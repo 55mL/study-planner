@@ -1,3 +1,12 @@
+<!-- 
+ - File     : add.html
+ - Descript : หน้าสำหรับเพิ่มวิชา ไอคอนตรงกลาง นับ 3 จากซ้าย ประกอบไปด้วย
+ -            1. Label กรอกชื่อวิชา
+ -            2. Label เลือกวันสอบ
+ -            3. Difficulty slider เลือกระดับความยากง่ายของวิชา
+ -            4. Add Subject button ปุ่มเพิ่มวิชา
+ - Update   : 2025-10-06 12:52 AM (Neptune)
+-->
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -17,6 +26,7 @@
         
         <main class="main-content">
             
+            <!-- Title ด้านบน บอกชื่อหน้า (จะปรับทีหลัง) -->
             <header class="page-header">
                 <div class="greeting">
                     <h1 class="page-title">Add New Exam</h1>
@@ -26,6 +36,7 @@
 
             <form id="addExamForm" class="add-exam-form">
                 
+                <!-- กรอกชื่อวิชา -->
                 <div class="form-group">
                     <label for="subjectName" class="form-label">Subject Name</label>
                     <input 
@@ -38,6 +49,7 @@
                     >
                 </div>
 
+                <!-- เลือกวันสอบ -->
                 <div class="form-group">
                     <label for="examDate" class="form-label">Exam Date</label>
                     <input 
@@ -49,6 +61,7 @@
                     >
                 </div>
 
+                <!-- เลือกระดับความยากง่ายของวิชา -->
                 <div class="form-group">
                     <label for="difficulty" class="form-label">Difficulty Level</label>
                     <div class="difficulty-slider">
@@ -70,6 +83,7 @@
                     </div>
                 </div>
 
+                <!-- ปุ่มเพิ่มวิชา -->
                 <button type="submit" class="btn-primary">
                     <ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>
                     Add Subject
@@ -79,6 +93,7 @@
 
         </main>
 
+        <!--nav bar-->
         <nav class="bottom-nav">
             <a href="home.html" class="nav-item" data-page="home">
                 <ion-icon name="home"></ion-icon>
