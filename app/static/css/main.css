@@ -1,53 +1,63 @@
+/*
+ * File     : main.css
+ * Descript : สไตล์หลัก และตัวแปรกลาง
+ * Update   : 2025-10-06 7:37 PM (Neptune)
+ *
+ */
+
+
+/* ตัวแปร CSS ที่กำหนดเอง */
 :root {
-    /* Monday */
+    /* ธีมสีตามวัน */
+    /* วันจันทร์ */
     --monday-primary: #f5df9b;
     --monday-secondary: #BBA444;
     --monday-accent: #E6B84D;
     --monday-gradient: linear-gradient(135deg, #FFB84D 0%, #85C1E2 50%, #C39BD3 100%);
     
-    /* Tuesday */
+    /* วันอังคาร */
     --tuesday-primary: #F5BCDD;
     --tuesday-secondary: #D190B6;
     --tuesday-accent: #E91E63;
     --tuesday-gradient: linear-gradient(135deg, #FFB84D 0%, #85C1E2 50%, #C39BD3 100%);
     
-    /* Wednesday */
+    /* วันพุธ */
     --wednesday-primary: #ABD6BA;
     --wednesday-secondary: #679F80;
     --wednesday-accent: #56AB91;
     --wednesday-gradient: linear-gradient(135deg, #FFB84D 0%, #85C1E2 50%, #C39BD3 100%);
     
-    /* Thursday */
+    /* วันพฤหัส */
     --thursday-primary: #FFC1A1;
     --thursday-secondary: #F8A174;
     --thursday-accent: #FF8C00;
     --thursday-gradient: linear-gradient(135deg, #FFB84D 0%, #85C1E2 50%, #C39BD3 100%);
     
-    /* Friday */
+    /* วันศุกร์ */
     --friday-primary: #BBEAF2;
     --friday-secondary: #92CBD5;
     --friday-accent: #3498DB;
     --friday-gradient: linear-gradient(135deg, #FFB84D 0%, #85C1E2 50%, #C39BD3 100%);
     
-    /* Saturday */
+    /* วันเสาร์ */
     --saturday-primary: #E8DAEF;
     --saturday-secondary: #C59AEF;
     --saturday-accent: #8E44AD;
     --saturday-gradient: linear-gradient(135deg, #FFB84D 0%, #85C1E2 50%, #C39BD3 100%);
     
-    /* Sunday */
+    /* วันอาทิตย์ */
     --sunday-primary: #FADBD8;
     --sunday-secondary: #F1A196;
     --sunday-accent: #E74C3C;
     --sunday-gradient: linear-gradient(135deg, #FFB84D 0%, #85C1E2 50%, #C39BD3 100%);
     
-    /* Default colors */
+    /* สีค่าเริ่มต้น */
     --bg-primary: var(--monday-primary);
     --bg-secondary: var(--monday-secondary);
     --color-accent: var(--monday-accent);
     --gradient-main: var(--monday-gradient);
     
-    /* Neutral colors */
+    /* สีเบส */
     --color-dark: #2C3E50;
     --color-light: #ECF0F1;
     --color-white: #FFFFFF;
@@ -55,19 +65,19 @@
     --color-black: #000000;
     --color-gray: #95A5A6;
     
-    /* Difficulty colors */
+    /* สีของระดับความยาก */
     --difficulty-easy: #2ECC71;
     --difficulty-medium: #F39C12;
     --difficulty-hard: #E74C3C;
     
-    /* Spacing */
+    /* ค่าเว้นวรรค */
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 1.5rem;
     --spacing-lg: 2rem;
     --spacing-xl: 3rem;
     
-    /* Border radius */
+    /* มุม */
     --radius-box: 30px;
     --radius-button: 40px;
     --radius-sm: 8px;
@@ -76,12 +86,13 @@
     --radius-xl: 32px;
     --radius-full: 9999px;
     
-    /* Shadows */
+    /* เงา */
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
     --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
+/* เปลี่ยนค่าสีตามวัน */
 body[data-day="monday"] {
     --bg-primary: var(--monday-primary);
     --bg-secondary: var(--monday-secondary);
@@ -131,12 +142,14 @@ body[data-day="sunday"] {
     --gradient-main: var(--sunday-gradient);
 }
 
+/* รีเซต */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* โหลดฟอนต์จากโฟลเดอร์ */
 @font-face {
     font-family: 'SF Pro Regular';
     src: url(/app/static/fonts/SFPRO/SFPRODISPLAYREGULAR.OTF);
@@ -152,6 +165,7 @@ body[data-day="sunday"] {
     src: url(/app/static/fonts/SFPRO/SFPRODISPLAYMEDIUM.OTF);
 }
 
+/* ตั้งค่าฟอนต์ */
 body {
     font-family: 'SF Pro Bold';
     background: var(--bg-primary);
