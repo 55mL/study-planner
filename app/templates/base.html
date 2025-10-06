@@ -1,15 +1,8 @@
 <!-- 
-    base.html โครงสร้างหลักของทุกหน้า
--->
-<!-- 
-    <ion-icon name="stats-chart"></ion-icon>
-    <ion-icon name="add"></ion-icon>
-    <ion-icon name="home"></ion-icon>
-    <ion-icon name="calendar"></ion-icon>
-    <ion-icon name="calendar-clear"></ion-icon>
-    <ion-icon name="calendar-number"></ion-icon>
-    <ion-icon name="settings"></ion-icon>
-    <ion-icon name="person"></ion-icon>
+ - File     : base.html
+ - Descript : 1. Bottom nav bar แถบเมนูด้านล่าง
+ -            2. Highlight icon on Data page ไฮไลท์ไอคอนบนเมนูตามหน้าปัจจุบัน
+ - Update   : 2025-10-06 7:46 PM (Neptune)
 -->
 
 <!DOCTYPE html>
@@ -32,26 +25,32 @@
         <main class="main-content">
         </main>
 
+        <!-- เมนูข้างล่าง ไอคอนและหน้าเรียงลำดับซ้ายไปขวา -->
         <nav class="bottom-nav">
+            <!-- 1. หน้าหลัก -->
             <a href="home.html" class="nav-item" data-page="home">
                 <ion-icon name="home"></ion-icon>
                 <span>Home</span>
             </a>
+            <!-- 2. ปฏิทิน -->
             <a href="schedule.html" class="nav-item" data-page="schedule">
                 <!-- <ion-icon name="calendar"></ion-icon> -->
                 <!-- <ion-icon name="calendar-clear"></ion-icon> -->
                 <ion-icon name="calendar-number"></ion-icon>
                 <span>Schedule</span>
             </a>
+            <!-- 3. เพิ่มวิชา -->
             <a href="add.html" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
                     <ion-icon name="add"></ion-icon>
                 </div>
             </a>
+            <!-- 4. สถิติ -->
             <a href="stat.html" class="nav-item" data-page="stat">
                 <ion-icon name="stats-chart"></ion-icon>
                 <span>Stats</span>
             </a>
+            <!-- 5. ตั้งค่าโปรไฟล์ -->
             <a href="profile.html" class="nav-item" data-page="profile">
                 <ion-icon name="person"></ion-icon>
                 <span>Profile</span>
@@ -60,6 +59,7 @@
 
     </div>
 
+    <!-- ไฮไลท์ไอคอนบนเมนู -->
     <script>
         const currentPage = document.body.dataset.page;
         const navItems = document.querySelectorAll('.nav-item');
@@ -69,5 +69,6 @@
             }
         });
     </script>
+
 </body>
 </html>
