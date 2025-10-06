@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Exam - Study Planner</title>
+    <link rel="stylesheet" href="/app/static/css/main.css">
+    <link rel="stylesheet" href="/app/static/css/components.css">
+    <link rel="stylesheet" href="/app/static/css/responsive.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body data-day="monday" data-page="add" class="page-add">
+    
+    <div class="app-container">
+        
+        <main class="main-content">
+            
+            <header class="page-header">
+                <div class="greeting">
+                    <h1 class="page-title">Add New Exam</h1>
+                    <p class="welcome-text">Schedule your upcoming exam</p>
+                </div>
+            </header>
+
+            <form id="addExamForm" class="add-exam-form">
+                
+                <div class="form-group">
+                    <label for="subjectName" class="form-label">Subject Name</label>
+                    <input 
+                        type="text" 
+                        id="subjectName" 
+                        name="subjectName" 
+                        class="form-input" 
+                        placeholder="e.g., Calculus III"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="examDate" class="form-label">Exam Date</label>
+                    <input 
+                        type="date" 
+                        id="examDate" 
+                        name="examDate" 
+                        class="form-input"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="difficulty" class="form-label">Difficulty Level</label>
+                    <div class="difficulty-slider">
+                        <input 
+                            type="range" 
+                            id="difficulty" 
+                            name="difficulty" 
+                            class="slider-input" 
+                            min="1" 
+                            max="10" 
+                            value="5"
+                        >
+                        <div class="slider-labels">
+                            <span class="slider-label-easy">Easy (1-4)</span>
+                            <span class="slider-label-medium">Medium (5-7)</span>
+                            <span class="slider-label-hard">Hard (8-10)</span>
+                        </div>
+                        <div class="difficulty-value" id="difficultyValue">5</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>
+                    Add Subject
+                </button>
+
+            </form>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item" data-page="home">
+                <ion-icon name="home"></ion-icon>
+                <span>Home</span>
+            </a>
+            <a href="schedule.html" class="nav-item" data-page="schedule">
+                <ion-icon name="calendar"></ion-icon>
+                <span>Schedule</span>
+            </a>
+            <a href="add.html" class="nav-item nav-item-center" data-page="add">
+                <div class="add-button">
+                    <ion-icon name="add"></ion-icon>
+                </div>
+            </a>
+            <a href="stat.html" class="nav-item" data-page="stat">
+                <ion-icon name="stats-chart"></ion-icon>
+                <span>Stats</span>
+            </a>
+            <a href="profile.html" class="nav-item" data-page="profile">
+                <ion-icon name="person"></ion-icon>
+                <span>Profile</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <script>
+        const currentPage = document.body.dataset.page;
+        document.querySelectorAll('.nav-item').forEach(item => {
+            if (item.dataset.page === currentPage) {
+                item.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

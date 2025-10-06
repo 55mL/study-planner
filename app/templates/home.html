@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Study Planner</title>
+    <link rel="stylesheet" href="/app/static/css/main.css">
+    <link rel="stylesheet" href="/app/static/css/components.css">
+    <link rel="stylesheet" href="/app/static/css/responsive.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body data-day="monday" data-page="home">
+    
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#FFB84D;stop-opacity:1" />
+                <stop offset="50%" style="stop-color:#85C1E2;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#C39BD3;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="app-container">
+        
+        <main class="main-content">
+            
+            <header class="page-header">
+                <div class="user-avatar"></div>
+                <div class="greeting">
+                    <p class="welcome-text">Welcome back!</p>
+                    <h1 class="page-title">6 October 2025</h1>
+                </div>
+            </header>
+
+            <section class="stats-overview">
+                <div class="stat-card">
+                    <h3>Reading</h3>
+                    <div class="progress-circle" data-progress="3" data-total="10">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
+                            <circle class="progress-bar" cx="60" cy="60" r="54"></circle>
+                        </svg>
+                        <span class="progress-value">3</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed</h3>
+                    <div class="progress-circle" data-progress="0" data-total="10">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
+                            <circle class="progress-bar" cx="60" cy="60" r="54"></circle>
+                        </svg>
+                        <span class="progress-value">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Streak</h3>
+                    <div class="progress-circle" data-progress="4" data-total="7">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
+                            <circle class="progress-bar" cx="60" cy="60" r="54"></circle>
+                        </svg>
+                        <span class="progress-value">4</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <div class="week-calendar-wrapper">
+            <section class="week-calendar" id="weekCalendar">
+            </section>
+        </div>
+
+        <main class="main-content" style="padding-top: 0;">
+
+            <section class="progress-section">
+                <h2 class="section-title">Log your progress</h2>
+                <p class="section-subtitle">(5/8) Completed</p>
+
+                <div class="subject-card">
+                    <h3 class="subject-name">Calculus III</h3>
+                    <div class="status-buttons">
+                        <button class="status-btn on-track">On Track</button>
+                        <button class="status-btn off-track">Off Track</button>
+                    </div>
+                </div>
+
+                <div class="subject-card">
+                    <h3 class="subject-name">Data Structure</h3>
+                    <div class="status-buttons">
+                        <button class="status-btn on-track">On Track</button>
+                        <button class="status-btn off-track">Off Track</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="upcoming-section">
+                <h2 class="section-title">Upcoming</h2>
+                <p class="section-subtitle">(5/8) Completed</p>
+            </section>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item" data-page="home">
+                <ion-icon name="home"></ion-icon>
+                <span>Home</span>
+            </a>
+            <a href="schedule.html" class="nav-item" data-page="schedule">
+                <ion-icon name="calendar-clear"></ion-icon>
+                <span>Schedule</span>
+            </a>
+            <a href="add.html" class="nav-item nav-item-center" data-page="add">
+                <div class="add-button">
+                    <ion-icon name="add"></ion-icon>
+                </div>
+            </a>
+            <a href="stat.html" class="nav-item" data-page="stat">
+                <ion-icon name="stats-chart"></ion-icon>
+                <span>Stats</span>
+            </a>
+            <a href="profile.html" class="nav-item" data-page="profile">
+                <ion-icon name="person"></ion-icon>
+                <span>Profile</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <script>
+        
+            const weekCalendar = document.getElementById('weekCalendar');
+            const today = new Date();
+        
+        const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const dayNamesShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        
+        function generateDays() {
+            const days = [];
+            for (let i = -30; i <= 29; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                days.push({
+                    date: date,
+                    dayNumber: date.getDate(),
+                    dayName: dayNamesShort[date.getDay()],
+                    dayKey: dayNames[date.getDay()],
+                    isToday: i === 0
+                });
+            }
+            return days;
+        }
+        
+        function renderCalendar() {
+            const days = generateDays();
+            weekCalendar.innerHTML = days.map((day, index) => `
+                <div class="day-pill ${day.isToday ? 'active' : ''}" 
+                    data-day="${day.dayKey}" 
+                    data-index="${index}"
+                    data-date="${day.date.toISOString()}">
+                    <span class="day-number">${day.dayNumber}</span>
+                    <span class="day-name">${day.dayName}</span>
+                </div>
+            `).join('');
+            
+            setTimeout(() => {
+                const todayPill = weekCalendar.querySelector('.day-pill.active');
+                if (todayPill) {
+                    todayPill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            }, 100);
+        }
+        
+        renderCalendar();
+        
+        
+        let scrollTimeout;
+        
+        function updateCenterDay() {
+            const calendarRect = weekCalendar.getBoundingClientRect();
+            const centerX = calendarRect.left + calendarRect.width / 2;
+            
+            let closestPill = null;
+            let closestDistance = Infinity;
+            
+            document.querySelectorAll('.day-pill').forEach(pill => {
+                const pillRect = pill.getBoundingClientRect();
+                const pillCenterX = pillRect.left + pillRect.width / 2;
+                const distance = Math.abs(centerX - pillCenterX);
+                
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestPill = pill;
+                }
+            });
+            
+            if (closestPill) {
+                document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
+                
+                closestPill.classList.add('active');
+                
+                const dayKey = closestPill.dataset.day;
+                document.body.dataset.day = dayKey;
+                
+                closestPill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }
+        
+        weekCalendar.addEventListener('scroll', function() {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(updateCenterDay, 150);
+        });
+        
+        weekCalendar.addEventListener('click', function(e) {
+            const pill = e.target.closest('.day-pill');
+            if (!pill) return;
+            
+            document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
+            
+            pill.classList.add('active');
+            
+            const dayKey = pill.dataset.day;
+            document.body.dataset.day = dayKey;
+            
+            pill.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
+        });
+        
+        const currentPage = document.body.dataset.page;
+        document.querySelectorAll('.nav-item').forEach(item => {
+            if (item.dataset.page === currentPage) {
+                item.classList.add('active');
+            }
+        });
+        
+        document.querySelectorAll('.progress-circle').forEach(circle => {
+            const progress = circle.dataset.progress;
+            const total = circle.dataset.total;
+            const percentage = (progress / total) * 100;
+            const circumference = 2 * Math.PI * 54;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            const progressBar = circle.querySelector('.progress-bar');
+            progressBar.style.strokeDasharray = circumference;
+            progressBar.style.strokeDashoffset = offset;
+        });
+    </script>
+</body>
+</html>

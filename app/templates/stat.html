@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics - Study Planner</title>
+    <link rel="stylesheet" href="/app/static/css/main.css">
+    <link rel="stylesheet" href="/app/static/css/components.css">
+    <link rel="stylesheet" href="/app/static/css/responsive.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body data-day="monday" data-page="stat">
+    
+    <div class="app-container">
+        
+        <main class="main-content">
+            
+            <header class="page-header">
+                <div class="top-header">
+                    <a href="home.html" class="back-item" data-page="home">
+                    <ion-icon name="caret-back-circle"></ion-icon>
+                    </a>
+                    <h1 class="page-title">Statistics</h1>
+                    <!-- <p class="welcome-text">Track your progress</p> -->
+                </div>
+            </header>
+
+            <!-- <section class="stat-summary">
+                <div class="summary-card">
+                    <div class="summary-value">24</div>
+                    <div class="summary-label">Days Checked In</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-value">4</div>
+                    <div class="summary-label">Current Streak</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-value">12</div>
+                    <div class="summary-label">Total Exams</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-value">8</div>
+                    <div class="summary-label">Completed</div>
+                </div>
+            </section> -->
+
+            <div class="stats-tabs">
+                <button class="tab-btn active" data-chart="bar" id="barChartBtn">
+                    <ion-icon name="bar-chart" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                    Bar Chart
+                </button>
+                <button class="tab-btn" data-chart="line" id="lineChartBtn">
+                    <ion-icon name="analytics" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                    Line Chart
+                </button>
+            </div>
+
+            <!-- Chart Container -->
+            <div class="chart-container">
+                <canvas id="statsChart"></canvas>
+            </div>
+
+            <!-- Weekly Progress -->
+            <section class="progress-section" style="margin-top: var(--spacing-lg);">
+                <h2 class="section-title">Weekly Progress</h2>
+                <p class="section-subtitle">Check-in history for this week</p>
+
+                <div class="week-calendar">
+                    <div class="day-pill" data-checked="true">
+                        <span class="day-number">12</span>
+                        <span class="day-name">Mon</span>
+                        <ion-icon name="checkmark-circle" style="color: var(--difficulty-easy); font-size: 1.25rem;"></ion-icon>
+                    </div>
+                    <div class="day-pill" data-checked="true">
+                        <span class="day-number">13</span>
+                        <span class="day-name">Tue</span>
+                        <ion-icon name="checkmark-circle" style="color: var(--difficulty-easy); font-size: 1.25rem;"></ion-icon>
+                    </div>
+                    <div class="day-pill" data-checked="true">
+                        <span class="day-number">14</span>
+                        <span class="day-name">Wed</span>
+                        <ion-icon name="checkmark-circle" style="color: var(--difficulty-easy); font-size: 1.25rem;"></ion-icon>
+                    </div>
+                    <div class="day-pill" data-checked="true">
+                        <span class="day-number">15</span>
+                        <span class="day-name">Thu</span>
+                        <ion-icon name="checkmark-circle" style="color: var(--difficulty-easy); font-size: 1.25rem;"></ion-icon>
+                    </div>
+                    <div class="day-pill" data-checked="false">
+                        <span class="day-number">16</span>
+                        <span class="day-name">Fri</span>
+                        <ion-icon name="close-circle" style="color: var(--color-gray); font-size: 1.25rem;"></ion-icon>
+                    </div>
+                    <div class="day-pill" data-checked="false">
+                        <span class="day-number">17</span>
+                        <span class="day-name">Sat</span>
+                        <ion-icon name="close-circle" style="color: var(--color-gray); font-size: 1.25rem;"></ion-icon>
+                    </div>
+                    <div class="day-pill" data-checked="false">
+                        <span class="day-number">18</span>
+                        <span class="day-name">Sun</span>
+                        <ion-icon name="close-circle" style="color: var(--color-gray); font-size: 1.25rem;"></ion-icon>
+                    </div>
+                </div>
+            </section>
+
+            <section style="margin-top: var(--spacing-xl);">
+                <h2 class="section-title">Monthly Overview</h2>
+                <div class="stat-summary" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="summary-card">
+                        <div class="summary-value" style="font-size: 1.5rem;">18</div>
+                        <div class="summary-label">Study Sessions</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" style="font-size: 1.5rem;">45h</div>
+                        <div class="summary-label">Total Hours</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" style="font-size: 1.5rem;">2.5h</div>
+                        <div class="summary-label">Daily Average</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item" data-page="home">
+                <ion-icon name="home"></ion-icon>
+                <span>Home</span>
+            </a>
+            <a href="schedule.html" class="nav-item" data-page="schedule">
+                <ion-icon name="calendar"></ion-icon>
+                <span>Schedule</span>
+            </a>
+            <a href="add.html" class="nav-item nav-item-center" data-page="add">
+                <div class="add-button">
+                    <ion-icon name="add"></ion-icon>
+                </div>
+            </a>
+            <a href="stat.html" class="nav-item" data-page="stat">
+                <ion-icon name="stats-chart"></ion-icon>
+                <span>Stats</span>
+            </a>
+            <a href="profile.html" class="nav-item" data-page="profile">
+                <ion-icon name="person"></ion-icon>
+                <span>Profile</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <script>
+        const currentPage = document.body.dataset.page;
+        document.querySelectorAll('.nav-item').forEach(item => {
+            if (item.dataset.page === currentPage) {
+                item.classList.add('active');
+            }
+        });
+
+        const chartData = {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Study Hours',
+                data: [3, 4, 2.5, 5, 0, 0, 0],
+                backgroundColor: [
+                    'rgba(241, 196, 15, 0.7)',
+                    'rgba(248, 180, 217, 0.7)',
+                    'rgba(168, 230, 207, 0.7)',
+                    'rgba(255, 184, 77, 0.7)',
+                    'rgba(133, 193, 226, 0.7)',
+                    'rgba(195, 155, 211, 0.7)',
+                    'rgba(241, 148, 138, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(241, 196, 15, 1)',
+                    'rgba(248, 180, 217, 1)',
+                    'rgba(168, 230, 207, 1)',
+                    'rgba(255, 184, 77, 1)',
+                    'rgba(133, 193, 226, 1)',
+                    'rgba(195, 155, 211, 1)',
+                    'rgba(241, 148, 138, 1)'
+                ],
+                borderWidth: 2
+            }]
+        };
+
+        const chartConfig = {
+            type: 'bar',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + 'h';
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const ctx = document.getElementById('statsChart').getContext('2d');
+        let currentChart = new Chart(ctx, chartConfig);
+
+        const barChartBtn = document.getElementById('barChartBtn');
+        const lineChartBtn = document.getElementById('lineChartBtn');
+
+        barChartBtn.addEventListener('click', function() {
+            if (currentChart.config.type === 'bar') return;
+            
+            currentChart.destroy();
+            chartConfig.type = 'bar';
+            currentChart = new Chart(ctx, chartConfig);
+            
+            barChartBtn.classList.add('active');
+            lineChartBtn.classList.remove('active');
+        });
+
+        lineChartBtn.addEventListener('click', function() {
+            if (currentChart.config.type === 'line') return;
+            
+            currentChart.destroy();
+            chartConfig.type = 'line';
+            chartConfig.data.datasets[0].fill = true;
+            chartConfig.data.datasets[0].tension = 0.4;
+            currentChart = new Chart(ctx, chartConfig);
+            
+            lineChartBtn.classList.add('active');
+            barChartBtn.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
