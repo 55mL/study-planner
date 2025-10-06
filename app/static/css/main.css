@@ -1,12 +1,17 @@
 /*
  * File     : main.css
- * Descript : สไตล์หลัก และตัวแปรกลาง
- * Update   : 2025-10-06 7:37 PM (Neptune)
+ * Descript : กำหนดตัวแปรกลาง ตั้งค่าฟอนต์หลัก 
+ * Update   : 2025-10-06 12.50 AM (Neptune)
  *
  */
 
 
-/* ตัวแปร CSS ที่กำหนดเอง */
+/* ---------------------------
+ * 
+ * ตัวแปร CSS ที่กำหนดเอง 
+ *
+ * ---------------------------
+ */
 :root {
     /* ธีมสีตามวัน */
     /* วันจันทร์ */
@@ -64,6 +69,7 @@
     --color-cream: #FFFEF7;
     --color-black: #000000;
     --color-gray: #95A5A6;
+    --color-glass: rgba(255, 255, 255, 0.4);
     
     /* สีของระดับความยาก */
     --difficulty-easy: #2ECC71;
@@ -92,7 +98,12 @@
     --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* เปลี่ยนค่าสีตามวัน */
+/* ---------------------------
+ * 
+ * เปลี่ยนค่าสีตามวัน
+ *
+ * ---------------------------
+ */
 body[data-day="monday"] {
     --bg-primary: var(--monday-primary);
     --bg-secondary: var(--monday-secondary);
@@ -149,7 +160,12 @@ body[data-day="sunday"] {
     box-sizing: border-box;
 }
 
-/* โหลดฟอนต์จากโฟลเดอร์ */
+/* ---------------------------
+ * 
+ * โหลดฟอนต์จากโฟลเดอร์
+ *
+ * ---------------------------
+ */
 @font-face {
     font-family: 'SF Pro Regular';
     src: url(/app/static/fonts/SFPRO/SFPRODISPLAYREGULAR.OTF);
@@ -165,58 +181,25 @@ body[data-day="sunday"] {
     src: url(/app/static/fonts/SFPRO/SFPRODISPLAYMEDIUM.OTF);
 }
 
-/* ตั้งค่าฟอนต์ */
-body {
-    font-family: 'SF Pro Bold';
-    background: var(--bg-primary);
-    color: var(--color-dark);
-    transition: background 0.4s ease, color 0.4s ease;
-    overflow-x: hidden;
+@font-face {
+    font-family: 'Sukhumvit Bold';
+    src: url(/app/static/fonts/Sukhumvit/SukhumvitSet-Bold.ttf);
+}
+@font-face {
+    font-family: 'Sukhumvit SemiBold';
+    src: url(/app/static/fonts/Sukhumvit/SukhumvitSet-SemiBold.ttf);
 }
 
-.app-container {
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: var(--bg-primary);
-    position: relative;
-    padding-bottom: 80px;
-    transition: background 0.4s ease;
-}
+/* ฟอนต์สำรอง(น่ารัก) */
+/* @font-face {
+    font-family: 'Parrot';
+    src: url(/app/static/fonts/Parrot/CkParrotDemo.ttf);
+} */
 
-.main-content {
-    padding: var(--spacing-md);
-    padding-bottom: var(--spacing-xl);
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
-    line-height: 1.2;
-}
-
-.page-title {
-    font-size: 2rem;
-    color: var(--color-dark);
-    margin: 0;
-}
-
-.section-title {
-    font-size: 1.5rem;
-    color: var(--color-dark);
-    margin-bottom: var(--spacing-xs);
-}
-
-.section-subtitle {
-    font-size: 0.9rem;
-    color: var(--color-gray);
-    margin-bottom: var(--spacing-md);
-}
-
-.welcome-text {
-    font-size: 0.95rem;
-    color: var(--color-dark);
-    opacity: 0.8;
-}
+/* @font-face {
+    font-family: 'Stockholm';
+    src: url(/app/static/fonts/Stockholm/PG\ Stockholm\ DEMO.ttf);
+} */
 
 button {
     border: none;
