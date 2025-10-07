@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from app.models import DailyAllocations
 from app.services.feedback_service import Feedback
 
-web_feedback = Blueprint('web_feedback', __name__, template_folder='templates') # ชี้ไปที่โฟลเดอร์ templates ใน web)
+web_feedback = Blueprint('web_feedback', __name__, template_folder='demo_backend') # ชี้ไปที่โฟลเดอร์ demo_backend ใน web)
 
 @web_feedback.route('/feedback', methods=['GET', 'POST'])
 @login_required

@@ -6,7 +6,7 @@ from app.services.schedule_service import ScheduleService
 from app.services.user_service import UserUpdateService
 from utils import get_today
 
-web_dashboard = Blueprint('web_dashboard', __name__, template_folder='templates') # ชี้ไปที่โฟลเดอร์ templates ใน web
+web_dashboard = Blueprint('web_dashboard', __name__, template_folder='demo_backend') # ชี้ไปที่โฟลเดอร์ demo_backend
 
 @web_dashboard.route('/dashboard', methods=['GET', 'POST'])
 @login_required

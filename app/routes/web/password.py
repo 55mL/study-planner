@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, url_for, flash, redirect, request
 from app.models import User
 from app.services.user_service import AuthService
 
-web_password = Blueprint('web_password', __name__, template_folder='templates') # ชี้ไปที่โฟลเดอร์ templates ใน web
+web_password = Blueprint('web_password', __name__, template_folder='demo_backend') # ชี้ไปที่โฟลเดอร์ demo_backend ใน web
 
 @web_password.route('/forgot', methods=['GET', 'POST'])
 def forgot_password():

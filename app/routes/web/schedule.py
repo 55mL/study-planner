@@ -5,7 +5,7 @@ from app.models import DailyAllocations
 from app.services.schedule_service import ScheduleService
 from utils import get_today
 
-web_schedule = Blueprint('web_schedule', __name__, template_folder='templates') # ชี้ไปที่โฟลเดอร์ templates ใน web
+web_schedule = Blueprint('web_schedule', __name__, template_folder='demo_backend') # ชี้ไปที่โฟลเดอร์ demo_backend ใน web
 
 @web_schedule.route('/study_schedule')
 @login_required

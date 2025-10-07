@@ -5,7 +5,7 @@ from app.models import User
 from app.services.user_service import AuthService
 from app import db
 
-web_login = Blueprint('web_login', __name__, template_folder='templates') # ชี้ไปที่โฟลเดอร์ templates ใน web
+web_login = Blueprint('web_login', __name__, template_folder='demo_backend') # ชี้ไปที่โฟลเดอร์ demo_backend ใน web
 
 @web_login.route('/')
 def check_session() :

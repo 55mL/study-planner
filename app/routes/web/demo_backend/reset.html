@@ -1,15 +1,15 @@
-{% extends "base.html" %}
+{% extends "./basev2.html" %}
 
-{% block title %}Forgot Password{% endblock %}
+{% block title %}Reset Password{% endblock %}
 
 {% block content %}
-<h2>❓ Forgot Password</h2>
+<h2>🔒 Reset Password</h2>
 <form method="POST" class="mb-3">
   <div class="mb-3">
-    <label class="form-label">Email:</label>
-    <input type="email" class="form-control" name="email" required>
+    <label class="form-label">New password:</label>
+    <input type="password" class="form-control" name="password" required>
   </div>
-  <button type="submit" class="btn btn-info">Send reset link</button>
+  <button type="submit" class="btn btn-warning">Save new password</button>
 </form>
 
 {% with messages = get_flashed_messages() %}
