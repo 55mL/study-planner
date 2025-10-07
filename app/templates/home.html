@@ -1,3 +1,13 @@
+<!-- 
+ - File     : home.html
+ - Descript : หน้าหลักเริ่มต้น ประกอบไปด้วย
+ -            1. Progress Overview
+ -            2. Scroll Bar เลื่อนซ้ายขวาเลือกวันได้
+ -            3. Log บันทึกการติดตามความคืบหน้า
+ -            4. Upcoming รายการสิ่งที่กำลังจะมาถึง
+ - Update   : 2025-10-06 7:40 PM (Neptune)
+-->
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -29,14 +39,14 @@
             <header class="page-header">
                 <div class="user-avatar"></div>
                 <div class="greeting">
-                    <p class="welcome-text">Welcome back!</p>
+                    <p class="welcome-text">Hello!</p>
                     <h1 class="page-title">6 October 2025</h1>
                 </div>
             </header>
 
             <section class="stats-overview">
                 <div class="stat-card">
-                    <h3>Reading</h3>
+                    <h3>กำลังอ่าน</h3>
                     <div class="progress-circle" data-progress="3" data-total="10">
                         <svg viewBox="0 0 120 120">
                             <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
@@ -46,7 +56,7 @@
                     </div>
                 </div>
                 <div class="stat-card">
-                    <h3>Completed</h3>
+                    <h3>อ่านจบแล้ว</h3>
                     <div class="progress-circle" data-progress="0" data-total="10">
                         <svg viewBox="0 0 120 120">
                             <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
@@ -56,7 +66,7 @@
                     </div>
                 </div>
                 <div class="stat-card">
-                    <h3>Streak</h3>
+                    <h3>ความต่อเนื่อง</h3>
                     <div class="progress-circle" data-progress="4" data-total="7">
                         <svg viewBox="0 0 120 120">
                             <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
@@ -77,14 +87,14 @@
         <main class="main-content" style="padding-top: 0;">
 
             <section class="progress-section">
-                <h2 class="section-title">Log your progress</h2>
+                <h2 class="section-title">บันทึกการอ่าน</h2>
                 <p class="section-subtitle">(5/8) Completed</p>
 
                 <div class="subject-card">
                     <h3 class="subject-name">Calculus III</h3>
                     <div class="status-buttons">
-                        <button class="status-btn on-track">On Track</button>
-                        <button class="status-btn off-track">Off Track</button>
+                        <button class="status-btn on-track">ตามแผน</button>
+                        <button class="status-btn off-track">ไม่ตามแผน</button>
                     </div>
                 </div>
 
@@ -107,11 +117,11 @@
         <nav class="bottom-nav">
             <a href="home.html" class="nav-item" data-page="home">
                 <ion-icon name="home"></ion-icon>
-                <span>Home</span>
+                <span>หน้าหลัก</span>
             </a>
             <a href="schedule.html" class="nav-item" data-page="schedule">
-                <ion-icon name="calendar-clear"></ion-icon>
-                <span>Schedule</span>
+                <ion-icon name="calendar"></ion-icon>
+                <span>ปฏิทิน</span>
             </a>
             <a href="add.html" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
@@ -120,11 +130,11 @@
             </a>
             <a href="stat.html" class="nav-item" data-page="stat">
                 <ion-icon name="stats-chart"></ion-icon>
-                <span>Stats</span>
+                <span>สถิติ</span>
             </a>
             <a href="profile.html" class="nav-item" data-page="profile">
                 <ion-icon name="person"></ion-icon>
-                <span>Profile</span>
+                <span>ตั้งค่า</span>
             </a>
         </nav>
 
