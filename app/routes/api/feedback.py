@@ -20,7 +20,7 @@ def pending_feedback():
         {
             'alloc_id': alloc.id,
             'date': alloc.date.isoformat(),
-            'exam': alloc.plan.exam_name if alloc.plan else None,
+            'exam': alloc.exam_name_snapshot if alloc.exam_name_snapshot else None,
             'slots': alloc.slots
         } for alloc in pending
     ])

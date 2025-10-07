@@ -128,20 +128,50 @@ class ScheduleService:
 	- change read time
 	""" 
 	@staticmethod
-	def update_schedule(user, from_feedback=True, persist=True):
-		today = get_today()
-		if from_feedback:
-			# ยังมี allocation ของวันนี้ที่ยังไม่ได้ feedback อยู่ไหม?
-			pending_today = DailyAllocations.query.filter(
-				DailyAllocations.user_id == user.id,
-				DailyAllocations.date == today,
-				DailyAllocations.feedback_done == False
-			).count()
+	def get_total_weight(user):
+		return sum(p.weight for p in user.reading_plans)
+	@staticmethod
+	def get_days_till_exam(user, start_days=None, next_day=False):
+		latest_exam = max(p.exam_date for p in user.reading_plans)
+		if start_days is None:
+			start_days = get_today()
+        
+		log(f"start_days: {start_days}")
 
-			if pending_today == 0:
-				# ✅ วันนี้ตอบครบแล้ว → regenerate ตารางใหม่ เริ่มจากพรุ่งนี้
+		start_days = (latest_exam - start_days).days
+		if next_day:
+			start_days -= 1
+		return start_days
+	
+
+	@staticmethod
+	def update_schedule(user, persist=True):
+		
+		today = get_today()
+
+		# ยังมี allocation ของวันนี้ที่ยังไม่ได้ feedback อยู่ไหม?
+		pending_today = DailyAllocations.query.filter(
+			DailyAllocations.user_id == user.id,
+			DailyAllocations.date == today,
+			DailyAllocations.feedback_done == False
+		).count()
+
+		# เช็กว่ามี allocation ของวันนี้อยู่หรือเปล่า
+		has_today = DailyAllocations.query.filter(
+			DailyAllocations.user_id == user.id,
+			DailyAllocations.date == today
+		).count() > 0
+
+		if pending_today == 0:
+			if has_today:
+				# ✅ มี allocation วันนี้แล้ว และตอบครบ → สร้างตารางใหม่เริ่มพรุ่งนี้
 				ScheduleService.calculate_slots(user, next_day=True, persist=persist)
 				ScheduleService.distribute_schedule(user, next_day=True, persist=persist)
+			else:
+				# ✅ ยังไม่เคยมี allocation วันนี้เลย (เพิ่งเพิ่มวิชาแรก)
+				# → สร้างตารางเริ่มจากวันนี้
+				ScheduleService.calculate_slots(user, next_day=False, persist=persist)
+				ScheduleService.distribute_schedule(user, next_day=False, persist=persist)
 		else:
 			ScheduleService.calculate_slots(user, persist=persist)
 			ScheduleService.distribute_schedule(user, persist=persist)
@@ -339,9 +369,10 @@ class ScheduleService:
 		if persist:
 			today = get_today()
 			# ลบเฉพาะ allocation ที่ยังไม่ได้ feedback และเป็นวันอนาคต
+			# เปลี่ยนเป็นลบเป็นวันอนาคตเฉยๆ
 			DailyAllocations.query.filter(
 				DailyAllocations.user_id == user.id,
-				DailyAllocations.feedback_done == False,
+				# DailyAllocations.feedback_done == False,
 				DailyAllocations.date >= today
 			).delete()
 
@@ -355,7 +386,8 @@ class ScheduleService:
 						user_id=user.id,
 						plan_id=subj.plan_id,
 						date=date.fromordinal(d),
-						slots=hours
+						slots=hours,
+						exam_name_snapshot=subj.name  # ✅ copy ชื่อวิชาเก็บไว้
 					))
 
 			db.session.commit()

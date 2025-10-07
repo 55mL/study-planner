@@ -44,8 +44,7 @@ class ReadingPlans(db.Model):
     daily_allocations = db.relationship(
         "DailyAllocations",
         back_populates="plan",
-        cascade="all, delete-orphan",
-        passive_deletes=True
+        cascade="save-update, merge"
     )
     # calculate
     allocated_slot = db.Column(db.Integer, default=0, nullable=False)
@@ -70,13 +69,15 @@ class DailyAllocations(db.Model):
     # get user and plan
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     plan_id = db.Column(
-        db.Integer,
-        db.ForeignKey("reading_plans.id", ondelete="CASCADE", name="fk_dailyallocations_plan"),
-        nullable=False
+        db.Integer, 
+        db.ForeignKey("reading_plans.id", ondelete="SET NULL"), 
+        nullable=True
     )
 
     plan = db.relationship("ReadingPlans", back_populates="daily_allocations")
 
+    exam_name_snapshot = db.Column(db.String(100))
+    
 
     # bind plan
     # plan = db.relationship(

@@ -14,7 +14,7 @@ def feedback():
         feedback_type = request.form.get('feedback_type')
         alloc = DailyAllocations.query.get_or_404(alloc_id)
         Feedback.submit_feedback(current_user, alloc, feedback_type)
-        flash(f'บันทึกฟีดแบค {feedback_type} สำหรับ {alloc.plan.exam_name} วันที่ {alloc.date}')
+        flash(f'บันทึกฟีดแบค {feedback_type} สำหรับ {alloc.exam_name_snapshot} วันที่ {alloc.date}')
         return redirect(url_for('web_feedback.feedback'))
     alloc = Feedback.get_next_feedback(current_user)
     if not alloc:

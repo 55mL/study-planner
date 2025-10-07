@@ -1,6 +1,7 @@
 # web/schedule.py
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
+import datetime
 from app.models import DailyAllocations
 from app.services.schedule_service import ScheduleService
 from utils import get_today
@@ -21,9 +22,15 @@ def study_schedule():
             continue
         events.append({
             'day': alloc.date,
-            'exam': alloc.plan.exam_name,
+            'exam': alloc.exam_name_snapshot,
             'slots': alloc.slots,
-            'is_exam_day': (alloc.date == alloc.plan.exam_date),
+            'is_exam_day': (alloc.date + datetime.timedelta(days=1) == alloc.plan.exam_date),
             'feedback_done': alloc.feedback_done
         })
     return render_template('study_schedule.html', events=events, simulated_today=simulated_today)
+
+from datetime import timedelta
+
+@web_schedule.app_template_filter('add_days')
+def add_days(date_obj, days):
+    return date_obj + timedelta(days=days)

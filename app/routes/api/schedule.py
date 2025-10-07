@@ -22,7 +22,7 @@ def get_schedule():
             continue
         events.append({
             'date': alloc.date.isoformat(),
-            'exam': alloc.plan.exam_name,
+            'exam': alloc.exam_name_snapshot,
             'slots': alloc.slots,
             'is_exam_day': (alloc.date == alloc.plan.exam_date),
             'feedback_done': alloc.feedback_done
