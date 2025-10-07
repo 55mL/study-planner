@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>👋 Welcome {{ username }}</h1>
+
+<!-- ฟอร์มตั้ง daily read hours -->
+<form method="POST" class="mb-4">
+  <div class="mb-3">
+    <label class="form-label">Daily read hours:</label>
+    <input type="number" class="form-control" name="daily_read_hours" required>
+  </div>
+  <button type="submit" name="action" value="set_daily_read_hours" class="btn btn-primary">
+    Save
+  </button>
+</form>
+
+<hr>
+
+<a href="{{ url_for('web_dashboard.simulate_day', days=-1) }}" class="btn btn-secondary">
+  ย้อนกลับ 1 วัน
+</a>
+<a href="{{ url_for('web_dashboard.simulate_day', days=1) }}" class="btn btn-secondary">
+  ข้ามไปวันถัดไป
+</a>
+<a href="{{ url_for('web_dashboard.clear_simulation') }}" class="btn btn-danger">
+  กลับมาใช้วันจริง
+</a>
+
+{% if session.simulated_date %}
+  <p class="text-warning">⚡ ตอนนี้กำลังจำลองวัน: {{ session.simulated_date }}</p>
+{% endif %}
+
+<hr>
+
+<h2>📚 แผนการอ่านของฉัน</h2>
+<!-- ฟอร์มเพิ่มแผน -->
+<form method="POST" class="mb-4">
+  <div class="mb-3">
+    <label class="form-label">Exam name:</label>
+    <input type="text" class="form-control" name="exam_name" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Exam date:</label>
+    <input type="date" class="form-control" name="exam_date" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Level (1-10):</label>
+    <input type="number" class="form-control" name="level" min="1" max="10" value="5" required>
+  </div>
+
+  <button type="submit" name="action" value="add_plan" class="btn btn-success">
+    Save Plan
+  </button>
+</form>
+
+<hr>
+
+<a href="{{ url_for('web_feedback.feedback') }}" class="btn btn-primary">
+  ไปตอบ Feedback
+  {% if pending_count > 0 %}
+    <span class="badge bg-danger">{{ pending_count }}</span>
+  {% endif %}
+</a>
+
+<hr>
+
+<!-- ปุ่มจัดการตารางอ่าน -->
+<div class="mb-4">
+  <a href="{{ url_for('web_schedule.study_schedule') }}" class="btn btn-success">
+    📅 ดูตารางอ่าน
+  </a>
+</div>
+
+<hr>
+
+<!-- แสดงรายการแผนที่บันทึกแล้ว -->
+<h3>📖 Saved Plans</h3>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Exam name</th>
+      <th>Exam date</th>
+      <th>Level</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for plan in plans %}
+    <tr>
+      <td>{{ plan.exam_name }}</td>
+      <td>{{ plan.exam_date }}</td>
+      <td>{{ plan.level }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h3>Current Plans</h3>
+<ul>
+  {% for plan in plans %}
+    <li>
+      {{ plan.exam_name }} ({{ plan.exam_date }}) - Level {{ plan.level }}
+  <form method="POST" action="{{ url_for('web_dashboard.delete_plan', plan_id=plan.id) }}" style="display:inline;">
+        <button type="submit" class="btn btn-sm btn-danger"
+                onclick="return confirm('Are you sure you want to delete this plan?');">
+          Delete
+        </button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>
+
+<h3>Slot Allocation</h3>
+<ul>
+  {% for exam, data in slots.items() %}
+    <li>
+      {{ exam }}: {{ data.hours }} ชั่วโมง 
+      (weight: {{ "%.2f"|format(data.weight) }})
+    </li>
+  {% endfor %}
+</ul>
+
+
+<a href="{{ url_for('web_login.logout') }}" class="btn btn-outline-secondary mt-3">Logout</a>
+{% endblock %}

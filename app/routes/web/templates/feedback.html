@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>ฟีดแบคการอ่าน</h2>
+
+    <p>
+        วันที่: <strong>{{ alloc.date }}</strong><br>
+        วิชา: <strong>{{ alloc.plan.exam_name }}</strong><br>
+        ชั่วโมงที่จัดไว้: <strong>{{ alloc.slots }}</strong>
+    </p>
+
+    <form method="post">
+        <input type="hidden" name="alloc_id" value="{{ alloc.id }}">
+        <button type="submit" name="feedback_type" value="read_in_time">อ่านทัน</button>
+        <button type="submit" name="feedback_type" value="harder">ยากไป</button>
+        <button type="submit" name="feedback_type" value="easier">ง่ายไป</button>
+        <button type="submit" name="feedback_type" value="read_all">อ่านครบและลบวิชา</button>
+    </form>
+
+
+    </form>
+{% endblock %}

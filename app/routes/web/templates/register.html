@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<h2>📝 Register</h2>
+<form method="post" class="mb-3">
+  <div class="mb-3">
+    <input type="email" class="form-control" name="email_register" placeholder="Email" required>
+  </div>
+  <div class="mb-3">
+    <input type="text" class="form-control" name="username_register" placeholder="Username" required>
+  </div>
+  <div class="mb-3">
+    <input type="password" class="form-control" name="password_register" placeholder="Password" required>
+  </div>
+  <button type="submit" class="btn btn-success">Register</button>
+</form>
+
+<p>Already have an account? <a href="{{ url_for('web_login.login') }}">Login</a></p>
+
+{% for msg in get_flashed_messages() %}
+  <p class="text-danger">{{ msg }}</p>
+{% endfor %}
+{% endblock %}

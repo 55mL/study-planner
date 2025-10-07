@@ -1,0 +1,12 @@
+# secret sauce
+.env
+# local env
+.venv
+# just cache
+__pycache__/
+# binary file
+*.pyc
+# just local database
+instance/
+# unimportant file
+python_flask
