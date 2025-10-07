@@ -1,3 +1,45 @@
+/*
+ * File     : components.css
+ * Descript : รูปแบบส่วนประกอบทุกอย่าง แยกตามหน้า 5 หน้า
+ * Update   : 2025-10-06 12:51 AM (Neptune)
+ *
+ */
+ 
+/* 
+ * ----------------------------------
+ * ทัั่วไป (ใช้ได้ทุกหน้า)
+ * ----------------------------------
+ */
+body {
+    font-family: 'SF Pro Bold'; /* ฟอนต์ภาษาอังกฤษ */
+    /* font-size: 'SF Thonburi'; ฟอนต์ภาษาไทย มีหัว */
+    /* font-size: 'Sukhumvit Bold'; ฟอนต์ภาษาไทย ไม่มีหัว */
+    background: var(--bg-primary);
+    color: var(--color-dark);
+    transition: background 0.4s ease, color 0.4s ease;
+    overflow-x: hidden;
+}
+
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--bg-primary);
+    position: relative;
+    padding-bottom: 80px;
+    transition: background 0.4s ease;
+}
+
+.main-content {
+    padding: var(--spacing-md);
+    padding-bottom: var(--spacing-xl);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+}
+
 .page-header {
     display: flex;
     align-items: center;
@@ -5,17 +47,32 @@
     margin-bottom: var(--spacing-lg);
 }
 
-.user-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: var(--radius-full);
-    background: var(--color-white);
-    border: 3px solid var(--bg-secondary);
-    flex-shrink: 0;
-}
-
 .greeting {
     flex: 1;
+}
+
+.welcome-text {
+    font-size: 0.95rem;
+    color: var(--color-dark);
+    opacity: 0.8;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: var(--color-dark);
+    margin: 0;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-xs);
+}
+
+.section-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-gray);
+    margin-bottom: var(--spacing-md);
 }
 
 .top-header {
@@ -57,6 +114,83 @@
   margin: 0;
   font-size: 0.875rem;
   color: #666;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    /* background: var(--bg-primary); */
+    background-color: var(--color-glass);
+    backdrop-filter: blur(10px);
+    padding: var(--spacing-sm) var(--spacing-md);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    transition: background 0.4s ease;
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-dark);
+    text-decoration: none;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    position: relative;
+}
+
+.nav-item ion-icon {
+    font-size: 1.5rem;
+}
+
+.nav-item:hover {
+    color: var(--color-dark);
+}
+
+.nav-item.active {
+    color: var(--color-accent);
+}
+
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-accent);
+}
+
+.nav-item-center {
+    margin-top: -20px;
+}
+
+ /* 
+ * ----------------------------------
+ * หน้าที่ 1 : Home Page
+ * ----------------------------------
+ */
+
+.user-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-full);
+    background: var(--color-white);
+    border: 3px solid var(--bg-secondary);
+    flex-shrink: 0;
 }
 
 .stats-overview {
@@ -262,233 +396,13 @@
     background: var(--color-dark);
 }
 
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    /* background: var(--bg-primary); */
-    background-color: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(10px);
-    padding: var(--spacing-sm) var(--spacing-md);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-    transition: background 0.4s ease;
-    z-index: 1000;
-}
+ /* 
+ * ----------------------------------
+ * หน้าที่ 2 : Calendar Page
+ * ----------------------------------
+ */
 
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    color: var(--color-dark);
-    text-decoration: none;
-    font-size: 0.75rem;
-    transition: all 0.3s ease;
-    padding: var(--spacing-xs);
-    border-radius: var(--radius-sm);
-    position: relative;
-}
-
-.nav-item ion-icon {
-    font-size: 1.5rem;
-}
-
-.nav-item:hover {
-    color: var(--color-dark);
-}
-
-.nav-item.active {
-    color: var(--color-accent);
-}
-
-.nav-item.active::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--color-accent);
-}
-
-.nav-item-center {
-    margin-top: -20px;
-}
-
-.add-button {
-    width: 56px;
-    height: 56px;
-    border-radius: var(--radius-full);
-    background: var(--color-white);
-    border: 3px solid var(--color-accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-lg);
-    transition: all 0.3s ease;
-}
-
-.add-button ion-icon {
-    font-size: 2rem;
-    color: var(--color-dark);
-}
-
-.add-button:hover {
-    transform: scale(1.1) rotate(45deg);
-    box-shadow: 0 8px 20px rgba(230, 184, 77, 0.4);
-}
-
-.page-add .add-button {
-    transform: rotate(45deg); 
-    box-shadow: 0 8px 20px rgba(230, 184, 77, 0.4);
-}
-
-.page-add .add-button:hover {
-    transform: scale(1.1) rotate(45deg);
-}
-
-.form-group {
-    margin-bottom: var(--spacing-md);
-}
-
-.form-label {
-    display: block;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--color-dark);
-    margin-bottom: var(--spacing-xs);
-}
-
-.form-input,
-.form-select,
-.form-textarea {
-    width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border: 2px solid var(--bg-secondary);
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    font-family: inherit;
-    background: var(--color-white);
-    color: var(--color-dark);
-    transition: all 0.3s ease;
-}
-
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-}
-
-.form-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.difficulty-slider {
-    margin-top: var(--spacing-sm);
-}
-
-.slider-container {
-    position: relative;
-    width: 100%;
-    height: 50px;
-}
-
-.slider-input {
-    width: 100%;
-    height: 8px;
-    border-radius: var(--radius-full);
-    background: linear-gradient(to right, var(--difficulty-easy) 0%, var(--difficulty-medium) 50%, var(--difficulty-hard) 100%);
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.slider-input::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--color-white);
-    cursor: pointer;
-    box-shadow: var(--shadow-md);
-    border: 3px solid var(--color-accent);
-}
-
-.slider-input::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--color-white);
-    cursor: pointer;
-    box-shadow: var(--shadow-md);
-    border: 3px solid var(--color-accent);
-}
-
-.slider-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: var(--spacing-xs);
-    font-size: 0.85rem;
-}
-
-.slider-label-easy {
-    color: var(--difficulty-easy);
-    font-weight: 600;
-}
-
-.slider-label-medium {
-    color: var(--difficulty-medium);
-    font-weight: 600;
-}
-
-.slider-label-hard {
-    color: var(--difficulty-hard);
-    font-weight: 600;
-}
-
-.difficulty-value {
-    text-align: center;
-    margin-top: var(--spacing-xs);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-dark);
-}
-
-.btn-primary {
-    width: 100%;
-    padding: var(--spacing-md);
-    background: var(--color-accent);
-    color: var(--color-white);
-    border-radius: var(--radius-md);
-    font-size: 1.1rem;
-    font-weight: 700;
-    box-shadow: var(--shadow-md);
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.btn-primary:active {
-    transform: translateY(0);
-}
-
-.calendar-container {
+ .calendar-container {
     background: var(--color-white);
     border-radius: var(--radius-lg);
     padding: var(--spacing-md);
@@ -643,6 +557,182 @@
     vertical-align: middle;
 }
 
+ /* 
+ * ----------------------------------
+ * หน้าที่ 3 : Add Subject Page
+ * ----------------------------------
+ */
+ 
+.add-button {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-full);
+    background: var(--color-white);
+    border: 3px solid var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
+}
+
+.add-button ion-icon {
+    font-size: 2rem;
+    color: var(--color-dark);
+}
+
+.add-button:hover {
+    transform: scale(1.1) rotate(45deg);
+    box-shadow: 0 8px 20px rgba(230, 184, 77, 0.4);
+}
+
+.page-add .add-button {
+    transform: rotate(45deg); 
+    box-shadow: 0 8px 20px rgba(230, 184, 77, 0.4);
+}
+
+.page-add .add-button:hover {
+    transform: scale(1.1) rotate(45deg);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-xs);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--bg-secondary);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-family: inherit;
+    background: var(--color-white);
+    color: var(--color-dark);
+    transition: all 0.3s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.difficulty-slider {
+    margin-top: var(--spacing-sm);
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 50px;
+}
+
+.slider-input {
+    width: 100%;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(to right, var(--difficulty-easy) 0%, var(--difficulty-medium) 50%, var(--difficulty-hard) 100%);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--color-white);
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    border: 3px solid var(--color-accent);
+}
+
+.slider-input::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--color-white);
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    border: 3px solid var(--color-accent);
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-xs);
+    font-size: 0.85rem;
+}
+
+.slider-label-easy {
+    color: var(--difficulty-easy);
+    font-weight: 600;
+}
+
+.slider-label-medium {
+    color: var(--difficulty-medium);
+    font-weight: 600;
+}
+
+.slider-label-hard {
+    color: var(--difficulty-hard);
+    font-weight: 600;
+}
+
+.difficulty-value {
+    text-align: center;
+    margin-top: var(--spacing-xs);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-dark);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--color-accent);
+    color: var(--color-white);
+    border-radius: var(--radius-button);
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+ /* 
+ * ----------------------------------
+ * หน้าที่ 4 : Stats Page
+ * ----------------------------------
+ */
+
 .stats-tabs {
     display: flex;
     gap: var(--spacing-sm);
@@ -654,7 +744,7 @@
     padding: var(--spacing-sm) var(--spacing-md);
     background: var(--color-white);
     color: var(--color-dark);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-button);
     font-size: 1rem;
     font-weight: 600;
     transition: all 0.3s ease;
@@ -668,7 +758,7 @@
 
 .chart-container {
     background: var(--color-white);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-box);
     padding: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
     box-shadow: var(--shadow-sm);
@@ -702,6 +792,12 @@
     color: var(--color-gray);
 }
 
+
+/* 
+ * ----------------------------------
+ * หน้าที่ 5 : Profile Page
+ * ----------------------------------
+ */
 .profile-header {
     text-align: center;
     margin-bottom: var(--spacing-lg);

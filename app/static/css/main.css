@@ -185,9 +185,15 @@ body[data-day="sunday"] {
     font-family: 'Sukhumvit Bold';
     src: url(/app/static/fonts/Sukhumvit/SukhumvitSet-Bold.ttf);
 }
+
 @font-face {
     font-family: 'Sukhumvit SemiBold';
     src: url(/app/static/fonts/Sukhumvit/SukhumvitSet-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: 'SF Thonburi';
+    src: url(/app/static/fonts/SF\ Thonburi.ttf);
 }
 
 /* ฟอนต์สำรอง(น่ารัก) */
