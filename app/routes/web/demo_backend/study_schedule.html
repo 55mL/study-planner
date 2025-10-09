@@ -55,11 +55,20 @@
       {% for e in events %}
         {% if e.is_exam_day %}
           {
+            // วันสอบ
             title: "{{ e.exam }}",   // ✅ แค่ชื่อวิชา
             start: "{{ (e.day|add_days(1)).isoformat() }}",
             allDay: true,
-            color: "#ff4d4d",        // พื้นหลังแดง
-            textColor: "black"       // ✅ ข้อความสีดำ
+            color: "#E4080A",        // พื้นหลังแดง
+            textColor: "white"       // ✅ ข้อความสีดำ
+          },
+          {
+            // วันทบทวน
+            title: "{{ e.exam }} ({{ e.slots }} slots)",
+            start: "{{ e.day.isoformat() }}",
+            allDay: true,
+            color: getColorForSubject("{{ e.exam }}"),
+            textColor: "black"    
           }
         {% elif e.feedback_done %}
           {

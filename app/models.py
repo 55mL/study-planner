@@ -20,6 +20,7 @@ class User(db.Model, UserMixin):
     # record attbruite
     daily_read_hours = db.Column(db.Integer, default=3)
     latest_exam_date = db.Column(db.Date, default=None)
+    last_cleanup_date = db.Column(db.Date, nullable=True)
     # bind plans
     reading_plans = db.relationship('ReadingPlans', backref='user', lazy=True)
 

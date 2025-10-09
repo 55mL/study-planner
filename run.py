@@ -6,7 +6,7 @@ from flask_migrate import upgrade, migrate, init, stamp
 import os
 from alembic.util.exc import CommandError
 import sqlite3
-from utils import log
+from app.utils.utils import log
 
 app = create_app()
 

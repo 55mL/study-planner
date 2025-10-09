@@ -5,6 +5,7 @@ from app import db
 from app.models import User, ReadingPlans
 from .schedule_service import ScheduleService
 from datetime import datetime
+from app.utils.utils import get_today
 
 import logging
 logger = logging.getLogger(__name__)
@@ -106,3 +107,17 @@ class UserUpdateService:
 
 		if persist:
 			db.session.commit()
+
+	def cleanup_expired_plans(user):
+		today = get_today()
+		expired_plans = ReadingPlans.query.filter(
+			ReadingPlans.user_id == user.id,
+			ReadingPlans.exam_date < today
+		).all()
+
+		for plan in expired_plans:
+			UserUpdateService.delete_plan(user, plan)
+
+		user.last_cleanup_date = today
+		db.session.commit()
+

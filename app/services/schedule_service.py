@@ -6,7 +6,7 @@ from datetime import date, datetime, timedelta
 from app import db
 from app.models import DailyAllocations, ReadingPlans, User
 from datetime import date, timedelta
-from utils import log, get_today
+from app.utils.utils import log, get_today
 
 @dataclass
 class Subject:
@@ -372,10 +372,12 @@ class ScheduleService:
 			# เปลี่ยนเป็นลบเป็นวันอนาคตเฉยๆ
 			DailyAllocations.query.filter(
 				DailyAllocations.user_id == user.id,
-				# DailyAllocations.feedback_done == False,
+				DailyAllocations.feedback_done == False,
 				DailyAllocations.date >= today
 			).delete()
 
+			db.session.commit()
+			
 			# เพิ่ม allocations ใหม่จาก schedule
 			for d in sorted(schedule.keys()):
 				for subject_name, hours in schedule[d]:

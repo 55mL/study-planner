@@ -4,13 +4,17 @@ from app.models import ReadingPlans
 from app.services.feedback_service import Feedback
 from app.services.schedule_service import ScheduleService
 from app.services.user_service import UserUpdateService
-from utils import get_today
+from app.utils.utils import get_today
 
 web_dashboard = Blueprint('web_dashboard', __name__, template_folder='demo_backend') # ชี้ไปที่โฟลเดอร์ demo_backend
 
 @web_dashboard.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    today = get_today()
+    if not current_user.last_cleanup_date or current_user.last_cleanup_date < today:
+        UserUpdateService.cleanup_expired_plans(current_user)
+
     if request.method == 'POST':
         action = request.form.get('action')
         if action == 'set_daily_read_hours':

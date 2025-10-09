@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 import datetime
 from app.models import DailyAllocations
 from app.services.schedule_service import ScheduleService
-from utils import get_today
+from app.utils.utils import get_today
 
 web_schedule = Blueprint('web_schedule', __name__, template_folder='demo_backend') # ชี้ไปที่โฟลเดอร์ demo_backend ใน web
 
@@ -18,13 +18,16 @@ def study_schedule():
                    .all())
     events = []
     for alloc in allocations:
-        if not alloc.plan:
-            continue
+        # if not alloc.plan:
+        #     continue
         events.append({
             'day': alloc.date,
             'exam': alloc.exam_name_snapshot,
             'slots': alloc.slots,
-            'is_exam_day': (alloc.date + datetime.timedelta(days=1) == alloc.plan.exam_date),
+            'is_exam_day': (
+                alloc.plan is not None and 
+                alloc.date + datetime.timedelta(days=1) == alloc.plan.exam_date
+            ),
             'feedback_done': alloc.feedback_done
         })
     return render_template('study_schedule.html', events=events, simulated_today=simulated_today)
