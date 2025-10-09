@@ -12,26 +12,45 @@ logger = logging.getLogger(__name__)
 
 import logging
 
+
+
 class AuthService:
+	"""
+	Service สำหรับจัดการ authentication ของ user เช่น set/check password, reset password
+	"""
 	# password check and set
 	@staticmethod
 	def set_password(user, password, persist=True):
+		"""
+		กำหนดรหัสผ่านใหม่ให้ user (hash ก่อนเก็บ)
+		persist=True จะ commit ลง DB ทันที
+		"""
 		user.password = generate_password_hash(password)
 		if persist:
 			db.session.commit()
 
 	@staticmethod
 	def check_password(user, password):
+		"""
+		ตรวจสอบรหัสผ่าน (hash แล้วเทียบกับที่เก็บใน DB)
+		"""
 		return check_password_hash(user.password, password)
 
 	# reset password
 	@staticmethod
 	def generate_reset_token(user, expires_sec=3600):
+		"""
+		สร้าง token สำหรับ reset password (ใช้ email เป็น payload)
+		"""
 		s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
 		return s.dumps(user.email, salt="password-reset-salt")
 
 	@staticmethod
 	def verify_reset_token(token, max_age=3600):
+		"""
+		ตรวจสอบ token สำหรับ reset password ว่ายังใช้ได้ไหม (ยังไม่หมดอายุ)
+		คืน user ถ้า valid, None ถ้าไม่ valid
+		"""
 		s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
 		try:
 			email = s.loads(token, salt="password-reset-salt", max_age=max_age)
@@ -40,9 +59,20 @@ class AuthService:
 		return User.query.filter_by(email=email).first()
 
 
+
+
 class UserUpdateService:
+	"""
+	Service สำหรับอัปเดตข้อมูล user เช่น daily_read_hours, การเพิ่ม/ลบแผน, ล้างแผนที่หมดอายุ
+	"""
 	@staticmethod
 	def set_daily_read_hours(user, daily_hours, persist=True):
+		"""
+		กำหนดจำนวนชั่วโมงอ่านหนังสือต่อวันใหม่ให้ user
+		- ปรับ weight ของทุก plan ตามสัดส่วน
+		- อัปเดตตาราง schedule ใหม่
+		- persist=True จะ commit ลง DB ทันที
+		"""
 		if daily_hours <= 0 and daily_hours >= 24:
 			raise ValueError("value must between 0-24")
 		for plan in user.reading_plans:
@@ -56,7 +86,7 @@ class UserUpdateService:
 	def add_plan(user, exam_name, exam_date, level, persist=True):
 		"""
 		เพิ่ม ReadingPlan ใหม่ให้ user
-		- ตรวจสอบชื่อซ้ำ
+		- ตรวจสอบชื่อซ้ำ ถ้ามีแล้วจะ raise error
 		- แปลง exam_date จาก string → date
 		- persist ลง DB
 		"""
@@ -108,7 +138,14 @@ class UserUpdateService:
 		if persist:
 			db.session.commit()
 
+	@staticmethod
 	def cleanup_expired_plans(user):
+		"""
+		ลบแผนที่หมดอายุ (วันสอบ < วันนี้) ออกจาก user
+		- เรียกใช้ delete_plan กับทุกแผนที่หมดอายุ
+		- อัปเดต last_cleanup_date
+		- commit ลง DB
+		"""
 		today = get_today()
 		expired_plans = ReadingPlans.query.filter(
 			ReadingPlans.user_id == user.id,

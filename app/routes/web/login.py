@@ -7,27 +7,49 @@ from app import db
 
 web_login = Blueprint('web_login', __name__, template_folder='demo_backend') # ชี้ไปที่โฟลเดอร์ demo_backend ใน web
 
+
 @web_login.route('/')
-def check_session() :
-    if current_user.is_authenticated :
-        return redirect(url_for("web_dashboard.dashboard")) 
+def check_session():
+    """
+    ตรวจสอบ session ของผู้ใช้ ถ้า login แล้วให้ไปหน้า dashboard ถ้ายังไม่ login ให้ไปหน้า login
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for("web_dashboard.dashboard"))
     return redirect(url_for("web_login.login"))
+
 
 @web_login.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    ฟังก์ชันสำหรับ login ผู้ใช้
+    - ถ้า method เป็น POST จะตรวจสอบ username และ password
+    - ถ้าถูกต้องจะ login และไปหน้า dashboard
+    - ถ้าผิดจะแสดงข้อความ error
+    - ถ้า method เป็น GET จะแสดงหน้า login
+    """
     if request.method == 'POST':
         username = request.form['username_login']
         password = request.form['password_login']
         user = User.query.filter_by(username=username).first()
+        # ตรวจสอบว่ามี user และรหัสผ่านถูกต้องหรือไม่
         if user and AuthService.check_password(user, password):
             login_user(user)
             return redirect(url_for('web_dashboard.dashboard'))
         else:
             flash('incorrect username or password')
+
     return render_template('login.html')
+
 
 @web_login.route('/register', methods=['GET', 'POST'])
 def register():
+    """
+    ฟังก์ชันสำหรับสมัครสมาชิกใหม่
+    - ถ้า method เป็น POST จะรับข้อมูลจากฟอร์มและสร้าง user ใหม่
+    - ถ้าสมัครสำเร็จจะ redirect ไปหน้า login
+    - ถ้ามี error จะ rollback และแสดง error
+    - ถ้า method เป็น GET จะแสดงหน้า register
+    """
     if request.method == 'POST':
         email = request.form['email_register']
         username = request.form['username_register']
@@ -42,10 +64,17 @@ def register():
         except Exception as e:
             db.session.rollback()
             flash(f'Error: {e}')
+            
     return render_template('register.html')
+
 
 @web_login.route('/logout')
 def logout():
+    """
+    ฟังก์ชันสำหรับ logout ผู้ใช้
+    - logout session ปัจจุบันและ redirect ไปหน้า login
+    """
     logout_user()
     flash('just logout')
+
     return redirect(url_for('web_login.login'))

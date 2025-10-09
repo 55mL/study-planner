@@ -18,13 +18,19 @@ class Subject:
 	plan_id: int   # เก็บ id ของ ReadingPlans ไว้ด้วย
 
 def check_feasible(start_day: int, daily_hours: int, subjects: List[Subject]) -> bool:
+	"""
+	ตรวจสอบว่าเวลาที่มีพอสำหรับอ่านทุกวิชาหรือไม่ (feasibility check)
+	"""
 	last_day = max(s.exam_day for s in subjects)
 	total_time = (last_day - start_day) * daily_hours
 	total_required = sum(s.required for s in subjects)
-	log(f"check feasible: total_time {total_time}, total_required {total_required}")
+	log(f"check feasible: total_time {total_time}, total_required {total_required}", debug=True)
 	return total_time == total_required
 
 def redistribute_subject(start_day: int, daily_hours: int, subjects: List[Subject]) -> bool:
+	"""
+	กระจายชั่วโมงอ่านที่เกินไปยังวิชาที่สอบทีหลัง (ถ้าเวลาวิชาแรกไม่พอ)
+	"""
 	# ตรวจสอบ feasibility รายวิชา
 	# (เพิ่ม)เรียงวิชาที่เสี่ยงก่อน: สอบเร็วที่สุดมาก่อน
 	subjects_sorted = sorted(subjects, key=lambda s: s.exam_day)
@@ -52,6 +58,9 @@ def redistribute_subject(start_day: int, daily_hours: int, subjects: List[Subjec
 			s.remaining = available
 
 def largest_remainder_allocation(weights: List[int], capacity: int) -> List[int]:
+	"""
+	กระจาย capacity (จำนวนชั่วโมง) ให้แต่ละวิชาตามสัดส่วน weight โดยใช้ largest remainder method
+	"""
 	total = sum(weights)
 	if total <= 0:
 		return [0] * len(weights)
@@ -67,11 +76,17 @@ def largest_remainder_allocation(weights: List[int], capacity: int) -> List[int]
 	return result
 
 def schedule_backward(start_day: int, daily_hours: int, subjects: List[Subject]) -> Dict[int, List[Tuple[str, int]]]:
+	"""
+	สร้างตารางอ่านหนังสือย้อนหลัง (backward scheduling)
+	- ใส่วันที่ทบทวนก่อน (วันก่อนสอบ)
+	- ไล่จากวันหลัง → วันหน้า กระจายชั่วโมงที่เหลือ
+	คืน dict: day ordinal → list ของ (subject, hours)
+	"""
 	last_day = max(s.exam_day for s in subjects)
 	schedule: Dict[int, List[Tuple[str, int]]] = {day: [] for day in range(start_day, last_day)}
 
 	if not check_feasible(start_day, daily_hours, subjects):
-		log(f"it's feasible return null")
+		log(f"it's feasible return null", debug=True)
 		return None
     
 	redistribute_subject(start_day, daily_hours, subjects)
@@ -121,32 +136,42 @@ def schedule_backward(start_day: int, daily_hours: int, subjects: List[Subject])
 
 class ScheduleService:
 	"""
-	Used to update when 
-	- add plan
-	- delete plan
-	- change weight
-	- change read time
-	""" 
+	Service สำหรับจัดการตารางเรียน/อ่านหนังสือของ user
+	- ใช้เมื่อมีการเพิ่ม/ลบแผน, เปลี่ยน weight, เปลี่ยนเวลาต่อวัน ฯลฯ
+	"""
 	@staticmethod
 	def get_total_weight(user):
+		"""
+		คืนผลรวม weight ของทุกแผนใน user (ใช้สำหรับคำนวณ feedback)
+		"""
 		return sum(p.weight for p in user.reading_plans)
+
+
 	@staticmethod
 	def get_days_till_exam(user, start_days=None, next_day=False):
+		"""
+		คืนจำนวนวันจนถึงวันสอบล่าสุด (ใช้สำหรับคำนวณ feedback)
+		"""
 		latest_exam = max(p.exam_date for p in user.reading_plans)
 		if start_days is None:
 			start_days = get_today()
-        
-		log(f"start_days: {start_days}")
-
+		log(f"start_days: {start_days}", debug=True)
 		start_days = (latest_exam - start_days).days
 		if next_day:
 			start_days -= 1
+
 		return start_days
-	
+
 
 	@staticmethod
 	def update_schedule(user, persist=True):
-		
+		"""
+		อัปเดตตาราง schedule ของ user
+		- ถ้าวันนี้ตอบ feedback ครบแล้ว → สร้างตารางใหม่เริ่มพรุ่งนี้
+		- ถ้ายังไม่เคยมี allocation วันนี้เลย → สร้างตารางเริ่มวันนี้
+		- ถ้ายังตอบ feedback ไม่ครบ → คำนวณตารางใหม่ (แต่ไม่เปลี่ยน horizon)
+		persist=True จะ commit ลง DB ทันที
+		"""
 		today = get_today()
 
 		# ยังมี allocation ของวันนี้ที่ยังไม่ได้ feedback อยู่ไหม?
@@ -184,11 +209,8 @@ class ScheduleService:
 		คำนวณ slot ของแต่ละวิชา
 		- start_days: วันเริ่มอ่าน (ถ้าไม่ใส่จะใช้วันนี้)
 		- next_day: ความคลาดเคลื่อนของวัน (อย่างลงวันนี้อ่านพรุ่งนี้ กันบรีฟแตก)
-		- sort: ใช้เรียงลำดับวิชาอ่านใหม่
-		- sort: ใช้เรียงลำดับวิชาอ่านใหม่
 		- persist: ถ้า True จะอัปเดต weight และ allocated_slot ลง DB
 		"""
-
 		if not user.reading_plans:
 			return {}
 
@@ -197,7 +219,7 @@ class ScheduleService:
 		if start_days is None:
 			start_days = get_today()
         
-		log(f"start_days: {start_days}")
+		log(f"start_days: {start_days}", debug=True)
 
 		start_days = (latest_exam - start_days).days
 		if next_day:
@@ -338,7 +360,7 @@ class ScheduleService:
 		"""
 		plans = ReadingPlans.query.filter_by(user_id=user.id).all()
 		if not plans:
-			log("no plan")
+			log("no plan", debug=True)
 			return None
 
 		# แปลงเป็น Subject (copy ค่า primitive จริง ๆ + plan_id)
