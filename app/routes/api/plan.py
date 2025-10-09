@@ -1,6 +1,9 @@
 from flask import Blueprint, request, jsonify, session
 from app.models import ReadingPlans, User
 from app.services.user_service import UserUpdateService
+from app.services.feedback_service import Feedback
+from app.services.schedule_service import ScheduleService
+from app.utils.utils import get_today
 from app import db
 
 plan_api = Blueprint('plan_api', __name__, url_prefix='/api/plans')
@@ -16,15 +19,42 @@ def get_plans():
     user = get_current_user()
     if not user:
         return jsonify({'error': 'Unauthorized'}), 401
+    
+    # Check and cleanup expired plans
+    today = get_today()
+    if not user.last_cleanup_date or user.last_cleanup_date < today:
+        UserUpdateService.cleanup_expired_plans(user)
+    
+    # Get all required data
     plans = ReadingPlans.query.filter_by(user_id=user.id).all()
-    return jsonify([
-        {
+    pending_count = len(Feedback.get_pending_feedback(user))
+    slots = ScheduleService.calculate_slots(user, persist=False)
+    
+    return jsonify({
+        'username': user.username,
+        'plans': [{
             'id': plan.id,
             'exam_name': plan.exam_name,
             'exam_date': plan.exam_date.isoformat(),
             'level': plan.level
-        } for plan in plans
-    ])
+        } for plan in plans],
+        'pending_count': pending_count,
+        'slots': slots
+    })
+
+@plan_api.route('/daily-hours', methods=['POST'])
+def set_daily_hours():
+    user = get_current_user()
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    data = request.get_json()
+    try:
+        daily_hours = float(data['daily_read_hours'])
+        UserUpdateService.set_daily_read_hours(user, daily_hours)
+        return jsonify({'message': 'Updated daily reading hours'})
+    except (KeyError, ValueError) as e:
+        return jsonify({'error': str(e)}), 400
 
 @plan_api.route('', methods=['POST'])
 def add_plan():
