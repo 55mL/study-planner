@@ -11,6 +11,11 @@ web_main = Blueprint('web_main', __name__, template_folder='template') # ชี�
 @web_main.route('/home')
 @login_required
 def home():
+    print(f"=" * 50)
+    print(f"✅ /home route accessed")
+    print(f"✅ Session data: {dict(session)}")
+    print(f"✅ user_id in session: {session.get('user_id')}")
+    print(f"=" * 50)
     return render_template('schedule.html')
 
 @web_main.route('/feedback')

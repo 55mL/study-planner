@@ -1,4 +1,3 @@
-<!-- Update: 2025-10-10 5.00 PM(Neptune) - Fixed CSS & Dynamic Events -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -11,8 +10,6 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <style>
-      /* ⚠️ ลบ CSS ที่ซ้ำกับ components.css ออก - ให้ใช้จาก components.css แทน */
-      /* เก็บเฉพาะที่จำเป็นจริงๆ */
       .event-dot { 
         width:8px; 
         height:8px; 
@@ -41,10 +38,10 @@
             
             <header class="page-header">
                 <div class="top-header">
-                    <a href="home.html" class="back-item" data-page="home">
-                    <ion-icon name="caret-back-circle"></ion-icon>
+                    <a href="{{ url_for('web_main.feedback') }}" class="back-item" data-page="home">
+                        <ion-icon name="caret-back-circle"></ion-icon>
                     </a>
-                    <h1 class="page-title">ปฎิทิน</h1>
+                    <h1 class="page-title">ปฏิทิน</h1>
                 </div>
             </header>
 
@@ -69,16 +66,13 @@
                     <div class="calendar-weekday">Sat</div>
                 </div>
 
-                <!-- จะถูกเติมด้วย JS -->
                 <div class="calendar-days" id="calendarDays"></div>
             </div>
 
             <section class="events-list">
                 <h2 class="section-title">เร็วๆนี้</h2>
                 
-                <!-- Events จะถูกโหลดจาก API -->
                 <div id="eventsContainer">
-                    <!-- Loading state -->
                     <p class="muted">กำลังโหลดข้อมูล...</p>
                 </div>
             </section>
@@ -86,24 +80,24 @@
         </main>
 
         <nav class="bottom-nav">
-            <a href="schedule.html" class="nav-item" data-page="schedule">
+            <a href="{{ url_for('web_main.home') }}" class="nav-item active" data-page="schedule">
                 <ion-icon name="home"></ion-icon>
                 <span>หน้าหลัก</span>
             </a>
-            <a href="home.html" class="nav-item" data-page="home">
+            <a href="{{ url_for('web_main.feedback') }}" class="nav-item" data-page="home">
                 <ion-icon name="checkmark-circle-outline"></ion-icon>
                 <span>บันทึก</span>
             </a>
-            <a href="add.html" class="nav-item nav-item-center" data-page="add">
+            <a href="{{ url_for('web_main.add') }}" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
                     <ion-icon name="add"></ion-icon>
                 </div>
             </a>
-            <a href="stat.html" class="nav-item" data-page="stat">
+            <a href="{{ url_for('web_main.stat') }}" class="nav-item" data-page="stat">
                 <ion-icon name="stats-chart"></ion-icon>
                 <span>สถิติ</span>
             </a>
-            <a href="profile.html" class="nav-item" data-page="profile">
+            <a href="{{ url_for('web_main.profile') }}" class="nav-item" data-page="profile">
                 <ion-icon name="person"></ion-icon>
                 <span>ตั้งค่า</span>
             </a>
@@ -113,14 +107,14 @@
 
     <script>
     // ====== config ======
-    const WEEK_START = 0; // 0 = Sunday
+    const WEEK_START = 0;
 
     // ====== state ======
     const todayReal = new Date();
     let viewYear = todayReal.getFullYear();
     let viewMonth = todayReal.getMonth();
-    let eventsData = {}; // เก็บข้อมูล events จาก API
-    let isDataLoaded = false; // ✅ เพิ่มตัวแปรเช็คว่าโหลดเสร็จหรือยัง
+    let eventsData = {};
+    let isDataLoaded = false;
 
     // ====== helper ======
     function monthLabelThai(year, monthIndex) {
@@ -132,55 +126,74 @@
     async function loadEventsFromAPI() {
         const container = document.getElementById('eventsContainer');
         
+        console.log('🚀 Starting to load events...');
+        
         try {
-            // แสดง loading state
             container.innerHTML = '<p class="muted">กำลังโหลดข้อมูล...</p>';
             
+            console.log('📡 Fetching /api/schedule...');
             const response = await fetch('/api/schedule');
-            if (!response.ok) {
-                throw new Error('Failed to fetch schedule');
-            }
-            const data = await response.json();
             
-            // แปลง events array เป็น map: date -> event data
+            console.log('📥 Response status:', response.status);
+            console.log('📥 Response ok:', response.ok);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ Server error:', errorText);
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
+            
+            const data = await response.json();
+            console.log('📦 Raw data received:', data);
+            console.log('📦 Events count:', data.events ? data.events.length : 0);
+            
+            // แปลง events array เป็น map
             eventsData = {};
-            data.events.forEach(event => {
-                const dateKey = event.day; // ISO format: YYYY-MM-DD
-                if (!eventsData[dateKey]) {
-                    eventsData[dateKey] = [];
-                }
-                eventsData[dateKey].push(event);
-            });
+            if (data.events && Array.isArray(data.events)) {
+                data.events.forEach(event => {
+                    const dateKey = event.day;
+                    if (!eventsData[dateKey]) {
+                        eventsData[dateKey] = [];
+                    }
+                    eventsData[dateKey].push(event);
+                });
+            }
 
-            // ✅ เซ็ตว่าโหลดเสร็จแล้ว
+            console.log('🗓️ Processed eventsData:', eventsData);
+            console.log('🗓️ Total dates with events:', Object.keys(eventsData).length);
+            
             isDataLoaded = true;
-
-            // Render calendar และ events list
+            console.log('✅ isDataLoaded set to true');
+            
             renderCalendar(viewYear, viewMonth);
             renderEventsList();
             
-            console.log('✅ Data loaded successfully:', eventsData);
+            console.log('✅ Rendering complete');
             
         } catch (error) {
-            console.error('Error loading events:', error);
+            console.error('❌ Error loading events:', error);
+            console.error('❌ Error message:', error.message);
+            console.error('❌ Error stack:', error.stack);
             container.innerHTML = 
-                '<p class="muted" style="color: #e74c3c;">❌ ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง</p>';
+                `<p class="muted" style="color: #e74c3c;">❌ ไม่สามารถโหลดข้อมูลได้: ${error.message}</p>`;
         }
     }
 
     // ====== Render events list ======
     function renderEventsList(filterDate = null) {
+        console.log('📝 renderEventsList called, filterDate:', filterDate);
+        console.log('📝 isDataLoaded:', isDataLoaded);
+        
         const container = document.getElementById('eventsContainer');
         
-        // ✅ เช็คว่าโหลดข้อมูลเสร็จหรือยัง
         if (!isDataLoaded) {
+            console.log('⏳ Data not loaded yet');
             container.innerHTML = '<p class="muted">กำลังโหลดข้อมูล...</p>';
             return;
         }
         
         container.innerHTML = '';
 
-        // หัวข้อ
         const heading = document.createElement('div');
         heading.className = 'day-heading muted';
         heading.textContent = filterDate 
@@ -188,27 +201,25 @@
             : 'แสดงเหตุการณ์ทั้งหมด';
         container.appendChild(heading);
 
-        // กรอง events
         let displayEvents = [];
         if (filterDate) {
             displayEvents = eventsData[filterDate] || [];
         } else {
-            // แสดงทั้งหมด เรียงตามวันที่
             Object.keys(eventsData).sort().forEach(date => {
                 displayEvents.push(...eventsData[date]);
             });
         }
+
+        console.log('📝 Display events count:', displayEvents.length);
 
         if (displayEvents.length === 0) {
             container.innerHTML += '<p class="muted">ไม่มีเหตุการณ์</p>';
             return;
         }
 
-        // สร้าง event cards
         displayEvents.forEach(event => {
             const card = document.createElement('div');
             
-            // กำหนด difficulty class
             let difficultyClass = 'difficulty-medium';
             const slots = event.slots || 0;
             if (slots <= 3) difficultyClass = 'difficulty-easy';
@@ -216,7 +227,6 @@
             
             card.className = `event-card ${difficultyClass}`;
             
-            // สร้าง HTML ภายใน
             const dateObj = new Date(event.day);
             const dateStr = dateObj.toLocaleDateString('th-TH', { 
                 month: 'short', 
@@ -245,9 +255,12 @@
 
     // ====== Render Calendar ======
     function renderCalendar(year, month) {
-        // ✅ เช็คว่าโหลดข้อมูลเสร็จหรือยัง
+        console.log('📅 renderCalendar called:', year, month);
+        console.log('📅 isDataLoaded:', isDataLoaded);
+        
         if (!isDataLoaded) {
-            return; // รอโหลดข้อมูลก่อน
+            console.log('⏳ Data not loaded, skipping calendar render');
+            return;
         }
         
         const currentMonthEl = document.getElementById('currentMonth');
@@ -268,16 +281,13 @@
             cell.className = 'calendar-day';
             const idx = i - firstWeekday + 1;
             let cellDate = null;
-            let isOtherMonth = false;
             let dayNumber = 1;
 
             if (idx <= 0) {
-                isOtherMonth = true;
                 dayNumber = prevMonthDays + idx;
                 cellDate = new Date(year, month - 1, dayNumber);
                 cell.classList.add('other-month');
             } else if (idx > daysInMonth) {
-                isOtherMonth = true;
                 dayNumber = idx - daysInMonth;
                 cellDate = new Date(year, month + 1, dayNumber);
                 cell.classList.add('other-month');
@@ -299,7 +309,6 @@
             const iso = cellDate.toISOString().slice(0,10);
             cell.dataset.iso = iso;
 
-            // เช็คว่ามี event วันนี้ไหม
             if (eventsData[iso] && eventsData[iso].length > 0) {
                 cell.classList.add('has-event');
                 const dot = document.createElement('span');
@@ -314,26 +323,14 @@
 
             container.appendChild(cell);
         }
+        
+        console.log('📅 Calendar rendered successfully');
     }
 
-    // ====== Navigation ======
-    document.getElementById('prevMonth').addEventListener('click', () => {
-        viewMonth--;
-        if (viewMonth < 0) { viewMonth = 11; viewYear--; }
-        renderCalendar(viewYear, viewMonth);
-        renderEventsList(null);
-    });
-
-    document.getElementById('nextMonth').addEventListener('click', () => {
-        viewMonth++;
-        if (viewMonth > 11) { viewMonth = 0; viewYear++; }
-        renderCalendar(viewYear, viewMonth);
-        renderEventsList(null);
-    });
-
     // ====== Initialize ======
-    // ✅ รอให้ DOM โหลดเสร็จก่อน
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('🎬 DOM Content Loaded');
+        
         // Theme & Active Nav
         function setDayTheme() {
             const today = new Date();
@@ -350,9 +347,33 @@
             }
         });
 
+        // ✅ Navigation - ย้ายเข้ามาใน DOMContentLoaded
+        const prevBtn = document.getElementById('prevMonth');
+        const nextBtn = document.getElementById('nextMonth');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                console.log('⬅️ Previous month clicked');
+                viewMonth--;
+                if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+                renderCalendar(viewYear, viewMonth);
+                renderEventsList(null);
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                console.log('➡️ Next month clicked');
+                viewMonth++;
+                if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+                renderCalendar(viewYear, viewMonth);
+                renderEventsList(null);
+            });
+        }
+
         // ✅ โหลดข้อมูลจาก API
         loadEventsFromAPI();
     });
-</script>
+    </script>
 </body>
 </html>
