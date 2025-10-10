@@ -20,9 +20,9 @@
             
             <header class="profile-header">
                 <div class="profile-avatar-large">
-                    <!-- <button class="avatar-upload-btn">
+                    <button class="avatar-upload-btn">
                         <ion-icon name="camera"></ion-icon>
-                    </button> -->
+                    </button>
                 </div>
                 <h2 class="profile-name">ชื่อผู้ใช้</h2>
                 <p class="profile-email">อีแมว@kkumail.com</p>
@@ -45,22 +45,10 @@
                         >
                     </div>
 
-                    <div class="form-group">
-                        <label for="email" class="form-label">อีเมล</label>
-                        <input 
-                            type="email" 
-                            id="email" 
-                            name="email" 
-                            class="form-input" 
-                            value="ทดสอบ@kkumail.com"
-                            placeholder="Enter your email"
-                        >
-                    </div>
-
-                    <!-- <button type="submit" class="btn-primary">
+                    <button type="submit" class="btn-primary">
                         <ion-icon name="save" style="vertical-align: middle; margin-right: 8px;"></ion-icon>
-                        Save Changes
-                    </button> -->
+                        บันทึกการเปลี่ยนแปลง
+                    </button>
                 </form>
             </section>
 
@@ -89,34 +77,14 @@
                             <ion-icon name="alarm"></ion-icon>
                         </div>
                         <div class="setting-text">
-                            <h4>Study Reminders</h4>
-                            <p>Set daily study reminders</p>
+                            <h4>เวลาในการอ่านแต่ละวัน</h4>
+                            <p>ตั้งค่าเวลาสำหรับอ่านในแต่ละวัน</p>
                         </div>
                     </div>
                     <div class="setting-arrow">
                         <ion-icon name="chevron-forward"></ion-icon>
                     </div>
                 </div>
-
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <div class="setting-icon">
-                            <ion-icon name="trophy"></ion-icon>
-                        </div>
-                        <div class="setting-text">
-                            <h4>เป้าหมาย</h4>
-                            <p>กำหนดเป้าหมายของคุณ</p>
-                        </div>
-                    </div>
-                    <div class="setting-arrow">
-                        <ion-icon name="chevron-forward"></ion-icon>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Account Section -->
-            <section class="settings-section">
-                <h2 class="section-title">Account</h2>
 
                 <div class="setting-item">
                     <div class="setting-info">
@@ -124,38 +92,8 @@
                             <ion-icon name="lock-closed"></ion-icon>
                         </div>
                         <div class="setting-text">
-                            <h4>Change Password</h4>
-                            <p>Update your password</p>
-                        </div>
-                    </div>
-                    <div class="setting-arrow">
-                        <ion-icon name="chevron-forward"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <div class="setting-icon">
-                            <ion-icon name="shield-checkmark"></ion-icon>
-                        </div>
-                        <div class="setting-text">
-                            <h4>Privacy & Security</h4>
-                            <p>Manage your privacy settings</p>
-                        </div>
-                    </div>
-                    <div class="setting-arrow">
-                        <ion-icon name="chevron-forward"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <div class="setting-icon">
-                            <ion-icon name="document-text"></ion-icon>
-                        </div>
-                        <div class="setting-text">
-                            <h4>Export Data</h4>
-                            <p>Download your study data</p>
+                            <h4>เปลี่ยนรหัสผ่าน</h4>
+                            <p>แก้ไขรหัสผ่านกันจ้า</p>
                         </div>
                     </div>
                     <div class="setting-arrow">
@@ -164,24 +102,25 @@
                 </div>
             </section>
 
+
             <!-- Logout Button -->
             <section class="settings-section">
                 <button class="btn-primary" style="background: var(--difficulty-hard);" id="logoutBtn">
                     <ion-icon name="log-out" style="vertical-align: middle; margin-right: 8px;"></ion-icon>
-                    Log Out
+                    ออกจากระบบ
                 </button>
             </section>
 
         </main>
 
         <nav class="bottom-nav">
-            <a href="home.html" class="nav-item" data-page="home">
-                <ion-icon name="home"></ion-icon>
-                <span>Home</span>
-            </a>
             <a href="schedule.html" class="nav-item" data-page="schedule">
-                <ion-icon name="calendar"></ion-icon>
-                <span>Schedule</span>
+                <ion-icon name="home"></ion-icon>
+                <span>หน้าหลัก</span>
+            </a>
+            <a href="home.html" class="nav-item" data-page="home">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <span>บันทึก</span>
             </a>
             <a href="add.html" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
@@ -190,11 +129,11 @@
             </a>
             <a href="stat.html" class="nav-item" data-page="stat">
                 <ion-icon name="stats-chart"></ion-icon>
-                <span>Stats</span>
+                <span>สถิติ</span>
             </a>
             <a href="profile.html" class="nav-item" data-page="profile">
                 <ion-icon name="person"></ion-icon>
-                <span>Profile</span>
+                <span>ตั้งค่า</span>
             </a>
         </nav>
 
