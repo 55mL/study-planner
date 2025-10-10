@@ -20,17 +20,19 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
-<body data-day="monday" data-page="add" class="page-add">
+<body data-page="add" class="page-add">
     
     <div class="app-container">
         
         <main class="main-content">
             
-            <!-- Title ด้านบน บอกชื่อหน้า (จะปรับทีหลัง) -->
             <header class="page-header">
-                <div class="greeting">
-                    <h1 class="page-title">Add New Exam</h1>
-                    <p class="welcome-text">Schedule your upcoming exam</p>
+                <div class="top-header">
+                    <a href="home.html" class="back-item" data-page="home">
+                    <ion-icon name="caret-back-circle"></ion-icon>
+                    </a>
+                    <h1 class="page-title">เพิ่มวิชา</h1>
+                    <!-- <p class="welcome-text">ห้ะ</p> -->
                 </div>
             </header>
 
@@ -38,20 +40,20 @@
                 
                 <!-- กรอกชื่อวิชา -->
                 <div class="form-group">
-                    <label for="subjectName" class="form-label">Subject Name</label>
+                    <label for="subjectName" class="form-label">ชื่อวิชา</label>
                     <input 
                         type="text" 
                         id="subjectName" 
                         name="subjectName" 
                         class="form-input" 
-                        placeholder="e.g., Calculus III"
+                        placeholder="เช่น Calculus III"
                         required
                     >
                 </div>
 
                 <!-- เลือกวันสอบ -->
                 <div class="form-group">
-                    <label for="examDate" class="form-label">Exam Date</label>
+                    <label for="examDate" class="form-label">วันสอบ</label>
                     <input 
                         type="date" 
                         id="examDate" 
@@ -63,7 +65,7 @@
 
                 <!-- เลือกระดับความยากง่ายของวิชา -->
                 <div class="form-group">
-                    <label for="difficulty" class="form-label">Difficulty Level</label>
+                    <label for="difficulty" class="form-label">ระดับความถนัด</label>
                     <div class="difficulty-slider">
                         <input 
                             type="range" 
@@ -75,18 +77,24 @@
                             value="5"
                         >
                         <div class="slider-labels">
-                            <span class="slider-label-easy">Easy (1-4)</span>
-                            <span class="slider-label-medium">Medium (5-7)</span>
-                            <span class="slider-label-hard">Hard (8-10)</span>
+                            <span class="slider-label-easy">ง่าย (1-4)</span>
+                            <span class="slider-label-medium">ปานกลาง (5-7)</span>
+                            <span class="slider-label-hard">ยาก (8-10)</span>
                         </div>
                         <div class="difficulty-value" id="difficultyValue">5</div>
                     </div>
+                    
+                    <!-- หมายเหตุ -->
+                    <p class="form-note">
+                        <ion-icon name="information-circle-outline"></ion-icon>
+                        หมายเหตุ: หากต้องการตั้งเวลาในการอ่านแต่ละวัน ไปที่การตั้งค่า > ตั้งค่าเวลาในการอ่านแต่ละวัน
+                    </p>
                 </div>
 
                 <!-- ปุ่มเพิ่มวิชา -->
                 <button type="submit" class="btn-primary">
                     <ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>
-                    Add Subject
+                    เพิ่ม
                 </button>
 
             </form>
@@ -95,13 +103,13 @@
 
         <!--nav bar-->
         <nav class="bottom-nav">
-            <a href="home.html" class="nav-item" data-page="home">
+            <a href="schedule.html" class="nav-item" data-page="schedule">
                 <ion-icon name="home"></ion-icon>
                 <span>หน้าหลัก</span>
             </a>
-            <a href="schedule.html" class="nav-item" data-page="schedule">
-                <ion-icon name="calendar"></ion-icon>
-                <span>ปฏิทิน</span>
+            <a href="home.html" class="nav-item" data-page="home">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <span>บันทึก</span>
             </a>
             <a href="add.html" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
@@ -121,12 +129,27 @@
     </div>
 
     <script>
-        const currentPage = document.body.dataset.page;
-        document.querySelectorAll('.nav-item').forEach(item => {
-            if (item.dataset.page === currentPage) {
-                item.classList.add('active');
-            }
-        });
-    </script>
+    function setDayTheme() {
+        const today = new Date();
+        const dayIndex = today.getDay();
+        const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        document.body.setAttribute('data-day', dayNames[dayIndex]);
+    }
+    setDayTheme();
+
+    const currentPage = document.body.dataset.page;
+    document.querySelectorAll('.nav-item').forEach(item => {
+        if (item.dataset.page === currentPage) {
+            item.classList.add('active');
+        }
+    });
+
+    const difficultySlider = document.getElementById('difficulty');
+    const difficultyValue = document.getElementById('difficultyValue');
+    
+    difficultySlider.addEventListener('input', function() {
+        difficultyValue.textContent = this.value;
+    });
+</script>
 </body>
 </html>

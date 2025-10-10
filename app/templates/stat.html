@@ -12,7 +12,7 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
-<body data-day="monday" data-page="stat">
+<body data-page="stat">
     
     <div class="app-container">
         
@@ -63,7 +63,7 @@
                 <canvas id="statsChart"></canvas>
             </div>
 
-            <!-- Weekly Progress -->
+            <!-- Weekly Progress
             <section class="progress-section" style="margin-top: var(--spacing-lg);">
                 <h2 class="section-title">Weekly Progress</h2>
                 <p class="section-subtitle">Check-in history for this week</p>
@@ -123,18 +123,18 @@
                         <div class="summary-label">Daily Average</div>
                     </div>
                 </div>
-            </section>
+            </section> -->
 
         </main>
 
         <nav class="bottom-nav">
-            <a href="home.html" class="nav-item" data-page="home">
+            <a href="schedule.html" class="nav-item" data-page="schedule">
                 <ion-icon name="home"></ion-icon>
                 <span>หน้าหลัก</span>
             </a>
-            <a href="schedule.html" class="nav-item" data-page="schedule">
-                <ion-icon name="calendar"></ion-icon>
-                <span>ปฏิทิน</span>
+            <a href="home.html" class="nav-item" data-page="home">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <span>บันทึก</span>
             </a>
             <a href="add.html" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
@@ -154,6 +154,14 @@
     </div>
 
     <script>
+        function setDayTheme() {
+            const today = new Date();
+            const dayIndex = today.getDay();
+            const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            document.body.setAttribute('data-day', dayNames[dayIndex]);
+        }
+        setDayTheme();
+
         const currentPage = document.body.dataset.page;
         document.querySelectorAll('.nav-item').forEach(item => {
             if (item.dataset.page === currentPage) {
