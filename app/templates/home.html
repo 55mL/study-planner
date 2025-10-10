@@ -5,7 +5,7 @@
  -            2. Scroll Bar เลื่อนซ้ายขวาเลือกวันได้
  -            3. Log บันทึกการติดตามความคืบหน้า
  -            4. Upcoming รายการสิ่งที่กำลังจะมาถึง
- - Update   : 2025-10-06 7:40 PM (Neptune)
+ - Update   : 2025-10-10 5.00 PM(Neptune)
 -->
 
 <!DOCTYPE html>
@@ -19,19 +19,15 @@
     <link rel="stylesheet" href="/app/static/css/responsive.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+        (function() {
+            const today = new Date();
+            const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            document.documentElement.setAttribute('data-day', dayNames[today.getDay()]);
+        })();
+    </script>
 </head>
-<body data-day="monday" data-page="home">
-    
-    <svg style="position: absolute; width: 0; height: 0;">
-        <defs>
-            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#FFB84D;stop-opacity:1" />
-                <stop offset="50%" style="stop-color:#85C1E2;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#C39BD3;stop-opacity:1" />
-            </linearGradient>
-        </defs>
-    </svg>
-
+<body data-page="home">
     <div class="app-container">
         
         <main class="main-content">
@@ -39,45 +35,27 @@
             <header class="page-header">
                 <div class="user-avatar"></div>
                 <div class="greeting">
-                    <p class="welcome-text">Hello!</p>
-                    <h1 class="page-title">6 October 2025</h1>
+                    <p class="welcome-text">สวัสดีจ้า</p>
+                    <h1 class="page-title"></h1>
                 </div>
             </header>
-
-            <section class="stats-overview">
-                <div class="stat-card">
-                    <h3>กำลังอ่าน</h3>
-                    <div class="progress-circle" data-progress="3" data-total="10">
-                        <svg viewBox="0 0 120 120">
-                            <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
-                            <circle class="progress-bar" cx="60" cy="60" r="54"></circle>
-                        </svg>
-                        <span class="progress-value">3</span>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <h3>อ่านจบแล้ว</h3>
-                    <div class="progress-circle" data-progress="0" data-total="10">
-                        <svg viewBox="0 0 120 120">
-                            <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
-                            <circle class="progress-bar" cx="60" cy="60" r="54"></circle>
-                        </svg>
-                        <span class="progress-value">0</span>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <h3>ความต่อเนื่อง</h3>
-                    <div class="progress-circle" data-progress="4" data-total="7">
-                        <svg viewBox="0 0 120 120">
-                            <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
-                            <circle class="progress-bar" cx="60" cy="60" r="54"></circle>
-                        </svg>
-                        <span class="progress-value">4</span>
-                    </div>
-                </div>
-            </section>
-
         </main>
+
+        <div class="calendar-header">
+            <div class="calendar-header-text">
+                <h2 class="section-title">ตารางอ่านรายวัน</h2>
+                <p class="calendar-hint">เลื่อนซ้ายขวาเพื่อดูวันอื่น</p>
+            </div>
+            <button class="today-btn" id="todayBtn">
+                <ion-icon name="today-outline"></ion-icon>
+                <span>วันนี้</span>
+            </button>
+        </div>
+
+        <div class="week-calendar-wrapper">
+            <section class="week-calendar" id="weekCalendar">
+            </section>
+        </div>
 
         <div class="week-calendar-wrapper">
             <section class="week-calendar" id="weekCalendar">
@@ -88,7 +66,7 @@
 
             <section class="progress-section">
                 <h2 class="section-title">บันทึกการอ่าน</h2>
-                <p class="section-subtitle">(5/8) Completed</p>
+                <p class="section-subtitle">(5/8) เสร็จสิ้น</p>
 
                 <div class="subject-card">
                     <h3 class="subject-name">Calculus III</h3>
@@ -107,21 +85,21 @@
                 </div>
             </section>
 
-            <section class="upcoming-section">
+            <!-- <section class="upcoming-section">
                 <h2 class="section-title">Upcoming</h2>
                 <p class="section-subtitle">(5/8) Completed</p>
-            </section>
+            </section> -->
 
         </main>
 
         <nav class="bottom-nav">
-            <a href="home.html" class="nav-item" data-page="home">
+            <a href="schedule.html" class="nav-item" data-page="schedule">
                 <ion-icon name="home"></ion-icon>
                 <span>หน้าหลัก</span>
             </a>
-            <a href="schedule.html" class="nav-item" data-page="schedule">
-                <ion-icon name="calendar"></ion-icon>
-                <span>ปฏิทิน</span>
+            <a href="home.html" class="nav-item" data-page="home">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <span>บันทึก</span>
             </a>
             <a href="add.html" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
@@ -138,6 +116,7 @@
             </a>
         </nav>
 
+
     </div>
 
     <script>
@@ -148,6 +127,21 @@
         const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
         const dayNamesShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         
+        const monthNamesThai = [
+            'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+            'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+        ];
+
+        function updateHeaderDate() {
+            const day = today.getDate();
+            const month = monthNamesThai[today.getMonth()];
+            const year = today.getFullYear() + 543; // แปลงเป็น พ.ศ.
+            
+            document.querySelector('.page-title').textContent = `${day} ${month} ${year}`;
+        }
+
+        updateHeaderDate();
+
         function generateDays() {
             const days = [];
             for (let i = -30; i <= 29; i++) {
@@ -255,6 +249,19 @@
             const progressBar = circle.querySelector('.progress-bar');
             progressBar.style.strokeDasharray = circumference;
             progressBar.style.strokeDashoffset = offset;
+        });
+
+        document.getElementById('todayBtn').addEventListener('click', function() {
+            const todayPill = weekCalendar.querySelector('.day-pill[data-index="30"]');
+            if (todayPill) {
+                document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
+                todayPill.classList.add('active');
+                
+                const dayKey = todayPill.dataset.day;
+                document.body.dataset.day = dayKey;
+                
+                todayPill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
         });
     </script>
 </body>

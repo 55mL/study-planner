@@ -1,7 +1,7 @@
 /*
  * File     : main.css
  * Descript : กำหนดตัวแปรกลาง ตั้งค่าฟอนต์หลัก 
- * Update   : 2025-10-06 12.50 AM (Neptune)
+ * Update   : 2025-10-10 5.00 PM(Neptune)
  *
  */
 
@@ -55,12 +55,7 @@
     --sunday-secondary: #F1A196;
     --sunday-accent: #E74C3C;
     --sunday-gradient: linear-gradient(135deg, #FFB84D 0%, #85C1E2 50%, #C39BD3 100%);
-    
-    /* สีค่าเริ่มต้น */
-    --bg-primary: var(--monday-primary);
-    --bg-secondary: var(--monday-secondary);
-    --color-accent: var(--monday-accent);
-    --gradient-main: var(--monday-gradient);
+
     
     /* สีเบส */
     --color-dark: #2C3E50;
@@ -104,6 +99,8 @@
  *
  * ---------------------------
  */
+
+html[data-day="monday"],
 body[data-day="monday"] {
     --bg-primary: var(--monday-primary);
     --bg-secondary: var(--monday-secondary);
@@ -111,6 +108,7 @@ body[data-day="monday"] {
     --gradient-main: var(--monday-gradient);
 }
 
+html[data-day="tuesday"],
 body[data-day="tuesday"] {
     --bg-primary: var(--tuesday-primary);
     --bg-secondary: var(--tuesday-secondary);
@@ -118,6 +116,7 @@ body[data-day="tuesday"] {
     --gradient-main: var(--tuesday-gradient);
 }
 
+html[data-day="wednesday"],
 body[data-day="wednesday"] {
     --bg-primary: var(--wednesday-primary);
     --bg-secondary: var(--wednesday-secondary);
@@ -125,6 +124,7 @@ body[data-day="wednesday"] {
     --gradient-main: var(--wednesday-gradient);
 }
 
+html[data-day="thursday"],
 body[data-day="thursday"] {
     --bg-primary: var(--thursday-primary);
     --bg-secondary: var(--thursday-secondary);
@@ -132,6 +132,7 @@ body[data-day="thursday"] {
     --gradient-main: var(--thursday-gradient);
 }
 
+html[data-day="friday"],
 body[data-day="friday"] {
     --bg-primary: var(--friday-primary);
     --bg-secondary: var(--friday-secondary);
@@ -139,6 +140,7 @@ body[data-day="friday"] {
     --gradient-main: var(--friday-gradient);
 }
 
+html[data-day="saturday"],
 body[data-day="saturday"] {
     --bg-primary: var(--saturday-primary);
     --bg-secondary: var(--saturday-secondary);
@@ -146,6 +148,7 @@ body[data-day="saturday"] {
     --gradient-main: var(--saturday-gradient);
 }
 
+html[data-day="sunday"],
 body[data-day="sunday"] {
     --bg-primary: var(--sunday-primary);
     --bg-secondary: var(--sunday-secondary);

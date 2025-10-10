@@ -1,3 +1,4 @@
+<!-- Update   : 2025-10-10 5.00 PM(Neptune) -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -10,7 +11,7 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
-<body data-day="monday" data-page="schedule">
+<body data-page="schedule">
     
     <div class="app-container">
         
@@ -165,13 +166,13 @@
         </main>
 
         <nav class="bottom-nav">
-            <a href="home.html" class="nav-item" data-page="home">
+            <a href="schedule.html" class="nav-item" data-page="schedule">
                 <ion-icon name="home"></ion-icon>
                 <span>หน้าหลัก</span>
             </a>
-            <a href="schedule.html" class="nav-item" data-page="schedule">
-                <ion-icon name="calendar"></ion-icon>
-                <span>ปฏิทิน</span>
+            <a href="home.html" class="nav-item" data-page="home">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <span>บันทึก</span>
             </a>
             <a href="add.html" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
@@ -188,9 +189,18 @@
             </a>
         </nav>
 
+
     </div>
 
     <script>
+        function setDayTheme() {
+            const today = new Date();
+            const dayIndex = today.getDay();
+            const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            document.body.setAttribute('data-day', dayNames[dayIndex]);
+        }
+        setDayTheme();
+
         const currentPage = document.body.dataset.page;
         document.querySelectorAll('.nav-item').forEach(item => {
             if (item.dataset.page === currentPage) {
