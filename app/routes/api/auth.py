@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, session
+from sqlalchemy import or_
 from app.models import User
 from app.services.user_service import AuthService
 from app import db
@@ -22,7 +23,7 @@ def register():
         return jsonify({'error': 'Missing fields'}), 400
     
     # ตรวจสอบว่ามี username หรือ email ซ้ำในระบบหรือไม่
-    if User.query.filter((User.username == username) | (User.email == email)).first():
+    if User.query.filter(User.email == email).first():
         return jsonify({'error': 'Username or email already exists'}), 400
     
     user = User(username=username, email=email)
@@ -42,9 +43,19 @@ def login():
     - คืน message success หรือ error
     """
     data = request.get_json()
-    username = data.get('username')
+    username_or_email = data.get('username')
     password = data.get('password')
-    user = User.query.filter_by(username=username).first()
+    
+    # หา user โดย username หรือ email
+    users = User.query.filter(
+        or_(User.username == username_or_email,
+            User.email == username_or_email)
+    ).all()
+    
+    if len(users) > 1:
+        return jsonify({'error': 'Duplicate username found, please use email to login'}), 400
+
+    user = users[0] if users else None
 
     # ตรวจสอบรหัสผ่าน ถ้าถูกต้องจะเก็บ user_id ใน session
     if user and AuthService.check_password(user, password):

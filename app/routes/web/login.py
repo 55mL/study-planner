@@ -1,6 +1,7 @@
 import os
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, current_user
+from sqlalchemy import or_
 from app.models import User
 from app.services.user_service import AuthService
 from app import db
@@ -32,9 +33,21 @@ def login():
     - ถ้า method เป็น GET จะแสดงหน้า login
     """
     if request.method == 'POST':
-        username = request.form['username_login']
+        username_or_email = request.form['username_login']
         password = request.form['password_login']
-        user = User.query.filter_by(username=username).first()
+
+        # หา user โดย username หรือ email
+        users = User.query.filter(
+            or_(User.username == username_or_email,
+                User.email == username_or_email)
+        ).all()
+        
+        if len(users) > 1:
+            flash('Duplicate username found, please use email to login')
+            return render_template('login.html')
+
+        user = users[0] if users else None
+
         # ตรวจสอบว่ามี user และรหัสผ่านถูกต้องหรือไม่
         if user and AuthService.check_password(user, password):
             login_user(user)
