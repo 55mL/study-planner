@@ -476,6 +476,9 @@ h1, h2, h3, h4, h5, h6 {
  * หน้าที่ 2 : Calendar Page
  * ----------------------------------
  */
+    body[data-page="schedule"] .top-header .page-title {
+  transform: translateX(-20px);
+}
 
  .calendar-container {
     background: var(--color-white);
