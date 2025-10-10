@@ -22,9 +22,9 @@ def register():
     if not username or not email or not password:
         return jsonify({'error': 'Missing fields'}), 400
     
-    # ตรวจสอบว่ามี username หรือ email ซ้ำในระบบหรือไม่
+    # ตรวจสอบว่ามี email ซ้ำในระบบหรือไม่
     if User.query.filter(User.email == email).first():
-        return jsonify({'error': 'Username or email already exists'}), 400
+        return jsonify({'error': 'email already exists'}), 400
     
     user = User(username=username, email=email)
     AuthService.set_password(user, password, persist=False)
@@ -45,7 +45,7 @@ def login():
     data = request.get_json()
     username_or_email = data.get('username')
     password = data.get('password')
-    
+
     # หา user โดย username หรือ email
     users = User.query.filter(
         or_(User.username == username_or_email,
