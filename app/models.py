@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
     # basic attbruite
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(200), unique=True, nullable=False)
-    username = db.Column(db.String(100), unique=True, nullable=False)
+    username = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(200), nullable=False)
     # record attbruite
     daily_read_hours = db.Column(db.Integer, default=3)
