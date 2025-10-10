@@ -62,4 +62,6 @@ if __name__ == "__main__":
         with app.app_context():
             setup_database()
         log("✅ Starting Flask app with debug logger", name="system")
-        app.run(debug=True)
+        port = int(os.environ.get("PORT", 5000))  # Render/Heroku จะส่งค่า PORT มา
+        app.run(host="0.0.0.0", port=port, debug=True)
+

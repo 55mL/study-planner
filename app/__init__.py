@@ -47,7 +47,7 @@ def create_app() :
     mail.init_app(app)
 
     # db
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data.db"
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///data.db")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
         'pool_pre_ping': True,
