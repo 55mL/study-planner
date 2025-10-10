@@ -14,7 +14,11 @@ def check_session():
     ตรวจสอบ session ของผู้ใช้ ถ้า login แล้วให้ไปหน้า dashboard ถ้ายังไม่ login ให้ไปหน้า login
     """
     if current_user.is_authenticated:
-        return redirect(url_for("web_dashboard.dashboard"))
+        if os.environ.get("ENABLE_DEMO", "0") == "1":
+            return redirect(url_for("web_dashboard.dashboard"))
+        
+        return redirect(url_for("web_main.home")) # เปลี่ยนไปหน้าที่ใช้ได้
+    
     return redirect(url_for("web_login.login"))
 
 
@@ -34,7 +38,10 @@ def login():
         # ตรวจสอบว่ามี user และรหัสผ่านถูกต้องหรือไม่
         if user and AuthService.check_password(user, password):
             login_user(user)
-            return redirect(url_for('web_dashboard.dashboard'))
+            if os.environ.get("ENABLE_DEMO", "0") == "1":
+                return redirect(url_for("web_dashboard.dashboard"))
+            
+            return redirect(url_for("web_main.home")) # เปลี่ยนไปหน้าที่ใช้ได้
         else:
             flash('incorrect username or password')
 

@@ -87,5 +87,9 @@ def create_app() :
     app.register_blueprint(web_feedback)
     app.register_blueprint(web_schedule)
 
+    # Register main blueprints
+    from .routes.web import web_main
+    app.register_blueprint(web_main)
+
     return app
 
