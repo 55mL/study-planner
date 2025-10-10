@@ -194,10 +194,30 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .stats-overview {
+    margin-bottom: var(--spacing-xs);
+}
+
+.stats-header {
+    text-align: left;
+    margin-bottom: var(--spacing-md);
+}
+
+.stats-header .section-title {
+    margin-bottom: 4px;
+    font-size: 1.25rem;
+    color: var(--color-dark);
+}
+
+.stats-header .section-subtitle {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-gray);
+}
+
+.stat-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-lg);
 }
 
 .stat-card {
@@ -249,10 +269,65 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--color-dark);
 }
 
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.calendar-header .section-title {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.calendar-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.calendar-hint {
+    font-size: 0.8rem;
+    color: var(--color-gray);
+    margin: 0;
+    opacity: 0.8;
+}
+
+.today-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--color-cream);
+    color: var(--color-dark);
+    border: none;
+    border-radius: var(--radius-button);
+    font-family: 'SF Pro Bold';
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.today-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.today-btn:active {
+    transform: translateY(0);
+}
+
+.today-btn ion-icon {
+    font-size: 1.1rem;
+}
+
 .week-calendar-wrapper {
     margin-left: calc(-1 * var(--spacing-md));
     margin-right: calc(-1 * var(--spacing-md));
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-xs);
     position: relative;
 }
 

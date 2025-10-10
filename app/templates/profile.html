@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Study Planner</title>
+    <link rel="stylesheet" href="/app/static/css/main.css">
+    <link rel="stylesheet" href="/app/static/css/components.css">
+    <link rel="stylesheet" href="/app/static/css/responsive.css">
+</body>
+</html>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body data-page="profile">
+    
+    <div class="app-container">
+        
+        <main class="main-content">
+            
+            <header class="profile-header">
+                <div class="profile-avatar-large">
+                    <!-- <button class="avatar-upload-btn">
+                        <ion-icon name="camera"></ion-icon>
+                    </button> -->
+                </div>
+                <h2 class="profile-name">ชื่อผู้ใช้</h2>
+                <p class="profile-email">อีแมว@kkumail.com</p>
+            </header>
+
+            <!-- Edit Profile Form -->
+            <section class="settings-section">
+                <h2 class="section-title">แก้ไขโปรไฟล์</h2>
+                
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="displayName" class="form-label">ชื่อ</label>
+                        <input 
+                            type="text" 
+                            id="displayName" 
+                            name="displayName" 
+                            class="form-input" 
+                            value="พั้นรักแมว"
+                            placeholder="Enter your name"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">อีเมล</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input" 
+                            value="ทดสอบ@kkumail.com"
+                            placeholder="Enter your email"
+                        >
+                    </div>
+
+                    <!-- <button type="submit" class="btn-primary">
+                        <ion-icon name="save" style="vertical-align: middle; margin-right: 8px;"></ion-icon>
+                        Save Changes
+                    </button> -->
+                </form>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="settings-section">
+                <h2 class="section-title">การตั้งค่า</h2>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <ion-icon name="notifications"></ion-icon>
+                        </div>
+                        <div class="setting-text">
+                            <h4>การแจ้งเตือน</h4>
+                            <p>จัดการการแจ้งเตือน</p>
+                        </div>
+                    </div>
+                    <div class="setting-arrow">
+                        <ion-icon name="chevron-forward"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <ion-icon name="alarm"></ion-icon>
+                        </div>
+                        <div class="setting-text">
+                            <h4>Study Reminders</h4>
+                            <p>Set daily study reminders</p>
+                        </div>
+                    </div>
+                    <div class="setting-arrow">
+                        <ion-icon name="chevron-forward"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <ion-icon name="trophy"></ion-icon>
+                        </div>
+                        <div class="setting-text">
+                            <h4>เป้าหมาย</h4>
+                            <p>กำหนดเป้าหมายของคุณ</p>
+                        </div>
+                    </div>
+                    <div class="setting-arrow">
+                        <ion-icon name="chevron-forward"></ion-icon>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Account Section -->
+            <section class="settings-section">
+                <h2 class="section-title">Account</h2>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <ion-icon name="lock-closed"></ion-icon>
+                        </div>
+                        <div class="setting-text">
+                            <h4>Change Password</h4>
+                            <p>Update your password</p>
+                        </div>
+                    </div>
+                    <div class="setting-arrow">
+                        <ion-icon name="chevron-forward"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <ion-icon name="shield-checkmark"></ion-icon>
+                        </div>
+                        <div class="setting-text">
+                            <h4>Privacy & Security</h4>
+                            <p>Manage your privacy settings</p>
+                        </div>
+                    </div>
+                    <div class="setting-arrow">
+                        <ion-icon name="chevron-forward"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <ion-icon name="document-text"></ion-icon>
+                        </div>
+                        <div class="setting-text">
+                            <h4>Export Data</h4>
+                            <p>Download your study data</p>
+                        </div>
+                    </div>
+                    <div class="setting-arrow">
+                        <ion-icon name="chevron-forward"></ion-icon>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Logout Button -->
+            <section class="settings-section">
+                <button class="btn-primary" style="background: var(--difficulty-hard);" id="logoutBtn">
+                    <ion-icon name="log-out" style="vertical-align: middle; margin-right: 8px;"></ion-icon>
+                    Log Out
+                </button>
+            </section>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item" data-page="home">
+                <ion-icon name="home"></ion-icon>
+                <span>Home</span>
+            </a>
+            <a href="schedule.html" class="nav-item" data-page="schedule">
+                <ion-icon name="calendar"></ion-icon>
+                <span>Schedule</span>
+            </a>
+            <a href="add.html" class="nav-item nav-item-center" data-page="add">
+                <div class="add-button">
+                    <ion-icon name="add"></ion-icon>
+                </div>
+            </a>
+            <a href="stat.html" class="nav-item" data-page="stat">
+                <ion-icon name="stats-chart"></ion-icon>
+                <span>Stats</span>
+            </a>
+            <a href="profile.html" class="nav-item" data-page="profile">
+                <ion-icon name="person"></ion-icon>
+                <span>Profile</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <script>
+        function setDayTheme() {
+            const today = new Date();
+            const dayIndex = today.getDay();
+            const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            document.body.setAttribute('data-day', dayNames[dayIndex]);
+        }
+        setDayTheme();
+
+        const currentPage = document.body.dataset.page;
+        document.querySelectorAll('.nav-item').forEach(item => {
+            if (item.dataset.page === currentPage) {
+                item.classList.add('active');
+            }
+        });
+
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = {
+                displayName: document.getElementById('displayName').value,
+                email: document.getElementById('email').value
+            }
+            alert('Profile updated successfully!');
+        });
+
+        document.querySelectorAll('.setting-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const settingName = this.querySelector('h4').textContent;
+                alert(`Opening ${settingName} settings...`);
+            });
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to log out?')) {
+                alert('Logging out...');
+            }
+        });
+    </script>
+</body>
+</html>
