@@ -483,6 +483,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
     box-shadow: var(--shadow-sm);
+    max-width: 420px; /* เพิ่มความกว้างสูงสุด */
 }
 
 .calendar-header {
@@ -521,7 +522,7 @@ h1, h2, h3, h4, h5, h6 {
 .calendar-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
+    gap: 0; /* ลด gap ลง */
     margin-bottom: var(--spacing-xs);
 }
 
@@ -536,19 +537,19 @@ h1, h2, h3, h4, h5, h6 {
 .calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
+    gap: 2px; /* ลด gap จาก 4px เหลือ 2px */
 }
 
 .calendar-day {
     aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
     border-radius: var(--radius-sm);
     font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
+    min-height: 44px; /* เพิ่มความสูงขั้นต่ำ */
 }
 
 .calendar-day:hover {
@@ -564,7 +565,7 @@ h1, h2, h3, h4, h5, h6 {
 .calendar-day.has-event::after {
     content: '';
     position: absolute;
-    bottom: 4px;
+    bottom: 6px; /* เพิ่มระยะห่างจากขอบล่าง */
     left: 50%;
     transform: translateX(-50%);
     width: 4px;

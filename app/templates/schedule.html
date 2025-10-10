@@ -1,4 +1,4 @@
-<!-- Update   : 2025-10-10 5.00 PM(Neptune) -->
+<!-- Update: 2025-10-10 5.00 PM(Neptune) - Fixed CSS & Dynamic Events -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -10,6 +10,28 @@
     <link rel="stylesheet" href="/app/static/css/responsive.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+      /* ⚠️ ลบ CSS ที่ซ้ำกับ components.css ออก - ให้ใช้จาก components.css แทน */
+      /* เก็บเฉพาะที่จำเป็นจริงๆ */
+      .event-dot { 
+        width:8px; 
+        height:8px; 
+        border-radius:50%; 
+        background:#ff6b6b; 
+        position:absolute; 
+        right:8px; 
+        bottom:8px; 
+        display:inline-block; 
+      }
+      .day-heading { 
+        font-weight:600; 
+        margin-bottom:8px; 
+      }
+      .muted { 
+        color: #666; 
+        font-size:0.95rem; 
+      }
+    </style>
 </head>
 <body data-page="schedule">
     
@@ -23,17 +45,16 @@
                     <ion-icon name="caret-back-circle"></ion-icon>
                     </a>
                     <h1 class="page-title">ปฎิทิน</h1>
-                    <!-- <p class="welcome-text">calendar</p> -->
                 </div>
             </header>
 
             <div class="calendar-container">
                 <div class="calendar-header">
-                    <button class="calendar-nav-btn" id="prevMonth">
+                    <button class="calendar-nav-btn" id="prevMonth" title="Previous month">
                         <ion-icon name="chevron-back"></ion-icon>
                     </button>
-                    <h2 class="calendar-month" id="currentMonth">October 2025</h2>
-                    <button class="calendar-nav-btn" id="nextMonth">
+                    <h2 class="calendar-month" id="currentMonth">—</h2>
+                    <button class="calendar-nav-btn" id="nextMonth" title="Next month">
                         <ion-icon name="chevron-forward"></ion-icon>
                     </button>
                 </div>
@@ -48,118 +69,17 @@
                     <div class="calendar-weekday">Sat</div>
                 </div>
 
-                <div class="calendar-days" id="calendarDays">
-                    <div class="calendar-day other-month">28</div>
-                    <div class="calendar-day other-month">29</div>
-                    <div class="calendar-day other-month">30</div>
-                    <div class="calendar-day">1</div>
-                    <div class="calendar-day">2</div>
-                    <div class="calendar-day">3</div>
-                    <div class="calendar-day today">4</div>
-                    <div class="calendar-day">5</div>
-                    <div class="calendar-day">6</div>
-                    <div class="calendar-day">7</div>
-                    <div class="calendar-day">8</div>
-                    <div class="calendar-day">9</div>
-                    <div class="calendar-day">10</div>
-                    <div class="calendar-day">11</div>
-                    <div class="calendar-day has-event">12</div>
-                    <div class="calendar-day">13</div>
-                    <div class="calendar-day">14</div>
-                    <div class="calendar-day has-event">15</div>
-                    <div class="calendar-day">16</div>
-                    <div class="calendar-day">17</div>
-                    <div class="calendar-day has-event">18</div>
-                    <div class="calendar-day">19</div>
-                    <div class="calendar-day">20</div>
-                    <div class="calendar-day">21</div>
-                    <div class="calendar-day">22</div>
-                    <div class="calendar-day">23</div>
-                    <div class="calendar-day">24</div>
-                    <div class="calendar-day">25</div>
-                    <div class="calendar-day">26</div>
-                    <div class="calendar-day">27</div>
-                    <div class="calendar-day">28</div>
-                    <div class="calendar-day">29</div>
-                    <div class="calendar-day">30</div>
-                    <div class="calendar-day">31</div>
-                    <div class="calendar-day other-month">1</div>
-                </div>
+                <!-- จะถูกเติมด้วย JS -->
+                <div class="calendar-days" id="calendarDays"></div>
             </div>
 
             <section class="events-list">
                 <h2 class="section-title">เร็วๆนี้</h2>
                 
-                <div class="event-card difficulty-hard" data-exam-id="1" data-date="2025-10-12">
-                    <h3 class="event-title">Calculus III</h3>
-                    <div class="event-meta">
-                        <span>
-                            <ion-icon name="calendar-outline"></ion-icon>
-                            Oct 12, 2025
-                        </span>
-                        <span>
-                            <ion-icon name="time-outline"></ion-icon>
-                            09:00 AM
-                        </span>
-                        <span>
-                            <ion-icon name="speedometer-outline"></ion-icon>
-                            Hard (9/10)
-                        </span>
-                    </div>
-                </div>
-
-                <div class="event-card difficulty-medium" data-exam-id="2" data-date="2025-10-15">
-                    <h3 class="event-title">Data Structure</h3>
-                    <div class="event-meta">
-                        <span>
-                            <ion-icon name="calendar-outline"></ion-icon>
-                            Oct 15, 2025
-                        </span>
-                        <span>
-                            <ion-icon name="time-outline"></ion-icon>
-                            02:00 PM
-                        </span>
-                        <span>
-                            <ion-icon name="speedometer-outline"></ion-icon>
-                            Medium (6/10)
-                        </span>
-                    </div>
-                </div>
-
-                <div class="event-card difficulty-easy" data-exam-id="3" data-date="2025-10-18">
-                    <h3 class="event-title">English Literature</h3>
-                    <div class="event-meta">
-                        <span>
-                            <ion-icon name="calendar-outline"></ion-icon>
-                            Oct 18, 2025
-                        </span>
-                        <span>
-                            <ion-icon name="time-outline"></ion-icon>
-                            10:30 AM
-                        </span>
-                        <span>
-                            <ion-icon name="speedometer-outline"></ion-icon>
-                            Easy (3/10)
-                        </span>
-                    </div>
-                </div>
-
-                <div class="event-card difficulty-medium" data-exam-id="4" data-date="2025-10-22">
-                    <h3 class="event-title">Physics II</h3>
-                    <div class="event-meta">
-                        <span>
-                            <ion-icon name="calendar-outline"></ion-icon>
-                            Oct 22, 2025
-                        </span>
-                        <span>
-                            <ion-icon name="time-outline"></ion-icon>
-                            01:00 PM
-                        </span>
-                        <span>
-                            <ion-icon name="speedometer-outline"></ion-icon>
-                            Medium (7/10)
-                        </span>
-                    </div>
+                <!-- Events จะถูกโหลดจาก API -->
+                <div id="eventsContainer">
+                    <!-- Loading state -->
+                    <p class="muted">กำลังโหลดข้อมูล...</p>
                 </div>
             </section>
 
@@ -189,10 +109,206 @@
             </a>
         </nav>
 
-
     </div>
 
     <script>
+        // ====== config ======
+        const WEEK_START = 0; // 0 = Sunday
+
+        // ====== state ======
+        const todayReal = new Date();
+        let viewYear = todayReal.getFullYear();
+        let viewMonth = todayReal.getMonth();
+        let eventsData = {}; // เก็บข้อมูล events จาก API
+
+        // ====== Load events from API ======
+        async function loadEventsFromAPI() {
+            try {
+                const response = await fetch('/api/schedule');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch schedule');
+                }
+                const data = await response.json();
+                
+                // แปลง events array เป็น map: date -> event data
+                eventsData = {};
+                data.events.forEach(event => {
+                    const dateKey = event.day; // ISO format: YYYY-MM-DD
+                    if (!eventsData[dateKey]) {
+                        eventsData[dateKey] = [];
+                    }
+                    eventsData[dateKey].push(event);
+                });
+
+                // Render calendar และ events list
+                renderCalendar(viewYear, viewMonth);
+                renderEventsList();
+                
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('eventsContainer').innerHTML = 
+                    '<p class="muted">ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง</p>';
+            }
+        }
+
+        // ====== Render events list ======
+        function renderEventsList(filterDate = null) {
+            const container = document.getElementById('eventsContainer');
+            container.innerHTML = '';
+
+            // หัวข้อ
+            const heading = document.createElement('div');
+            heading.className = 'day-heading muted';
+            heading.textContent = filterDate 
+                ? `เหตุการณ์สำหรับ ${filterDate}` 
+                : 'แสดงเหตุการณ์ทั้งหมด';
+            container.appendChild(heading);
+
+            // กรอง events
+            let displayEvents = [];
+            if (filterDate) {
+                displayEvents = eventsData[filterDate] || [];
+            } else {
+                // แสดงทั้งหมด เรียงตามวันที่
+                Object.keys(eventsData).sort().forEach(date => {
+                    displayEvents.push(...eventsData[date]);
+                });
+            }
+
+            if (displayEvents.length === 0) {
+                container.innerHTML += '<p class="muted">ไม่มีเหตุการณ์</p>';
+                return;
+            }
+
+            // สร้าง event cards
+            displayEvents.forEach(event => {
+                const card = document.createElement('div');
+                
+                // กำหนด difficulty class
+                let difficultyClass = 'difficulty-medium';
+                const slots = event.slots || 0;
+                if (slots <= 3) difficultyClass = 'difficulty-easy';
+                else if (slots >= 7) difficultyClass = 'difficulty-hard';
+                
+                card.className = `event-card ${difficultyClass}`;
+                
+                // สร้าง HTML ภายใน
+                const dateObj = new Date(event.day);
+                const dateStr = dateObj.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+                
+                card.innerHTML = `
+                    <h3 class="event-title">${event.exam || 'Unknown'}</h3>
+                    <div class="event-meta">
+                        <span>
+                            <ion-icon name="calendar-outline"></ion-icon>
+                            ${dateStr}
+                        </span>
+                        <span>
+                            <ion-icon name="time-outline"></ion-icon>
+                            ${event.slots || 0} ชั่วโมง
+                        </span>
+                        ${event.is_exam_day ? '<span style="color: #E74C3C; font-weight: 600;">📝 วันสอบ</span>' : ''}
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // ====== helper ======
+        function monthLabelThai(year, monthIndex) {
+            const d = new Date(year, monthIndex, 1);
+            return d.toLocaleString('th-TH', { month: 'long', year: 'numeric' });
+        }
+
+        // ====== Render Calendar ======
+        function renderCalendar(year, month) {
+            const currentMonthEl = document.getElementById('currentMonth');
+            currentMonthEl.textContent = monthLabelThai(year, month);
+
+            const container = document.getElementById('calendarDays');
+            container.innerHTML = '';
+
+            const firstOfMonth = new Date(year, month, 1);
+            let firstWeekday = firstOfMonth.getDay();
+            firstWeekday = (firstWeekday - WEEK_START + 7) % 7;
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevMonthDays = new Date(year, month, 0).getDate();
+
+            for (let i = 0; i < 42; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-day';
+                const idx = i - firstWeekday + 1;
+                let cellDate = null;
+                let isOtherMonth = false;
+                let dayNumber = 1;
+
+                if (idx <= 0) {
+                    isOtherMonth = true;
+                    dayNumber = prevMonthDays + idx;
+                    cellDate = new Date(year, month - 1, dayNumber);
+                    cell.classList.add('other-month');
+                } else if (idx > daysInMonth) {
+                    isOtherMonth = true;
+                    dayNumber = idx - daysInMonth;
+                    cellDate = new Date(year, month + 1, dayNumber);
+                    cell.classList.add('other-month');
+                } else {
+                    dayNumber = idx;
+                    cellDate = new Date(year, month, dayNumber);
+
+                    const todayIso = new Date().toISOString().slice(0,10);
+                    if (cellDate.toISOString().slice(0,10) === todayIso) {
+                        cell.classList.add('today');
+                    }
+                }
+
+                const span = document.createElement('div');
+                span.className = 'date-number';
+                span.textContent = dayNumber;
+                cell.appendChild(span);
+
+                const iso = cellDate.toISOString().slice(0,10);
+                cell.dataset.iso = iso;
+
+                // เช็คว่ามี event วันนี้ไหม
+                if (eventsData[iso] && eventsData[iso].length > 0) {
+                    cell.classList.add('has-event');
+                    const dot = document.createElement('span');
+                    dot.className = 'event-dot';
+                    dot.title = eventsData[iso].map(e => e.exam || 'Event').join(', ');
+                    cell.appendChild(dot);
+                }
+
+                cell.addEventListener('click', () => {
+                    renderEventsList(iso);
+                });
+
+                container.appendChild(cell);
+            }
+        }
+
+        // ====== Navigation ======
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            viewMonth--;
+            if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+            renderCalendar(viewYear, viewMonth);
+            renderEventsList(null);
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            viewMonth++;
+            if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+            renderCalendar(viewYear, viewMonth);
+            renderEventsList(null);
+        });
+
+        // ====== Theme & Active Nav ======
         function setDayTheme() {
             const today = new Date();
             const dayIndex = today.getDay();
@@ -207,6 +323,11 @@
                 item.classList.add('active');
             }
         });
+
+        // ====== Initialize ======
+        loadEventsFromAPI();
+
+       
     </script>
 </body>
 </html>
