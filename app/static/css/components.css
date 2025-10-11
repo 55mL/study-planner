@@ -513,8 +513,8 @@ body[data-page="schedule"] .main-content {
 /* ===== Header ===== */
 body[data-page="schedule"] .page-header {
   flex-shrink: 0;
-  margin-bottom: 18px;
-  padding: 14px;
+  margin-bottom: 25px;
+  margin-top: 18px;
 }
 
 body[data-page="schedule"] .top-header .page-title {
@@ -536,7 +536,8 @@ body[data-page="schedule"] .top-header .page-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 23px;
+  margin-bottom: 20px;
+  margin-top: 9px;
 }
 
 .calendar-month {
@@ -613,6 +614,11 @@ body[data-page="schedule"] .top-header .page-title {
   color: var(--color-accent);
 }
 
+/* ✅ วันที่ถูกเลือก - แสดงเฉพาะกรอบสีเทาอ่อน */
+.calendar-day.selected {
+  background: transparent !important;
+  box-shadow: inset 0 0 0 2px rgba(149, 165, 166, 0.3) !important;
+}
 .calendar-day.other-month {
   color: var(--color-gray);
   opacity: 0.35;
@@ -649,8 +655,9 @@ body[data-page="schedule"] .top-header .page-title {
   transform: translateX(-50%) translateX(5px);
 }
 
+/* ✅ สีจุด exam ใช้จาก main.css */
 .event-dot.exam {
-  background: #e74c3c;
+  background: var(--difficulty-hard);
 }
 
 /* ===== Events List Section - FIXED HEIGHT ===== */
@@ -662,7 +669,7 @@ body[data-page="schedule"] .top-header .page-title {
   min-height: 0;
 }
 
-.section-title {
+.events-list .section-title {
   font-size: 1rem;
   font-weight: 700;
   color: var(--color-dark);
@@ -746,6 +753,18 @@ body[data-page="schedule"] .top-header .page-title {
   font-size: 0.7rem;
   background: rgba(0, 0, 0, 0.04);
 }
+
+/* ✅ Difficulty colors ใช้จาก main.css แทน */
+.event-card.difficulty-1  { border-left-color: #A5D6A7 !important; }
+.event-card.difficulty-2  { border-left-color: #81C784 !important; }
+.event-card.difficulty-3  { border-left-color: #66BB6A !important; }
+.event-card.difficulty-4  { border-left-color: var(--difficulty-easy) !important; }
+.event-card.difficulty-5  { border-left-color: #FFEB3B !important; }
+.event-card.difficulty-6  { border-left-color: #FFC107 !important; }
+.event-card.difficulty-7  { border-left-color: var(--difficulty-medium) !important; }
+.event-card.difficulty-8  { border-left-color: #FF7043 !important; }
+.event-card.difficulty-9  { border-left-color: #F4511E !important; }
+.event-card.difficulty-10 { border-left-color: var(--difficulty-hard) !important; }
 
 /* ===== Utility Classes ===== */
 .day-heading {
@@ -831,111 +850,6 @@ body[data-page="schedule"] .bottom-nav {
   body[data-page="schedule"] .main-content {
     padding: 8px 10px 0 10px;
   }
-}dot.exam {
-  background: #e74c3c;
-}
-
-/* ===== Events List Section ===== */
-.events-list {
-  margin-top: var(--spacing-sm);
-  padding-bottom: calc(10px + var(--spacing-md)); /* เว้นพื้นที่ให้ navbar */
-}
-
-.section-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--color-dark);
-  margin-bottom: var(--spacing-sm);
-}
-
-/* ===== Events Container - Scrollable ===== */
-#eventsContainer {
-  max-height: calc(100vh - 580px); /* ปรับตามความสูงของ calendar + navbar */
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 4px;
-}
-
-/* Custom Scrollbar */
-#eventsContainer::-webkit-scrollbar {
-  width: 5px;
-}
-
-#eventsContainer::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.03);
-  border-radius: 10px;
-}
-
-#eventsContainer::-webkit-scrollbar-thumb {
-  background: var(--bg-secondary);
-  border-radius: 10px;
-}
-
-#eventsContainer::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent);
-}
-
-/* ===== Event Cards ===== */
-.event-card {
-  background: var(--color-white);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-sm);
-  margin-bottom: var(--spacing-sm);
-  box-shadow: var(--shadow-sm);
-  border-left: 4px solid var(--difficulty-medium);
-  transition: all 0.2s ease;
-}
-
-.event-card:hover {
-  transform: translateX(3px);
-  box-shadow: var(--shadow-md);
-}
-
-.event-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--color-dark);
-  margin-bottom: 6px;
-}
-
-.event-meta {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
-  color: var(--color-gray);
-  font-size: 0.8rem;
-  flex-wrap: wrap;
-}
-
-.event-meta ion-icon {
-  margin-right: 3px;
-  vertical-align: middle;
-  font-size: 0.95rem;
-}
-
-.level-badge {
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 6px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  background: rgba(0, 0, 0, 0.04);
-}
-
-/* ===== Utility Classes ===== */
-.day-heading {
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: var(--color-gray);
-  font-size: 0.85rem;
-  padding: 4px 0;
-}
-
-.muted {
-  color: #999;
-  font-size: 0.85rem;
 }
 
 

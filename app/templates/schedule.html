@@ -6,7 +6,6 @@
     <title>Schedule - Study Planner</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/schedule.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
@@ -90,6 +89,7 @@
     let viewMonth = todayReal.getMonth();
     let eventsData = {};
     let isDataLoaded = false;
+    let selectedDate = null; // ✅ เพิ่ม state เก็บวันที่เลือก
 
     // ===== helpers =====
     function toLocalISO(date) {
@@ -107,27 +107,28 @@
         return dt.toLocaleDateString('th-TH', options);
     }
 
-    // ✅ mapping level (1..10) -> color (card left border)
-    const levelColors = {
-      1:  '#A5D6A7', 2:  '#81C784', 3:  '#66BB6A', 4:  '#4CAF50', 5:  '#FFEB3B',
-      6:  '#FFC107', 7:  '#FF9800', 8:  '#FF7043', 9:  '#F4511E', 10: '#D32F2F'
-    };
-
-    // ✅ สีของวันปัจจุบัน - เอาไว้ใช้กับจุด study ทั้งหมด
+    // ✅ ใช้สีจาก CSS variables แทน hardcode
     const todayWeekday = todayReal.getDay();
-    const dayDotColors = {
-      0: '#F1A196', // Sunday - red
-      1: '#BBA444', // Monday - yellow
-      2: '#D190B6', // Tuesday - pink
-      3: '#679F80', // Wednesday - green
-      4: '#F8A174', // Thursday - orange
-      5: '#92CBD5', // Friday - blue
-      6: '#C59AEF'  // Saturday - purple
+    const dayNames = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+    
+    // ✅ อ่านสีจาก CSS variables ตามวัน
+    const rootStyles = getComputedStyle(document.documentElement);
+    const dayColorMap = {
+      0: '--sunday-secondary',
+      1: '--monday-secondary',
+      2: '--tuesday-secondary',
+      3: '--wednesday-secondary',
+      4: '--thursday-secondary',
+      5: '--friday-secondary',
+      6: '--saturday-secondary'
     };
-    const currentDayColor = dayDotColors[todayWeekday] || '#66BB6A';
+    
+    function getCurrentDayColor() {
+        const varName = dayColorMap[todayWeekday];
+        return getComputedStyle(document.body).getPropertyValue(varName).trim() || '#66BB6A';
+    }
 
     console.log('✅ Today weekday:', todayWeekday);
-    console.log('✅ Current day color:', currentDayColor);
 
     // ===== load events =====
     async function loadEventsFromAPI() {
@@ -151,7 +152,7 @@
             renderEventsList();
         } catch (err) {
             console.error('Error loading events', err);
-            container.innerHTML = `<p class="muted" style="color:#e74c3c">❌ ไม่สามารถโหลดข้อมูล: ${err.message}</p>`;
+            container.innerHTML = `<p class="muted" style="color:var(--difficulty-hard)">❌ ไม่สามารถโหลดข้อมูล: ${err.message}</p>`;
         }
     }
 
@@ -185,34 +186,35 @@
         }
 
         displayEvents.forEach(ev => {
-    const card = document.createElement('div');
-    card.className = 'event-card';
-    if (typeof ev.level === 'number') {
-        const c = levelColors[Math.max(1, Math.min(10, ev.level))] || levelColors[5];
-        card.style.borderLeftColor = c;
-    }
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            
+            // ✅ ใช้ class difficulty แทน inline style
+            if (typeof ev.level === 'number') {
+                const level = Math.max(1, Math.min(10, ev.level));
+                card.classList.add(`difficulty-${level}`);
+            }
 
-    const dateStr = formatThaiDate(ev.day, { month:'short', day:'numeric', year:'numeric' });
-    const levelText = (typeof ev.level === 'number') ? `ระดับ ${ev.level}` : '';
-    const slotsText = `${ev.slots || 0} ชั่วโมง`;
+            const dateStr = formatThaiDate(ev.day, { month:'short', day:'numeric', year:'numeric' });
+            const levelText = (typeof ev.level === 'number') ? `ระดับ ${ev.level}` : '';
+            const slotsText = `${ev.slots || 0} ชั่วโมง`;
 
-    // ✅ ถ้าเป็นวันสอบ ไม่แสดงชั่วโมง
-    const hoursDisplay = ev.is_exam_day 
-        ? '' 
-        : `<span class="meta-hours"><ion-icon name="time-outline"></ion-icon> ${slotsText}</span>`;
+            const hoursDisplay = ev.is_exam_day 
+                ? '' 
+                : `<span class="meta-hours"><ion-icon name="time-outline"></ion-icon> ${slotsText}</span>`;
 
-    card.innerHTML = `
-        <h3 class="event-title">${ev.exam || 'Unknown'}</h3>
-        <div class="event-meta">
-            <span class="meta-date"><ion-icon name="calendar-outline"></ion-icon> ${dateStr}</span>
-            ${levelText ? `<span class="meta-level"><span class="level-badge">🔥 ${levelText}</span></span>` : ''}
-            ${hoursDisplay}
-            ${ev.is_exam_day ? '<span style="color:#E74C3C; font-weight:600;">📝 วันสอบ</span>' : ''}
-        </div>
-    `;
-    
-    container.appendChild(card);
-});
+            card.innerHTML = `
+                <h3 class="event-title">${ev.exam || 'Unknown'}</h3>
+                <div class="event-meta">
+                    <span class="meta-date"><ion-icon name="calendar-outline"></ion-icon> ${dateStr}</span>
+                    ${levelText ? `<span class="meta-level"><span class="level-badge">🔥 ${levelText}</span></span>` : ''}
+                    ${hoursDisplay}
+                    ${ev.is_exam_day ? '<span style="color:var(--difficulty-hard); font-weight:600;">📝 วันสอบ</span>' : ''}
+                </div>
+            `;
+            
+            container.appendChild(card);
+        });
     }
 
     // ===== render calendar =====
@@ -230,6 +232,8 @@
         firstWeekday = (firstWeekday - WEEK_START + 7) % 7;
         const daysInMonth = new Date(year, month+1, 0).getDate();
         const prevMonthDays = new Date(year, month, 0).getDate();
+        
+        const currentDayColor = getCurrentDayColor();
 
         for (let i=0;i<42;i++) {
             const cell = document.createElement('div');
@@ -263,26 +267,27 @@
             const iso = toLocalISO(cellDate);
             cell.dataset.iso = iso;
 
+            // ✅ เพิ่ม class selected ถ้าตรงกับวันที่เลือก
+            if (selectedDate === iso) {
+                cell.classList.add('selected');
+            }
+
             const dayEvents = eventsData[iso] || [];
             const hasStudy = dayEvents.some(e => e.event_type === 'study');
             const hasExam = dayEvents.some(e => e.event_type === 'exam');
 
             if (hasStudy && !hasExam) {
-                // ✅ จุด study เดียว - ใช้สีวันปัจจุบัน
                 const studyDot = document.createElement('span');
                 studyDot.className = 'event-dot normal dot-center study';
                 studyDot.style.background = currentDayColor;
                 cell.appendChild(studyDot);
                 cell.classList.add('has-event');
             } else if (!hasStudy && hasExam) {
-                // จุด exam เดียว - กลาง
                 const examDot = document.createElement('span');
                 examDot.className = 'event-dot normal dot-center exam';
-                examDot.style.background = '#D32F2F';
                 cell.appendChild(examDot);
                 cell.classList.add('has-event');
             } else if (hasStudy && hasExam) {
-                // ✅ มีทั้ง study และ exam - study เล็กกลาง, exam เยื้องขวามากขึ้น
                 const studyDot = document.createElement('span');
                 studyDot.className = 'event-dot small dot-center study';
                 studyDot.style.background = currentDayColor;
@@ -290,13 +295,15 @@
 
                 const examDot = document.createElement('span');
                 examDot.className = 'event-dot normal dot-exam-offset exam';
-                examDot.style.background = '#D32F2F';
                 cell.appendChild(examDot);
 
                 cell.classList.add('has-event');
             }
 
+            // ✅ เพิ่ม logic เก็บ selectedDate และ render ใหม่
             cell.addEventListener('click', () => {
+                selectedDate = iso;
+                renderCalendar(viewYear, viewMonth);
                 renderEventsList(iso);
             });
 
@@ -317,12 +324,15 @@
         document.getElementById('prevMonth').addEventListener('click', () => {
             viewMonth--;
             if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+            selectedDate = null; // ✅ reset selection เมื่อเปลี่ยนเดือน
             renderCalendar(viewYear, viewMonth);
             renderEventsList(null);
         });
+        
         document.getElementById('nextMonth').addEventListener('click', () => {
             viewMonth++;
             if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+            selectedDate = null; // ✅ reset selection เมื่อเปลี่ยนเดือน
             renderCalendar(viewYear, viewMonth);
             renderEventsList(null);
         });
