@@ -476,43 +476,85 @@ h1, h2, h3, h4, h5, h6 {
  * Calendar Page Styles
  * ----------------------------------
  */
-/* ===== Header adjustment ===== */
-body[data-page="schedule"] .top-header .page-title {
-  transform: translateX(-20px);
+html, body {
+  overflow: hidden;
+  height: 100vh;
+  position: fixed;
+  width: 100%;
 }
 
-/* ===== Calendar container ===== */
+/* ===== Page Layout - FIT VIEWPORT ===== */
+body[data-page="schedule"] {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+body[data-page="schedule"] .app-container {
+  height: 100vh;
+  width: 100%;
+  max-width: 480px;
+  padding: 0;
+  margin: 0 auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+body[data-page="schedule"] .main-content {
+  flex: 1;
+  padding: 10px 12px 0 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ===== Header ===== */
+body[data-page="schedule"] .page-header {
+  flex-shrink: 0;
+  margin-bottom: 18px;
+  padding: 14px;
+}
+
+body[data-page="schedule"] .top-header .page-title {
+  transform: translateX(-20px);
+  font-size: 1.15rem;
+}
+
+/* ===== Calendar Container ===== */
 .calendar-container {
   background: var(--color-white);
   border-radius: var(--radius-lg);
-  padding: 18px;
-  margin: 0 auto 16px;
+  padding: 10px;
+  margin-bottom: 10px;
   box-shadow: var(--shadow-sm);
-  max-width: 720px;
+  flex-shrink: 0;
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 23px;
 }
 
 .calendar-month {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--color-dark);
 }
 
 .calendar-nav-btn {
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius-full);
   background: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .calendar-nav-btn:hover {
@@ -521,42 +563,43 @@ body[data-page="schedule"] .top-header .page-title {
 }
 
 .calendar-nav-btn ion-icon {
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 
-/* ===== Calendar weekdays ===== */
+/* ===== Calendar Weekdays ===== */
 .calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: 3px;
 }
 
 .calendar-weekday {
   text-align: center;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: var(--color-gray);
-  padding: var(--spacing-xs);
+  padding: 2px;
 }
 
-/* ===== Calendar days grid ===== */
+/* ===== Calendar Days Grid ===== */
 .calendar-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+  gap: 2px;
 }
 
 .calendar-day {
-  min-height: 56px;
-  border-radius: 8px;
+  aspect-ratio: 1;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   cursor: pointer;
   background: transparent;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
 }
 
 .calendar-day:hover {
@@ -564,86 +607,262 @@ body[data-page="schedule"] .top-header .page-title {
 }
 
 .calendar-day.today {
-  outline: 3px solid var(--color-accent);
-  outline-offset: -3px;
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
   font-weight: 700;
   color: var(--color-accent);
 }
 
 .calendar-day.other-month {
   color: var(--color-gray);
-  opacity: 0.4;
+  opacity: 0.35;
 }
 
-/* ===== Event dots ===== */
+/* ===== Event Dots ===== */
 .event-dot {
   position: absolute;
   border-radius: 50%;
   transition: all 0.15s ease;
   display: block;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
-/* Dot sizes */
 .event-dot.normal {
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
 }
 
 .event-dot.small {
-  width: 7px;
-  height: 7px;
+  width: 4px;
+  height: 4px;
 }
 
-/* Dot positions */
 .dot-center {
-  bottom: 6px;
+  bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .dot-exam-offset {
-  bottom: 9.5px;
-  left: 70%;
-  transform: translateX(-50%);
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%) translateX(5px);
 }
 
-/* Dot colors */
 .event-dot.exam {
   background: #e74c3c;
 }
 
-/* ===== Events list ===== */
+/* ===== Events List Section - FIXED HEIGHT ===== */
 .events-list {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 0 12px calc(var(--bottom-nav-height, 80px) + 12px) 12px; /* ไม่ให้ทะลุ navbar */
-  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
 }
 
-/* Section title */
 .section-title {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--color-dark);
-  margin: 0 0 8px 0;
+  margin-bottom: 8px;
+  flex-shrink: 0;
 }
 
-/* Container ที่เก็บ events - scroll ไม่ทะลุ navbar */
+/* ===== Events Container - Scrollable ===== */
 #eventsContainer {
-  max-height: calc(100vh - 550px);
+  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 6px;
+  padding-right: 4px;
+  padding-bottom: 10px;
+  min-height: 0;
 }
 
-/* Custom scrollbar */
+/* Custom Scrollbar */
 #eventsContainer::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 #eventsContainer::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
+  background: transparent;
+}
+
+#eventsContainer::-webkit-scrollbar-thumb {
+  background: var(--bg-secondary);
+  border-radius: 10px;
+}
+
+#eventsContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* ===== Event Cards ===== */
+.event-card {
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--difficulty-medium);
+  transition: all 0.2s ease;
+}
+
+.event-card:hover {
+  transform: translateX(3px);
+  box-shadow: var(--shadow-md);
+}
+
+.event-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 5px;
+}
+
+.event-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--color-gray);
+  font-size: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.event-meta ion-icon {
+  margin-right: 2px;
+  vertical-align: middle;
+  font-size: 0.85rem;
+}
+
+.level-badge {
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* ===== Utility Classes ===== */
+.day-heading {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--color-gray);
+  font-size: 0.75rem;
+  padding: 3px 0;
+}
+
+.muted {
+  color: #999;
+  font-size: 0.75rem;
+}
+
+/* ===== Bottom Navbar - FIXED ===== */
+body[data-page="schedule"] .bottom-nav {
+  flex-shrink: 0;
+  position: relative;
+  bottom: 0;
+}
+
+/* ===== Responsive ===== */
+@media (max-height: 750px) {
+  .calendar-container {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .calendar-days {
+    gap: 2px;
+  }
+  
+  .calendar-day {
+    font-size: 0.75rem;
+  }
+  
+  .event-card {
+    padding: 8px;
+    margin-bottom: 6px;
+  }
+  
+  .event-title {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-height: 650px) {
+  body[data-page="schedule"] .page-header {
+    margin-bottom: 8px;
+  }
+  
+  .calendar-container {
+    padding: 6px;
+    margin-bottom: 6px;
+  }
+  
+  .calendar-weekday {
+    font-size: 0.6rem;
+  }
+  
+  .calendar-day {
+    font-size: 0.7rem;
+  }
+  
+  .event-card {
+    padding: 6px;
+    margin-bottom: 5px;
+  }
+  
+  .event-title {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+  
+  .event-meta {
+    font-size: 0.7rem;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 400px) {
+  body[data-page="schedule"] .main-content {
+    padding: 8px 10px 0 10px;
+  }
+}dot.exam {
+  background: #e74c3c;
+}
+
+/* ===== Events List Section ===== */
+.events-list {
+  margin-top: var(--spacing-sm);
+  padding-bottom: calc(10px + var(--spacing-md)); /* เว้นพื้นที่ให้ navbar */
+}
+
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* ===== Events Container - Scrollable ===== */
+#eventsContainer {
+  max-height: calc(100vh - 580px); /* ปรับตามความสูงของ calendar + navbar */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+}
+
+/* Custom Scrollbar */
+#eventsContainer::-webkit-scrollbar {
+  width: 5px;
+}
+
+#eventsContainer::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
   border-radius: 10px;
 }
 
@@ -656,120 +875,67 @@ body[data-page="schedule"] .top-header .page-title {
   background: var(--color-accent);
 }
 
-/* ===== Event cards ===== */
+/* ===== Event Cards ===== */
 .event-card {
   background: var(--color-white);
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 12px;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
   box-shadow: var(--shadow-sm);
-  display: block;
-  position: relative;
-  border-left: 6px solid var(--difficulty-medium);
-  transition: all 0.3s ease;
+  border-left: 4px solid var(--difficulty-medium);
+  transition: all 0.2s ease;
 }
 
 .event-card:hover {
-  transform: translateX(4px);
+  transform: translateX(3px);
   box-shadow: var(--shadow-md);
 }
 
 .event-title {
+  font-size: 1rem;
   font-weight: 700;
-  margin-bottom: 8px;
   color: var(--color-dark);
-  font-size: 1.1rem;
+  margin-bottom: 6px;
 }
 
 .event-meta {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-sm);
   align-items: center;
   color: var(--color-gray);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   flex-wrap: wrap;
 }
 
 .event-meta ion-icon {
-  margin-right: 4px;
+  margin-right: 3px;
   vertical-align: middle;
-}
-
-.event-meta .meta-hours.exam-day {
-  display: none;
+  font-size: 0.95rem;
 }
 
 .level-badge {
   font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
+  gap: 4px;
+  padding: 3px 6px;
   border-radius: 999px;
-  font-size: 0.85rem;
-  background: rgba(0, 0, 0, 0.03);
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.04);
 }
 
-/* Difficulty colors for cards */
-.difficulty-1  { border-left-color: #A5D6A7; }
-.difficulty-2  { border-left-color: #81C784; }
-.difficulty-3  { border-left-color: #66BB6A; }
-.difficulty-4  { border-left-color: #4CAF50; }
-.difficulty-5  { border-left-color: #FFEB3B; }
-.difficulty-6  { border-left-color: #FFC107; }
-.difficulty-7  { border-left-color: #FF9800; }
-.difficulty-8  { border-left-color: #FF7043; }
-.difficulty-9  { border-left-color: #F4511E; }
-.difficulty-10 { border-left-color: #D32F2F; }
-
-/* ===== Utility classes ===== */
+/* ===== Utility Classes ===== */
 .day-heading {
   font-weight: 600;
-  margin: 0 0 8px 0;
+  margin-bottom: 6px;
   color: var(--color-gray);
-  font-size: 0.9rem;
-  padding: 8px 0;
+  font-size: 0.85rem;
+  padding: 4px 0;
 }
 
 .muted {
-  color: #666;
-  font-size: 0.95rem;
-}
-
-/* ===== Bottom navbar ===== */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    background-color: var(--color-glass);
-    backdrop-filter: blur(10px);
-    padding: var(--spacing-sm) var(--spacing-md);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-    transition: background 0.4s ease;
-    z-index: 1000;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 780px) {
-  .calendar-container { padding: 16px; margin: 0 auto 12px; }
-  .events-list { padding: 0 8px calc(var(--bottom-nav-height, 80px) + 12px) 8px; }
-  #eventsContainer { max-height: calc(100vh - 600px); }
-}
-
-@media (max-width: 480px) {
-  .calendar-container { padding: 14px; }
-  #eventsContainer { max-height: calc(100vh - 620px); }
-  .events-list { padding: 0 12px calc(var(--bottom-nav-height, 80px) + 12px) 12px; }
-  .event-card { padding: 12px; }
-  .event-title { font-size: 1rem; }
-  .event-meta { font-size: 0.85rem; gap: 10px; }
+  color: #999;
+  font-size: 0.85rem;
 }
 
 

@@ -1,4 +1,3 @@
-# backend: api/schedule (Flask)
 from flask import Blueprint, jsonify, session
 from app.models import User, DailyAllocations, ReadingPlans
 from app.utils.utils import get_today
@@ -33,7 +32,11 @@ def get_schedule():
     plan_by_name = {plan.exam_name: plan for plan in plans}
 
     events = []
-    exam_dates_added = set()
+    # ✅ เปลี่ยนจาก set เป็น dict เพื่อเก็บหลายวิชาในวันเดียวกัน
+    exam_dates_added = {}  # {date: [exam_name1, exam_name2, ...]}
+
+    print(f"\n{'='*60}")
+    print(f"📊 Processing allocations...")
 
     # 1. เพิ่ม allocations (วันอ่าน)
     for alloc in allocations:
@@ -43,11 +46,14 @@ def get_schedule():
         if exam_date:
             # ถ้าวันนี้ >= วันสอบ ให้ข้ามไป (ไม่เอา)
             if alloc.date >= exam_date:
+                print(f"⚠️ SKIP: {date_str} >= exam date {exam_date.strftime('%Y-%m-%d')}")
                 continue
 
             # หาค่า level จาก plan (ReadingPlans.level)
             plan = plan_by_name.get(alloc.exam_name_snapshot)
             level_value = plan.level if plan else None
+
+            print(f"✅ ADD study day: {date_str} ({alloc.exam_name_snapshot}, {alloc.slots} ชม., level={level_value})")
 
             events.append({
                 'day': date_str,
@@ -59,13 +65,20 @@ def get_schedule():
                 'level': level_value
             })
 
-    # 2. เพิ่มวันสอบ (จาก plans)
+    # 2. เพิ่มวันสอบ (จาก plans) - รองรับหลายวิชาในวันเดียวกัน
     for plan in plans:
         if plan.exam_date:
             exam_date_str = plan.exam_date.strftime('%Y-%m-%d')
 
+            # ✅ เช็คว่าวันนี้มี exam_name นี้แล้วหรือยัง
             if exam_date_str not in exam_dates_added:
-                exam_dates_added.add(exam_date_str)
+                exam_dates_added[exam_date_str] = []
+
+            # ถ้ายังไม่มีวิชานี้ในวันนี้ ก็เพิ่ม
+            if plan.exam_name not in exam_dates_added[exam_date_str]:
+                exam_dates_added[exam_date_str].append(plan.exam_name)
+
+                print(f"✅ ADD exam day: {exam_date_str} ({plan.exam_name}, level={plan.level})")
 
                 events.append({
                     'day': exam_date_str,
@@ -74,8 +87,10 @@ def get_schedule():
                     'is_exam_day': True,
                     'feedback_done': False,
                     'event_type': 'exam',
-                    'level': plan.level  # ส่ง level ด้วย (ใช้สำหรับ card)
+                    'level': plan.level
                 })
+
+    print(f"{'='*60}\n")
 
     return jsonify({
         'simulated_today': simulated_today.strftime('%Y-%m-%d'),
