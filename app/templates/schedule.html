@@ -6,36 +6,15 @@
     <title>Schedule - Study Planner</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/schedule.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <style>
-      .event-dot { 
-        width:8px; 
-        height:8px; 
-        border-radius:50%; 
-        background:#ff6b6b; 
-        position:absolute; 
-        right:8px; 
-        bottom:8px; 
-        display:inline-block; 
-      }
-      .day-heading { 
-        font-weight:600; 
-        margin-bottom:8px; 
-      }
-      .muted { 
-        color: #666; 
-        font-size:0.95rem; 
-      }
-    </style>
 </head>
 <body data-page="schedule">
-    
+
     <div class="app-container">
-        
         <main class="main-content">
-            
             <header class="page-header">
                 <div class="top-header">
                     <a href="{{ url_for('web_main.feedback') }}" class="back-item" data-page="home">
@@ -71,12 +50,10 @@
 
             <section class="events-list">
                 <h2 class="section-title">เร็วๆนี้</h2>
-                
                 <div id="eventsContainer">
                     <p class="muted">กำลังโหลดข้อมูล...</p>
                 </div>
             </section>
-
         </main>
 
         <nav class="bottom-nav">
@@ -102,169 +79,148 @@
                 <span>ตั้งค่า</span>
             </a>
         </nav>
-
     </div>
-
     <script>
-    // ====== config ======
+    // ===== config =====
     const WEEK_START = 0;
 
-    // ====== state ======
+    // ===== state =====
     const todayReal = new Date();
     let viewYear = todayReal.getFullYear();
     let viewMonth = todayReal.getMonth();
     let eventsData = {};
     let isDataLoaded = false;
 
-    // ====== helper ======
-    function monthLabelThai(year, monthIndex) {
-        const d = new Date(year, monthIndex, 1);
-        return d.toLocaleString('th-TH', { month: 'long', year: 'numeric' });
+    // ===== helpers =====
+    function toLocalISO(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+    function parseLocalDate(isoString) {
+        const [y, m, d] = isoString.split('-').map(Number);
+        return new Date(y, m - 1, d, 12, 0, 0);
+    }
+    function formatThaiDate(isoString, options = {}) {
+        const dt = parseLocalDate(isoString);
+        return dt.toLocaleDateString('th-TH', options);
     }
 
-    // ====== Load events from API ======
+    // ✅ mapping level (1..10) -> color (card left border)
+    const levelColors = {
+      1:  '#A5D6A7', 2:  '#81C784', 3:  '#66BB6A', 4:  '#4CAF50', 5:  '#FFEB3B',
+      6:  '#FFC107', 7:  '#FF9800', 8:  '#FF7043', 9:  '#F4511E', 10: '#D32F2F'
+    };
+
+    // ✅ สีของวันปัจจุบัน - เอาไว้ใช้กับจุด study ทั้งหมด
+    const todayWeekday = todayReal.getDay();
+    const dayDotColors = {
+      0: '#F1A196', // Sunday - red
+      1: '#BBA444', // Monday - yellow
+      2: '#D190B6', // Tuesday - pink
+      3: '#679F80', // Wednesday - green
+      4: '#F8A174', // Thursday - orange
+      5: '#92CBD5', // Friday - blue
+      6: '#C59AEF'  // Saturday - purple
+    };
+    const currentDayColor = dayDotColors[todayWeekday] || '#66BB6A';
+
+    console.log('✅ Today weekday:', todayWeekday);
+    console.log('✅ Current day color:', currentDayColor);
+
+    // ===== load events =====
     async function loadEventsFromAPI() {
         const container = document.getElementById('eventsContainer');
-        
-        console.log('🚀 Starting to load events...');
-        
         try {
             container.innerHTML = '<p class="muted">กำลังโหลดข้อมูล...</p>';
-            
-            console.log('📡 Fetching /api/schedule...');
-            const response = await fetch('/api/schedule');
-            
-            console.log('📥 Response status:', response.status);
-            console.log('📥 Response ok:', response.ok);
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('❌ Server error:', errorText);
-                throw new Error(`HTTP ${response.status}: ${errorText}`);
-            }
-            
-            const data = await response.json();
-            console.log('📦 Raw data received:', data);
-            console.log('📦 Events count:', data.events ? data.events.length : 0);
-            
-            // แปลง events array เป็น map
+            const res = await fetch('/api/schedule');
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+
             eventsData = {};
             if (data.events && Array.isArray(data.events)) {
-                data.events.forEach(event => {
-                    const dateKey = event.day;
-                    if (!eventsData[dateKey]) {
-                        eventsData[dateKey] = [];
-                    }
-                    eventsData[dateKey].push(event);
+                data.events.forEach(ev => {
+                    const day = ev.day;
+                    if (!eventsData[day]) eventsData[day] = [];
+                    eventsData[day].push(ev);
                 });
             }
-
-            console.log('🗓️ Processed eventsData:', eventsData);
-            console.log('🗓️ Total dates with events:', Object.keys(eventsData).length);
-            
             isDataLoaded = true;
-            console.log('✅ isDataLoaded set to true');
-            
             renderCalendar(viewYear, viewMonth);
             renderEventsList();
-            
-            console.log('✅ Rendering complete');
-            
-        } catch (error) {
-            console.error('❌ Error loading events:', error);
-            console.error('❌ Error message:', error.message);
-            console.error('❌ Error stack:', error.stack);
-            container.innerHTML = 
-                `<p class="muted" style="color: #e74c3c;">❌ ไม่สามารถโหลดข้อมูลได้: ${error.message}</p>`;
+        } catch (err) {
+            console.error('Error loading events', err);
+            container.innerHTML = `<p class="muted" style="color:#e74c3c">❌ ไม่สามารถโหลดข้อมูล: ${err.message}</p>`;
         }
     }
 
-    // ====== Render events list ======
+    // ===== render events list =====
     function renderEventsList(filterDate = null) {
-        console.log('📝 renderEventsList called, filterDate:', filterDate);
-        console.log('📝 isDataLoaded:', isDataLoaded);
-        
         const container = document.getElementById('eventsContainer');
-        
         if (!isDataLoaded) {
-            console.log('⏳ Data not loaded yet');
             container.innerHTML = '<p class="muted">กำลังโหลดข้อมูล...</p>';
             return;
         }
-        
         container.innerHTML = '';
-
         const heading = document.createElement('div');
         heading.className = 'day-heading muted';
-        heading.textContent = filterDate 
-            ? `เหตุการณ์สำหรับ ${new Date(filterDate).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}` 
-            : 'แสดงเหตุการณ์ทั้งหมด';
+        if (filterDate) {
+            heading.textContent = `เหตุการณ์สำหรับ ${formatThaiDate(filterDate, { year:'numeric', month:'long', day:'numeric' })}`;
+        } else {
+            heading.textContent = 'แสดงเหตุการณ์ทั้งหมด';
+        }
         container.appendChild(heading);
 
         let displayEvents = [];
         if (filterDate) {
             displayEvents = eventsData[filterDate] || [];
         } else {
-            Object.keys(eventsData).sort().forEach(date => {
-                displayEvents.push(...eventsData[date]);
-            });
+            Object.keys(eventsData).sort().forEach(d => displayEvents.push(...eventsData[d]));
         }
-
-        console.log('📝 Display events count:', displayEvents.length);
 
         if (displayEvents.length === 0) {
             container.innerHTML += '<p class="muted">ไม่มีเหตุการณ์</p>';
             return;
         }
 
-        displayEvents.forEach(event => {
-            const card = document.createElement('div');
-            
-            let difficultyClass = 'difficulty-medium';
-            const slots = event.slots || 0;
-            if (slots <= 3) difficultyClass = 'difficulty-easy';
-            else if (slots >= 7) difficultyClass = 'difficulty-hard';
-            
-            card.className = `event-card ${difficultyClass}`;
-            
-            const dateObj = new Date(event.day);
-            const dateStr = dateObj.toLocaleDateString('th-TH', { 
-                month: 'short', 
-                day: 'numeric', 
-                year: 'numeric' 
-            });
-            
-            card.innerHTML = `
-                <h3 class="event-title">${event.exam || 'Unknown'}</h3>
-                <div class="event-meta">
-                    <span>
-                        <ion-icon name="calendar-outline"></ion-icon>
-                        ${dateStr}
-                    </span>
-                    <span>
-                        <ion-icon name="time-outline"></ion-icon>
-                        ${event.slots || 0} ชั่วโมง
-                    </span>
-                    ${event.is_exam_day ? '<span style="color: #E74C3C; font-weight: 600;">📝 วันสอบ</span>' : ''}
-                </div>
-            `;
-            
-            container.appendChild(card);
-        });
+        displayEvents.forEach(ev => {
+    const card = document.createElement('div');
+    card.className = 'event-card';
+    if (typeof ev.level === 'number') {
+        const c = levelColors[Math.max(1, Math.min(10, ev.level))] || levelColors[5];
+        card.style.borderLeftColor = c;
     }
 
-    // ====== Render Calendar ======
+    const dateStr = formatThaiDate(ev.day, { month:'short', day:'numeric', year:'numeric' });
+    const levelText = (typeof ev.level === 'number') ? `ระดับ ${ev.level}` : '';
+    const slotsText = `${ev.slots || 0} ชั่วโมง`;
+
+    // ✅ ถ้าเป็นวันสอบ ไม่แสดงชั่วโมง
+    const hoursDisplay = ev.is_exam_day 
+        ? '' 
+        : `<span class="meta-hours"><ion-icon name="time-outline"></ion-icon> ${slotsText}</span>`;
+
+    card.innerHTML = `
+        <h3 class="event-title">${ev.exam || 'Unknown'}</h3>
+        <div class="event-meta">
+            <span class="meta-date"><ion-icon name="calendar-outline"></ion-icon> ${dateStr}</span>
+            ${levelText ? `<span class="meta-level"><span class="level-badge">🔥 ${levelText}</span></span>` : ''}
+            ${hoursDisplay}
+            ${ev.is_exam_day ? '<span style="color:#E74C3C; font-weight:600;">📝 วันสอบ</span>' : ''}
+        </div>
+    `;
+    
+    container.appendChild(card);
+});
+    }
+
+    // ===== render calendar =====
     function renderCalendar(year, month) {
-        console.log('📅 renderCalendar called:', year, month);
-        console.log('📅 isDataLoaded:', isDataLoaded);
-        
-        if (!isDataLoaded) {
-            console.log('⏳ Data not loaded, skipping calendar render');
-            return;
-        }
-        
+        if (!isDataLoaded) return;
         const currentMonthEl = document.getElementById('currentMonth');
-        currentMonthEl.textContent = monthLabelThai(year, month);
+        const d = new Date(year, month, 1);
+        currentMonthEl.textContent = d.toLocaleString('th-TH', { month:'long', year:'numeric' });
 
         const container = document.getElementById('calendarDays');
         container.innerHTML = '';
@@ -272,31 +228,29 @@
         const firstOfMonth = new Date(year, month, 1);
         let firstWeekday = firstOfMonth.getDay();
         firstWeekday = (firstWeekday - WEEK_START + 7) % 7;
-
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInMonth = new Date(year, month+1, 0).getDate();
         const prevMonthDays = new Date(year, month, 0).getDate();
 
-        for (let i = 0; i < 42; i++) {
+        for (let i=0;i<42;i++) {
             const cell = document.createElement('div');
             cell.className = 'calendar-day';
             const idx = i - firstWeekday + 1;
-            let cellDate = null;
-            let dayNumber = 1;
+            let cellDate;
+            let dayNumber;
 
             if (idx <= 0) {
                 dayNumber = prevMonthDays + idx;
-                cellDate = new Date(year, month - 1, dayNumber);
+                cellDate = new Date(year, month - 1, dayNumber, 12);
                 cell.classList.add('other-month');
             } else if (idx > daysInMonth) {
                 dayNumber = idx - daysInMonth;
-                cellDate = new Date(year, month + 1, dayNumber);
+                cellDate = new Date(year, month + 1, dayNumber, 12);
                 cell.classList.add('other-month');
             } else {
                 dayNumber = idx;
-                cellDate = new Date(year, month, dayNumber);
-
-                const todayIso = new Date().toISOString().slice(0,10);
-                if (cellDate.toISOString().slice(0,10) === todayIso) {
+                cellDate = new Date(year, month, dayNumber, 12);
+                const todayIso = toLocalISO(new Date());
+                if (toLocalISO(cellDate) === todayIso) {
                     cell.classList.add('today');
                 }
             }
@@ -306,15 +260,40 @@
             span.textContent = dayNumber;
             cell.appendChild(span);
 
-            const iso = cellDate.toISOString().slice(0,10);
+            const iso = toLocalISO(cellDate);
             cell.dataset.iso = iso;
 
-            if (eventsData[iso] && eventsData[iso].length > 0) {
+            const dayEvents = eventsData[iso] || [];
+            const hasStudy = dayEvents.some(e => e.event_type === 'study');
+            const hasExam = dayEvents.some(e => e.event_type === 'exam');
+
+            if (hasStudy && !hasExam) {
+                // ✅ จุด study เดียว - ใช้สีวันปัจจุบัน
+                const studyDot = document.createElement('span');
+                studyDot.className = 'event-dot normal dot-center study';
+                studyDot.style.background = currentDayColor;
+                cell.appendChild(studyDot);
                 cell.classList.add('has-event');
-                const dot = document.createElement('span');
-                dot.className = 'event-dot';
-                dot.title = eventsData[iso].map(e => e.exam || 'Event').join(', ');
-                cell.appendChild(dot);
+            } else if (!hasStudy && hasExam) {
+                // จุด exam เดียว - กลาง
+                const examDot = document.createElement('span');
+                examDot.className = 'event-dot normal dot-center exam';
+                examDot.style.background = '#D32F2F';
+                cell.appendChild(examDot);
+                cell.classList.add('has-event');
+            } else if (hasStudy && hasExam) {
+                // ✅ มีทั้ง study และ exam - study เล็กกลาง, exam เยื้องขวามากขึ้น
+                const studyDot = document.createElement('span');
+                studyDot.className = 'event-dot small dot-center study';
+                studyDot.style.background = currentDayColor;
+                cell.appendChild(studyDot);
+
+                const examDot = document.createElement('span');
+                examDot.className = 'event-dot normal dot-exam-offset exam';
+                examDot.style.background = '#D32F2F';
+                cell.appendChild(examDot);
+
+                cell.classList.add('has-event');
             }
 
             cell.addEventListener('click', () => {
@@ -323,55 +302,31 @@
 
             container.appendChild(cell);
         }
-        
-        console.log('📅 Calendar rendered successfully');
     }
 
-    // ====== Initialize ======
+    // ===== init =====
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('🎬 DOM Content Loaded');
-        
-        // Theme & Active Nav
         function setDayTheme() {
             const today = new Date();
             const dayIndex = today.getDay();
-            const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const dayNames = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
             document.body.setAttribute('data-day', dayNames[dayIndex]);
         }
         setDayTheme();
 
-        const currentPage = document.body.dataset.page;
-        document.querySelectorAll('.nav-item').forEach(item => {
-            if (item.dataset.page === currentPage) {
-                item.classList.add('active');
-            }
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            viewMonth--;
+            if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+            renderCalendar(viewYear, viewMonth);
+            renderEventsList(null);
+        });
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            viewMonth++;
+            if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+            renderCalendar(viewYear, viewMonth);
+            renderEventsList(null);
         });
 
-        // ✅ Navigation - ย้ายเข้ามาใน DOMContentLoaded
-        const prevBtn = document.getElementById('prevMonth');
-        const nextBtn = document.getElementById('nextMonth');
-        
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                console.log('⬅️ Previous month clicked');
-                viewMonth--;
-                if (viewMonth < 0) { viewMonth = 11; viewYear--; }
-                renderCalendar(viewYear, viewMonth);
-                renderEventsList(null);
-            });
-        }
-        
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                console.log('➡️ Next month clicked');
-                viewMonth++;
-                if (viewMonth > 11) { viewMonth = 0; viewYear++; }
-                renderCalendar(viewYear, viewMonth);
-                renderEventsList(null);
-            });
-        }
-
-        // ✅ โหลดข้อมูลจาก API
         loadEventsFromAPI();
     });
     </script>

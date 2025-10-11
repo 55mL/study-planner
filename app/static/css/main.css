@@ -169,34 +169,35 @@ body[data-day="sunday"] {
  *
  * ---------------------------
  */
+/* โหลดฟอนต์จากโฟลเดอร์ */
 @font-face {
     font-family: 'SF Pro Regular';
-    src: url(/app/static/fonts/SFPRO/SFPRODISPLAYREGULAR.OTF);
+    src: url('../fonts/SFPRO/SFPRODISPLAYREGULAR.OTF');
 }
 
 @font-face {
     font-family: 'SF Pro Bold';
-    src: url(/app/static/fonts/SFPRO/SFPRODISPLAYBOLD.OTF);
+    src: url('../fonts/SFPRO/SFPRODISPLAYBOLD.OTF');
 }
 
 @font-face {
     font-family: 'SF Pro Medium';
-    src: url(/app/static/fonts/SFPRO/SFPRODISPLAYMEDIUM.OTF);
+    src: url('../fonts/SFPRO/SFPRODISPLAYMEDIUM.OTF');
 }
 
 @font-face {
     font-family: 'Sukhumvit Bold';
-    src: url(/app/static/fonts/Sukhumvit/SukhumvitSet-Bold.ttf);
+    src: url('../fonts/Sukhumvit/SukhumvitSet-Bold.ttf');
 }
 
 @font-face {
     font-family: 'Sukhumvit SemiBold';
-    src: url(/app/static/fonts/Sukhumvit/SukhumvitSet-SemiBold.ttf);
+    src: url('../fonts/Sukhumvit/SukhumvitSet-SemiBold.ttf');
 }
 
 @font-face {
     font-family: 'SF Thonburi';
-    src: url(/app/static/fonts/SF\ Thonburi.ttf);
+    src: url('../fonts/SF Thonburi.ttf');
 }
 
 /* ฟอนต์สำรอง(น่ารัก) */
