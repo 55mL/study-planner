@@ -1,11 +1,3 @@
-1st Demo อัพลง main แต่ต่อจากนี้อย่าลืมสร้าง Branch แยกก่อนนะ
-
-โค้ดที่เค้าเขียนสามารถแก้ไขได้ แต่ฝากคอมเมนท์ไว้ตรงบรรทัดที่แก้ด้วย
-
-e.g. /* แก้ตื้ดดดด โต๋*/
-
-P.S. ยังเขียนไม่เสร็จกำลังเพิ่มเติม ถ้าแก้โค้ดแล้วอยากให้pull หรือ merge พิมพ์ในแชทกลุ่มก็ได้
-
 +++ importance +++
 1. ไม่ได้ลง venv ให้
 step ทำ - https://www.geeksforgeeks.org/python/create-virtual-environment-using-venv-python/
@@ -23,3 +15,8 @@ step ทำ - https://www.geeksforgeeks.org/python/create-virtual-environment-us
 อัพเดทหน้าบ้าน ยังไม่ merge (10/10/2025 12.55 PM)
 - เติมภาษาไทย (ยังไม่ครบ)
 - เพิ่มหน้าโปรไฟล์
+
+อัพเดทหน้าบ้าน (10/13)
+- เพิ่มไฟล์ index.html หน้าหลัก ไว้กด login หรือ ทดลองใช้(ปุ่มนี้เข้าหน้า home)
+- login มีไป regis กับ forgot
+- resetpassword 
