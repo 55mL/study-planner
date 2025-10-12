@@ -1,8 +1,0 @@
-flask
-email
-smtplib
-apscheduler
-requests
-pytz
-datetime
-email_service

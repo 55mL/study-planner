@@ -1,4 +1,3 @@
-# notification/email_service.py
 import os
 import smtplib
 from email.mime.text import MIMEText
@@ -9,6 +8,7 @@ SMTP_USER = os.getenv("SMTP_USER", "")
 SMTP_PASS = os.getenv("SMTP_PASS", "")
 
 def send_email(to_email, subject, body_html):
+    """ส่งอีเมลด้วย SMTP (รองรับ HTML)"""
     msg = MIMEText(body_html, "html", _charset="utf-8")
     msg["Subject"] = subject
     msg["From"] = SMTP_USER

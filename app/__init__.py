@@ -4,6 +4,11 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.routing import BaseConverter
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from app.notification.scheduler import batch_job
+from app.notification.scheduler import start_scheduler
+
 from dotenv import load_dotenv
 from datetime import timedelta
 import os
@@ -83,5 +88,11 @@ def create_app():
 
     from .routes.web import web_main
     app.register_blueprint(web_main)
+
+    # ✅ เริ่ม scheduler ตอน app start
+    start_scheduler()
+
+    with app.app_context():
+        batch_job()
 
     return app
