@@ -66,6 +66,31 @@ class UserUpdateService:
 	Service สำหรับอัปเดตข้อมูล user เช่น daily_read_hours, การเพิ่ม/ลบแผน, ล้างแผนที่หมดอายุ
 	"""
 	@staticmethod
+	def set_username(user, new_username, uniqeable=False, persist=True):
+		if not new_username:
+			raise KeyError("username not found")
+		# ตรวจสอบว่า username ซ้ำหรือไม่
+		if uniqeable:
+			if User.query.filter_by(username=new_username).first():
+				raise ValueError("username already used")
+			
+		user.username = new_username
+
+		if persist:
+			db.session.commit()
+
+	def set_password(user, new_password, old_password, persist=True):
+		if old_password and new_password:
+			if not check_password_hash(user.password, old_password):
+				raise UnicodeError("old password is incorrect")
+			AuthService.set_password(user, new_password)
+		else:
+			raise KeyError("new_password or old_password is empty")
+		
+		if persist:
+			db.session.commit()
+
+	@staticmethod
 	def set_daily_read_hours(user, daily_hours, persist=True):
 		"""
 		กำหนดจำนวนชั่วโมงอ่านหนังสือต่อวันใหม่ให้ user
