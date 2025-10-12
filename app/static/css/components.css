@@ -644,14 +644,14 @@ body[data-page="schedule"] .top-header .page-title {
 }
 
 .dot-center {
-  bottom: 2px;
-  left: 50%;
+  bottom: 9px;
+  left: 52%;
   transform: translateX(-50%);
 }
 
 .dot-exam-offset {
-  bottom: 5px;
-  left: 50%;
+  bottom: 12px;
+  left: 53%;
   transform: translateX(-50%) translateX(5px);
 }
 

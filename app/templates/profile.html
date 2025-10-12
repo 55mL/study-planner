@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Study Planner</title>
-    <link rel="stylesheet" href="/app/static/css/main.css">
-    <link rel="stylesheet" href="/app/static/css/components.css">
-    <link rel="stylesheet" href="/app/static/css/responsive.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
 </body>
 </html>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
@@ -115,24 +115,24 @@
         </main>
 
         <nav class="bottom-nav">
-            <a href="schedule.html" class="nav-item" data-page="schedule">
+            <a href="{{ url_for('web_main.home') }}" class="nav-item" data-page="schedule">
                 <ion-icon name="home"></ion-icon>
                 <span>หน้าหลัก</span>
             </a>
-            <a href="home.html" class="nav-item" data-page="home">
+            <a href="{{ url_for('web_main.feedback') }}" class="nav-item active" data-page="home">
                 <ion-icon name="checkmark-circle-outline"></ion-icon>
                 <span>บันทึก</span>
             </a>
-            <a href="add.html" class="nav-item nav-item-center" data-page="add">
+            <a href="{{ url_for('web_main.add') }}" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
                     <ion-icon name="add"></ion-icon>
                 </div>
             </a>
-            <a href="stat.html" class="nav-item" data-page="stat">
+            <a href="{{ url_for('web_main.stat') }}" class="nav-item" data-page="stat">
                 <ion-icon name="stats-chart"></ion-icon>
                 <span>สถิติ</span>
             </a>
-            <a href="profile.html" class="nav-item" data-page="profile">
+            <a href="{{ url_for('web_main.profile') }}" class="nav-item" data-page="profile">
                 <ion-icon name="person"></ion-icon>
                 <span>ตั้งค่า</span>
             </a>

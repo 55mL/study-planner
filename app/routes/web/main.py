@@ -23,7 +23,7 @@ def home():
 def feedback():
     return render_template('home.html')
 
-@web_main.route('/add')
+@web_main.route('/add.html')
 @login_required
 def add():
     return render_template('add.html')
@@ -32,7 +32,7 @@ def add():
 def stat():
     return render_template('stat.html')
 
-@web_main.route('/profile')
+@web_main.route('/profile.html')
 @login_required
 def profile():
     return render_template('profile.html')

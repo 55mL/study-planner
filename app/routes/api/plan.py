@@ -9,15 +9,11 @@ from app import db
 plan_api = Blueprint('plan_api', __name__, url_prefix='/api/plans')
 
 def get_current_user():
-    """
-    ใช้ดึง user ปัจจุบันจาก session (ใช้กับ API ทุกตัวที่ต้อง login)
-    ถ้าไม่มี user_id ใน session จะคืนค่า None
-    """
-    user_id = session.get('user_id')
+    """ดึง user จาก session"""
+    user_id = session.get('_user_id')
     if not user_id:
         return None
-    
-    return User.query.get(user_id)
+    return User.query.get(int(user_id))
 
 
 @plan_api.route('', methods=['GET'])
