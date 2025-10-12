@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, current_user
 from sqlalchemy import or_
 from app.models import User
 from app.services.user_service import AuthService
-from app import db
+from app.extensions import db
 
 web_login = Blueprint('web_login', __name__, template_folder='demo_backend') # ชี้ไปที่โฟลเดอร์ demo_backend ใน web
 

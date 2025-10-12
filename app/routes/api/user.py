@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Blueprint, request, jsonify, session
 from app.models import User
-from app import db
+from app.extensions import db
 from app.services.user_service import AuthService, UserUpdateService
 
 user_api = Blueprint('user_api', __name__, url_prefix='/api/user')

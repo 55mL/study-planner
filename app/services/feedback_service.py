@@ -1,7 +1,7 @@
 from .schedule_service import ScheduleService
 from .user_service import UserUpdateService
 import datetime
-from app import db
+from app.extensions import db
 from app.models import DailyAllocations, ReadingPlans
 from app.utils.utils import get_today, log
 

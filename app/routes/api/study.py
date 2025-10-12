@@ -2,14 +2,15 @@
 from datetime import date
 from flask import Blueprint, jsonify, request
 from sqlalchemy import func
-from app.models import DailyAllocations, User, db
-from app.utils.utils import get_today
+from app.extensions import db
+from app.models import DailyAllocations
+from app.utils.utils import get_today, log
 
 study_api = Blueprint("study_api", __name__, url_prefix="/api/study")
 
 def get_daily_summary(user_id, target_date=None):
     if target_date is None:
-        target_date = date.today()
+        target_date = get_today()
 
     allocations = (
         db.session.query(
@@ -23,6 +24,8 @@ def get_daily_summary(user_id, target_date=None):
     )
 
     total_hours = sum(a.total_hours for a in allocations)
+
+    log(f"user_id: {user_id}, total_hours: {total_hours}")
 
     return {
         "date": target_date.isoformat(),

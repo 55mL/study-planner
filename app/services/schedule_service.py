@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List, Dict, Tuple
 from collections import defaultdict
 from datetime import date, datetime, timedelta
-from app import db
+from app.extensions import db
 from app.models import DailyAllocations, ReadingPlans, User
 from datetime import date, timedelta
 from app.utils.utils import log, get_today

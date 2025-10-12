@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, session
 from sqlalchemy import or_
 from app.models import User
 from app.services.user_service import AuthService
-from app import db
+from app.extensions import db
 
 auth_api = Blueprint('auth_api', __name__, url_prefix='/api/auth')
 

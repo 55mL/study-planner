@@ -5,18 +5,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.routing import BaseConverter
 
-from apscheduler.schedulers.background import BackgroundScheduler
-from app.notification.scheduler import batch_job
+from app.extensions import db, migrate, mail, login_manager
 from app.notification.scheduler import start_scheduler
 
 from dotenv import load_dotenv
 from datetime import timedelta
 import os
 
-db = SQLAlchemy()
-migrate = Migrate()
-mail = Mail()
-login_manager = LoginManager()
 
 class SignedIntConverter(BaseConverter):
     regex = r'-?\d+'
@@ -40,6 +35,7 @@ def create_app():
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_USERNAME'] = os.environ.get("SENDER_MAIL", "idk-bruh")
     app.config['MAIL_PASSWORD'] = os.environ.get("SENDER_PASSWORD", "idk-bruh")
+    app.config['MAIL_DEFAULT_SENDER'] = os.getenv("SENDER_MAIL")
     mail.init_app(app)
 
     # db config
@@ -92,7 +88,8 @@ def create_app():
     # ✅ เริ่ม scheduler ตอน app start
     start_scheduler()
 
-    with app.app_context():
-        batch_job()
+    # with app.app_context():
+    #     from app.notification.scheduler import batch_job
+    #     batch_job()
 
     return app

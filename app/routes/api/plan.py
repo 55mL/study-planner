@@ -4,7 +4,7 @@ from app.services.user_service import UserUpdateService
 from app.services.feedback_service import Feedback
 from app.services.schedule_service import ScheduleService
 from app.utils.utils import get_today
-from app import db
+from app.extensions import db
 
 plan_api = Blueprint('plan_api', __name__, url_prefix='/api/plans')
 
