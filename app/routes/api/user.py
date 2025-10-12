@@ -7,14 +7,10 @@ from app.services.user_service import AuthService, UserUpdateService
 user_api = Blueprint('user_api', __name__, url_prefix='/api/user')
 
 def get_current_user():
-    """
-    ดึง user ปัจจุบันจาก session (ใช้กับทุก endpoint ที่ต้อง login)
-    """
-    user_id = session.get('user_id')
+    user_id = session.get('_user_id')
     if not user_id:
         return None
-    
-    return User.query.get(user_id)
+    return User.query.get(int(user_id))
 
 @user_api.route('/profile', methods=['GET'])
 def profile():

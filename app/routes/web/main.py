@@ -6,7 +6,7 @@ from app.services.schedule_service import ScheduleService
 from app.services.user_service import UserUpdateService
 from app.utils.utils import get_today
 
-web_main = Blueprint('web_main', __name__, template_folder='template') # ชี้ไปที่โฟลเดอร์ demo_backend
+web_main = Blueprint('web_main', __name__, template_folder='template')
 
 @web_main.route('/home')
 @login_required
@@ -27,7 +27,8 @@ def feedback():
 @login_required
 def add():
     return render_template('add.html')
-@web_main.route('/stat')
+
+@web_main.route('/stat.html')
 @login_required
 def stat():
     return render_template('stat.html')
@@ -36,3 +37,15 @@ def stat():
 @login_required
 def profile():
     return render_template('profile.html')
+
+@web_main.route('/forgotpassword.html')
+def forgotpassword(): 
+    return render_template('forgotpassword.html')
+
+@web_main.route('/register.html')
+def register(): 
+    return render_template('register.html')
+
+@web_main.route('/login.html')
+def login_page():  
+    return render_template('login.html')

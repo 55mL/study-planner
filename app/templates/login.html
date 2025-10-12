@@ -118,11 +118,6 @@
             margin-bottom: 10px;
         }
 
-        .logo-icon {
-            font-size: 36px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-        }
-
         .logo-text {
             font-size: 28px;
             font-weight: 700;
@@ -135,6 +130,33 @@
             color: #1a1a1a;
             font-weight: 300;
             font-style: italic;
+        }
+
+        .notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 9999;
+            transition: top 0.3s ease-in-out;
+            font-weight: 500;
+            max-width: 90%;
+        }
+
+        .notification.show {
+            top: 20px;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         .alert-success {
@@ -164,16 +186,6 @@
             margin-bottom: 8px;
             letter-spacing: -1px;
             line-height: 1.1;
-            text-align: center;
-        }
-
-        .login-subtitle {
-            font-size: 18px;
-            font-weight: 300;
-            font-style: italic;
-            color: #1a1a1a;
-            margin-bottom: 25px;
-            letter-spacing: -0.5px;
             text-align: center;
         }
 
@@ -239,19 +251,25 @@
             transition: transform 0.3s ease;
         }
 
-        .btn-login:hover {
+        .btn-login:hover:not(:disabled) {
             background: #000000;
             transform: translateY(-1px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
         }
 
-        .btn-login:hover::after {
+        .btn-login:hover:not(:disabled)::after {
             transform: translateX(3px);
         }
 
-        .btn-login:active {
+        .btn-login:active:not(:disabled) {
             transform: translateY(0);
         }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         .form-links {
             margin-top: 20px;
             text-align: center;
@@ -290,18 +308,14 @@
         .reset-link a:hover::after {
             width: 100%;
         }
-
-        .extra-text {
-            font-size: 14px;
-            color: #555;
-            margin-top: 15px;
-            font-weight: 400;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
     <a href="index.html" class="back-btn" title="ย้อนกลับ" aria-label="ย้อนกลับ">←</a>
+
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
 
     <div class="shape-pink"></div>
     <div class="shape-yellow"></div>
@@ -319,32 +333,114 @@
         <div class="login-container">
             <h1 class="login-title">เข้าสู่ระบบ</h1>
 
-            <form class="login-form">
+            <form id="loginForm" class="login-form">
                 <div class="form-group">
-                    <label for="username">ชื่อผู้ใช้</label>
-                    <input type="text" id="username" name="username" class="form-input" placeholder="ป้อนชื่อผู้ใช้">
+                    <label for="username">ชื่อผู้ใช้หรืออีเมล</label>
+                    <input type="text" id="username" name="username_login" class="form-input" placeholder="ป้อนชื่อผู้ใช้หรืออีเมล" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">รหัสผ่าน</label>
-                    <input type="password" id="password" name="password" class="form-input" placeholder="ป้อนรหัสผ่านของคุณ">
+                    <input type="password" id="password" name="password_login" class="form-input" placeholder="ป้อนรหัสผ่านของคุณ" required>
                 </div>
 
-                <button type="submit" class="btn-login">เข้าสู่ระบบ</button>
+                <button type="submit" class="btn-login" id="loginBtn">เข้าสู่ระบบ</button>
 
                 <div class="form-links">
                     <p class="register-link">
                         ยังไม่มีบัญชี? 
-                        <a href="register.html">สมัครสมาชิก</a>
+                        <a href="{{ url_for('web_main.register') }}">สมัครสมาชิก</a>
                     </p>
                     <p class="reset-link">
                         ลืมรหัสผ่าน? 
-                        <a href="forgotpassword.html">รีเซ็ตรหัสผ่าน</a>
+                        <a href="{{ url_for('web_main.forgotpassword') }}">รีเซ็ตรหัสผ่าน</a>
                     </p>
                 </div>
-
             </form>
         </div>
     </main>
+
+    <script>
+        // ฟังก์ชันแสดง notification
+        function showNotification(message, isSuccess = false) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            
+            if (isSuccess) {
+                notification.classList.add('success');
+            } else {
+                notification.classList.remove('success');
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // ตรวจสอบว่ามี flash message จาก URL หรือไม่
+        const urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message');
+        if (message) {
+            showNotification(decodeURIComponent(message), false);
+        }
+
+        // จัดการ form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showNotification('กรุณากรอกข้อมูลให้ครบถ้วน', false);
+                return;
+            }
+            
+            const loginBtn = document.getElementById('loginBtn');
+            const originalText = loginBtn.innerHTML;
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = 'กำลังเข้าสู่ระบบ...';
+            loginBtn.style.setProperty('--after-content', '""', 'important');
+            
+            try {
+                const formData = new FormData();
+                formData.append('username_login', username);
+                formData.append('password_login', password);
+                
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                if (response.redirected) {
+                    showNotification('เข้าสู่ระบบสำเร็จ!', true);
+                    setTimeout(() => {
+                        window.location.href = response.url;
+                    }, 500);
+                } else {
+                    const text = await response.text();
+                    
+                    if (text.includes('incorrect username or password')) {
+                        showNotification('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง', false);
+                    } else if (text.includes('Duplicate username found')) {
+                        showNotification('พบชื่อผู้ใช้ซ้ำ กรุณาใช้อีเมลในการเข้าสู่ระบบ', false);
+                    } else {
+                        showNotification('เกิดข้อผิดพลาดในการเข้าสู่ระบบ', false);
+                    }
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('เกิดข้อผิดพลาดในการเชื่อมต่อ', false);
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = originalText;
+            }
+        });
+    </script>
 </body>
 </html>

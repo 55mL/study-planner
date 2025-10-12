@@ -97,6 +97,7 @@
             z-index: 0;
             transform: rotate(-8deg);
         }
+
         .main-container {
             width: 100%;
             max-width: 360px;
@@ -104,36 +105,31 @@
             z-index: 1;
         }
 
-        .header {
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .logo {
+        .notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
+            z-index: 9999;
+            transition: top 0.3s ease-in-out;
+            font-weight: 500;
+            max-width: 90%;
         }
 
-        .logo-icon {
-            font-size: 36px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        .notification.show {
+            top: 20px;
         }
 
-        .logo-text {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1a1a1a;
-            letter-spacing: -1px;
-        }
-
-        .header-subtitle {
-            font-size: 18px;
-            color: #1a1a1a;
-            font-weight: 300;
-            font-style: italic;
+        .notification.success {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         .register-container {
@@ -226,18 +222,23 @@
             transition: transform 0.3s ease;
         }
 
-        .btn-register:hover {
+        .btn-register:hover:not(:disabled) {
             background: #000000;
             transform: translateY(-1px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
         }
 
-        .btn-register:hover::after {
+        .btn-register:hover:not(:disabled)::after {
             transform: translateX(3px);
         }
 
-        .btn-register:active {
+        .btn-register:active:not(:disabled) {
             transform: translateY(0);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
 
         .form-links {
@@ -279,43 +280,126 @@
 <body>
     <a href="index.html" class="back-btn" title="ย้อนกลับ" aria-label="ย้อนกลับ">←</a>
 
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
+
     <div class="shape-pink"></div>
     <div class="shape-yellow"></div>
     <div class="shape-blue"></div>
     <div class="shape-green"></div>
 
     <main class="main-container">
-
         <div class="register-container">
             <h1 class="register-title">สมัครสมาชิก</h1>
             <p class="register-subtitle">สร้างบัญชีของคุณ</p>
 
-            <form class="register-form">
+            <form id="registerForm" class="register-form">
                 <div class="form-group">
                     <label for="email">อีเมล</label>
-                    <input type="email" id="email" name="email" class="form-input" placeholder="ป้อนอีเมลของคุณ">
+                    <input type="email" id="email" name="email_register" class="form-input" placeholder="ป้อนอีเมลของคุณ" required>
                 </div>
 
                 <div class="form-group">
                     <label for="username">ชื่อผู้ใช้</label>
-                    <input type="text" id="username" name="username" class="form-input" placeholder="ป้อนชื่อผู้ใช้">
+                    <input type="text" id="username" name="username_register" class="form-input" placeholder="ป้อนชื่อผู้ใช้" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">รหัสผ่าน</label>
-                    <input type="password" id="password" name="password" class="form-input" placeholder="สร้างรหัสผ่าน">
+                    <input type="password" id="password" name="password_register" class="form-input" placeholder="สร้างรหัสผ่าน" required>
                 </div>
 
-                <button type="submit" class="btn-register">สมัครสมาชิก</button>
+                <button type="submit" class="btn-register" id="registerBtn">สมัครสมาชิก</button>
 
                 <div class="form-links">
                     <p class="login-link">
                         มีบัญชีอยู่แล้ว?
-                        <a href="login.html">เข้าสู่ระบบ</a>
+                        <a href="/login">เข้าสู่ระบบ</a>
                     </p>
                 </div>
             </form>
         </div>
     </main>
+
+    <script>
+        function showNotification(message, isSuccess = false) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            
+            if (isSuccess) {
+                notification.classList.add('success');
+            } else {
+                notification.classList.remove('success');
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!email || !username || !password) {
+                showNotification('กรุณากรอกข้อมูลให้ครบถ้วน', false);
+                return;
+            }
+
+            if (password.length < 6) {
+                showNotification('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร', false);
+                return;
+            }
+            
+            const registerBtn = document.getElementById('registerBtn');
+            const originalText = registerBtn.innerHTML;
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = 'กำลังสมัครสมาชิก...';
+            
+            try {
+                const formData = new FormData();
+                formData.append('email_register', email);
+                formData.append('username_register', username);
+                formData.append('password_register', password);
+                
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                if (response.redirected) {
+                    showNotification('สมัครสมาชิกสำเร็จ! กำลังพาไปหน้าเข้าสู่ระบบ...', true);
+                    setTimeout(() => {
+                        window.location.href = response.url;
+                    }, 1500);
+                } else {
+                    const text = await response.text();
+                    
+                    if (text.includes('Error:')) {
+                        const errorMatch = text.match(/Error: (.+?)</);
+                        const errorMsg = errorMatch ? errorMatch[1] : 'เกิดข้อผิดพลาดในการสมัครสมาชิก';
+                        showNotification(errorMsg, false);
+                    } else {
+                        showNotification('เกิดข้อผิดพลาดในการสมัครสมาชิก', false);
+                    }
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                showNotification('เกิดข้อผิดพลาดในการเชื่อมต่อ', false);
+            } finally {
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = originalText;
+            }
+        });
+    </script>
 </body>
 </html>

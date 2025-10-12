@@ -1,4 +1,4 @@
-<!-- Update   : 2025-10-10 5.00 PM(Neptune) -->
+<!-- Update   : 2025-10-13 (Connected to Backend) -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -8,13 +8,314 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
-</body>
-</html>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        .notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 9999;
+            transition: top 0.3s ease-in-out;
+            font-weight: 500;
+            max-width: 90%;
+        }
+
+        .notification.show {
+            top: 20px;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            background: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { background: rgba(0, 0, 0, 0); }
+            to { background: rgba(0, 0, 0, 0.5); }
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7) translateY(50px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-header ion-icon {
+            font-size: 32px;
+            color: #667eea;
+        }
+
+        .modal-form .form-group {
+            margin-bottom: 18px;
+        }
+
+        .modal-form label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .modal-form input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .modal-form input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-cancel {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-cancel:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-save {
+            background: var(--bg-secondary);
+            color: white;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--bg-secondary);
+            filter: brightness(1.1);
+        }
+
+        .btn-save:active, .btn-cancel:active {
+            transform: translateY(0);
+        }
+
+        /* Logout Confirm Modal */
+        .logout-modal .modal-content {
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .logout-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logout-icon ion-icon {
+            font-size: 42px;
+            color: white;
+        }
+
+        .logout-modal .modal-header {
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .logout-modal .modal-text {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .btn-logout-confirm {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-logout-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        /* Modal header icon color */
+        .modal-header ion-icon {
+            color: var(--color-accent);
+        }
+
+        /* Input focus border color */
+        .modal-form input:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 4px var(--bg-primary);
+        }
+    </style>
 </head>
 <body data-page="profile">
     
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <!-- Modal สำหรับเปลี่ยนรหัสผ่าน -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-header">
+                <ion-icon name="lock-closed"></ion-icon>
+                เปลี่ยนรหัสผ่าน
+            </h2>
+            <form id="passwordForm" class="modal-form">
+                <div class="form-group">
+                    <label>รหัสผ่านเก่า</label>
+                    <input type="password" id="oldPassword" placeholder="กรอกรหัสผ่านเก่า" required>
+                </div>
+                <div class="form-group">
+                    <label>รหัสผ่านใหม่</label>
+                    <input type="password" id="newPassword" placeholder="กรอกรหัสผ่านใหม่ (อย่างน้อย 6 ตัว)" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closePasswordModal()">
+                        <ion-icon name="close"></ion-icon>
+                        ยกเลิก
+                    </button>
+                    <button type="submit" class="btn-save">
+                        <ion-icon name="checkmark"></ion-icon>
+                        บันทึก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal สำหรับตั้งเวลาอ่าน -->
+    <div id="readingTimeModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-header">
+                <ion-icon name="alarm"></ion-icon>
+                เวลาในการอ่านแต่ละวัน
+            </h2>
+            <form id="readingTimeForm" class="modal-form">
+                <div class="form-group">
+                    <label>จำนวนชั่วโมงต่อวัน</label>
+                    <input type="number" id="dailyHours" min="0.5" max="24" step="0.5" placeholder="เช่น 2.5" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeReadingTimeModal()">
+                        <ion-icon name="close"></ion-icon>
+                        ยกเลิก
+                    </button>
+                    <button type="submit" class="btn-save">
+                        <ion-icon name="checkmark"></ion-icon>
+                        บันทึก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal สำหรับยืนยัน Logout -->
+    <div id="logoutModal" class="modal logout-modal">
+        <div class="modal-content">
+            <div class="logout-icon">
+                <ion-icon name="log-out"></ion-icon>
+            </div>
+            <h2 class="modal-header">ออกจากระบบ</h2>
+            <p class="modal-text">คุณต้องการออกจากระบบหรือไม่?</p>
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeLogoutModal()">
+                    <ion-icon name="close"></ion-icon>
+                    ยกเลิก
+                </button>
+                <button type="button" class="btn-logout-confirm" onclick="confirmLogout()">
+                    <ion-icon name="checkmark"></ion-icon>
+                    ออกจากระบบ
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         
         <main class="main-content">
@@ -25,8 +326,8 @@
                         <ion-icon name="camera"></ion-icon>
                     </button>
                 </div>
-                <h2 class="profile-name">ชื่อผู้ใช้</h2>
-                <p class="profile-email">อีแมว@kkumail.com</p>
+                <h2 class="profile-name" id="profileName">กำลังโหลด...</h2>
+                <p class="profile-email" id="profileEmail">กำลังโหลด...</p>
             </header>
 
             <!-- Edit Profile Form -->
@@ -35,13 +336,13 @@
                 
                 <form id="profileForm">
                     <div class="form-group">
-                        <label for="displayName" class="form-label">ชื่อ</label>
+                        <label for="displayName" class="form-label">ชื่อผู้ใช้</label>
                         <input 
                             type="text" 
                             id="displayName" 
                             name="displayName" 
                             class="form-input" 
-                            placeholder="Enter your name"
+                            placeholder="กรอกชื่อผู้ใช้"
                         >
                     </div>
 
@@ -63,23 +364,23 @@
                         </div>
                         <div class="setting-text">
                             <h4>การแจ้งเตือน</h4>
-                            <p>เปิด/ปิดการแจ้งเตือน</p>
+                            <p>เปิด/ปิดการแจ้งเตือนทางอีเมล</p>
                         </div>
                     </div>
                     <label class="toggle-switch">
-                        <input type="checkbox" id="notificationToggle" checked>
+                        <input type="checkbox" id="notificationToggle">
                         <span class="toggle-slider"></span>
                     </label>
                 </div>
 
-                <div class="setting-item">
+                <div class="setting-item" id="readingTimeSetting">
                     <div class="setting-info">
                         <div class="setting-icon">
                             <ion-icon name="alarm"></ion-icon>
                         </div>
                         <div class="setting-text">
                             <h4>เวลาในการอ่านแต่ละวัน</h4>
-                            <p>ตั้งค่าเวลาสำหรับอ่านในแต่ละวัน</p>
+                            <p id="currentReadingTime">กำลังโหลด...</p>
                         </div>
                     </div>
                     <div class="setting-arrow">
@@ -87,14 +388,14 @@
                     </div>
                 </div>
 
-                <div class="setting-item">
+                <div class="setting-item" id="passwordSetting">
                     <div class="setting-info">
                         <div class="setting-icon">
                             <ion-icon name="lock-closed"></ion-icon>
                         </div>
                         <div class="setting-text">
                             <h4>เปลี่ยนรหัสผ่าน</h4>
-                            <p>แก้ไขรหัสผ่านกันจ้า</p>
+                            <p>แก้ไขรหัสผ่านของคุณ</p>
                         </div>
                     </div>
                     <div class="setting-arrow">
@@ -102,7 +403,6 @@
                     </div>
                 </div>
             </section>
-
 
             <!-- Logout Button -->
             <section class="settings-section">
@@ -115,24 +415,24 @@
         </main>
 
         <nav class="bottom-nav">
-            <a href="{{ url_for('web_main.home') }}" class="nav-item" data-page="schedule">
+            <a href="home" class="nav-item" data-page="schedule">
                 <ion-icon name="home"></ion-icon>
                 <span>หน้าหลัก</span>
             </a>
-            <a href="{{ url_for('web_main.feedback') }}" class="nav-item" data-page="home">
+            <a href="home.html" class="nav-item" data-page="home">
                 <ion-icon name="checkmark-circle-outline"></ion-icon>
                 <span>บันทึก</span>
             </a>
-            <a href="{{ url_for('web_main.add') }}" class="nav-item nav-item-center" data-page="add">
+            <a href="add.html" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
                     <ion-icon name="add"></ion-icon>
                 </div>
             </a>
-            <a href="{{ url_for('web_main.stat') }}" class="nav-item" data-page="stat">
-                <ion-icon name="book-outline"></ion-icon>
-                <span>คู่มือ</span>
+            <a href="stat.html" class="nav-item" data-page="stat">
+                <ion-icon name="stats-chart"></ion-icon>
+                <span>สถิติ</span>
             </a>
-            <a href="{{ url_for('web_main.profile') }}" class="nav-item active" data-page="profile">
+            <a href="profile.html" class="nav-item active" data-page="profile">
                 <ion-icon name="person"></ion-icon>
                 <span>ตั้งค่า</span>
             </a>
@@ -156,36 +456,240 @@
             }
         });
 
-        document.getElementById('profileForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = {
-                displayName: document.getElementById('displayName').value,
-                email: document.getElementById('email').value
+        // Notification function
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            
+            if (isError) {
+                notification.classList.add('error');
+            } else {
+                notification.classList.remove('error');
             }
-            alert('Profile updated successfully!');
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Load user profile
+        async function loadProfile() {
+            try {
+                const response = await fetch('/api/user/profile', {
+                    credentials: 'include'
+                });
+
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const data = await response.json();
+                
+                document.getElementById('profileName').textContent = data.username;
+                document.getElementById('profileEmail').textContent = data.email;
+                document.getElementById('displayName').value = data.username;
+                document.getElementById('currentReadingTime').textContent = `${data.daily_read_hours} ชั่วโมงต่อวัน`;
+                document.getElementById('dailyHours').value = data.daily_read_hours;
+                
+                // Load notification setting
+                const notificationToggle = document.getElementById('notificationToggle');
+                notificationToggle.checked = data.email_notifications || false;
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showNotification('เกิดข้อผิดพลาดในการโหลดข้อมูล', true);
+            }
+        }
+
+        // Update username
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const newUsername = document.getElementById('displayName').value.trim();
+            
+            if (!newUsername) {
+                showNotification('กรุณากรอกชื่อผู้ใช้', true);
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/user/change-username', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        username: newUsername
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showNotification('เปลี่ยนชื่อผู้ใช้สำเร็จ!');
+                    document.getElementById('profileName').textContent = data.username;
+                } else {
+                    showNotification(data.error || 'เกิดข้อผิดพลาด', true);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('เกิดข้อผิดพลาดในการเชื่อมต่อ', true);
+            }
         });
 
-        document.querySelectorAll('.setting-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const settingName = this.querySelector('h4').textContent;
-                alert(`Opening ${settingName} settings...`);
+        // Notification toggle
+        document.getElementById('notificationToggle').addEventListener('change', async function() {
+            try {
+                const response = await fetch('/api/user/change-email_notifications', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        email_notifications: this.checked
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showNotification(this.checked ? 'เปิดการแจ้งเตือนแล้ว' : 'ปิดการแจ้งเตือนแล้ว');
+                } else {
+                    showNotification(data.error || 'เกิดข้อผิดพลาด', true);
+                    this.checked = !this.checked;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('เกิดข้อผิดพลาด', true);
+                this.checked = !this.checked;
+            }
+        });
+
+        // Password modal
+        function openPasswordModal() {
+            document.getElementById('passwordModal').classList.add('show');
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('show');
+            document.getElementById('passwordForm').reset();
+        }
+
+        document.getElementById('passwordSetting').addEventListener('click', openPasswordModal);
+
+        document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            if (newPassword.length < 6) {
+                showNotification('รหัสผ่านใหม่ต้องมีอย่างน้อย 6 ตัวอักษร', true);
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/user/change-password', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        old_password: oldPassword,
+                        new_password: newPassword
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showNotification('เปลี่ยนรหัสผ่านสำเร็จ!');
+                    closePasswordModal();
+                } else {
+                    showNotification(data.error || 'เกิดข้อผิดพลาด', true);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('เกิดข้อผิดพลาดในการเชื่อมต่อ', true);
+            }
+        });
+
+        // Reading time modal
+        function openReadingTimeModal() {
+            document.getElementById('readingTimeModal').classList.add('show');
+        }
+
+        function closeReadingTimeModal() {
+            document.getElementById('readingTimeModal').classList.remove('show');
+        }
+
+        document.getElementById('readingTimeSetting').addEventListener('click', openReadingTimeModal);
+
+        document.getElementById('readingTimeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const dailyHours = parseFloat(document.getElementById('dailyHours').value);
+
+            try {
+                const response = await fetch('/api/user/change-daily_read_hours', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        daily_read_hours: dailyHours
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showNotification('อัปเดตเวลาอ่านสำเร็จ!');
+                    document.getElementById('currentReadingTime').textContent = `${dailyHours} ชั่วโมงต่อวัน`;
+                    closeReadingTimeModal();
+                } else {
+                    showNotification(data.error || 'เกิดข้อผิดพลาด', true);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('เกิดข้อผิดพลาดในการเชื่อมต่อ', true);
+            }
+        });
+
+        // Logout
+        function openLogoutModal() {
+            document.getElementById('logoutModal').classList.add('show');
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('show');
+        }
+
+        function confirmLogout() {
+            window.location.href = '/logout';
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', openLogoutModal);
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                }
             });
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            if (confirm('Are you sure you want to log out?')) {
-                alert('Logging out...');
-            }
-        });
-
-        document.getElementById('notificationToggle').addEventListener('change', function() {
-            if (this.checked) {
-                alert('เปิดการแจ้งเตือนแล้ว');
-            } else {
-                alert('ปิดการแจ้งเตือนแล้ว');
-            }
-        });
-
+        // Load profile on page load
+        loadProfile();
     </script>
 </body>
 </html>
