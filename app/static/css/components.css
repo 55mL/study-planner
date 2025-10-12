@@ -1102,6 +1102,76 @@ body[data-page="schedule"] .bottom-nav {
     color: var(--color-gray);
 }
 
+/* ===== Subject Card ===== */
+.subject-card {
+    background: var(--color-white);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.subject-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.subject-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-bottom: 8px;
+}
+
+.subject-date {
+    font-size: 0.9rem;
+    color: var(--color-gray);
+    margin-bottom: 12px;
+}
+
+.status-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.status-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.status-btn ion-icon {
+    font-size: 1.25rem;
+}
+
+.status-btn.on-track {
+    background: #d4edda;
+    color: #2ECC71;
+    border-color: #2ECC71;
+}
+
+.status-btn.on-track:hover {
+    background: #2ECC71;
+    color: white;
+}
+
+.status-btn.off-track {
+    background: #f8d7da;
+    color: #E74C3C;
+    border-color: #E74C3C;
+}
+
+.status-btn.off-track:hover {
+    background: #E74C3C;
+    color: white;
+}
 
 /* 
  * ----------------------------------

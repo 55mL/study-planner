@@ -32,8 +32,7 @@ def get_schedule():
     plan_by_name = {plan.exam_name: plan for plan in plans}
 
     events = []
-    # ✅ เปลี่ยนจาก set เป็น dict เพื่อเก็บหลายวิชาในวันเดียวกัน
-    exam_dates_added = {}  # {date: [exam_name1, exam_name2, ...]}
+    exam_dates_added = {}
 
     print(f"\n{'='*60}")
     print(f"📊 Processing allocations...")
@@ -44,18 +43,20 @@ def get_schedule():
         exam_date = exam_dates_map.get(alloc.exam_name_snapshot)
 
         if exam_date:
-            # ถ้าวันนี้ >= วันสอบ ให้ข้ามไป (ไม่เอา)
+            # ถ้าวันนี้ >= วันสอบ ให้ข้ามไป
             if alloc.date >= exam_date:
                 print(f"⚠️ SKIP: {date_str} >= exam date {exam_date.strftime('%Y-%m-%d')}")
                 continue
 
-            # หาค่า level จาก plan (ReadingPlans.level)
+            # หาค่า level จาก plan
             plan = plan_by_name.get(alloc.exam_name_snapshot)
             level_value = plan.level if plan else None
 
-            print(f"✅ ADD study day: {date_str} ({alloc.exam_name_snapshot}, {alloc.slots} ชม., level={level_value})")
+            print(f"✅ ADD study day: {date_str} ({alloc.exam_name_snapshot}, {alloc.slots} ชม., level={level_value}, id={alloc.id})")
 
             events.append({
+                'id': alloc.id,  # ✅ เพิ่ม id
+                'alloc_id': alloc.id,  # ✅ เพิ่ม alloc_id
                 'day': date_str,
                 'exam': alloc.exam_name_snapshot,
                 'slots': alloc.slots,
@@ -65,22 +66,22 @@ def get_schedule():
                 'level': level_value
             })
 
-    # 2. เพิ่มวันสอบ (จาก plans) - รองรับหลายวิชาในวันเดียวกัน
+    # 2. เพิ่มวันสอบ (จาก plans)
     for plan in plans:
         if plan.exam_date:
             exam_date_str = plan.exam_date.strftime('%Y-%m-%d')
 
-            # ✅ เช็คว่าวันนี้มี exam_name นี้แล้วหรือยัง
             if exam_date_str not in exam_dates_added:
                 exam_dates_added[exam_date_str] = []
 
-            # ถ้ายังไม่มีวิชานี้ในวันนี้ ก็เพิ่ม
             if plan.exam_name not in exam_dates_added[exam_date_str]:
                 exam_dates_added[exam_date_str].append(plan.exam_name)
 
                 print(f"✅ ADD exam day: {exam_date_str} ({plan.exam_name}, level={plan.level})")
 
                 events.append({
+                    'id': None,  # ✅ วันสอบไม่มี allocation id
+                    'alloc_id': None,  # ✅ วันสอบไม่มี allocation id
                     'day': exam_date_str,
                     'exam': plan.exam_name,
                     'slots': 0,
@@ -90,6 +91,7 @@ def get_schedule():
                     'level': plan.level
                 })
 
+    print(f"📤 Total events: {len(events)}")
     print(f"{'='*60}\n")
 
     return jsonify({

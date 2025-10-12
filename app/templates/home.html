@@ -1,22 +1,12 @@
-<!-- 
- - File     : home.html
- - Descript : หน้าหลักเริ่มต้น ประกอบไปด้วย
- -            1. Progress Overview
- -            2. Scroll Bar เลื่อนซ้ายขวาเลือกวันได้
- -            3. Log บันทึกการติดตามความคืบหน้า
- -            4. Upcoming รายการสิ่งที่กำลังจะมาถึง
- - Update   : 2025-10-10 5.00 PM(Neptune)
--->
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Study Planner</title>
-    <link rel="stylesheet" href="/app/static/css/main.css">
-    <link rel="stylesheet" href="/app/static/css/components.css">
-    <link rel="stylesheet" href="/app/static/css/responsive.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
@@ -26,6 +16,181 @@
             document.documentElement.setAttribute('data-day', dayNames[today.getDay()]);
         })();
     </script>
+    
+    <style>
+        /* ===== Modal Styles ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: var(--color-white);
+            border-radius: 24px 24px 0 0;
+            width: 100%;
+            max-width: 500px;
+            padding: 24px;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 8px;
+        }
+        
+        .modal-subtitle {
+            font-size: 0.9rem;
+            color: var(--color-gray);
+        }
+        
+        .feedback-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .feedback-btn {
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px solid var(--bg-secondary);
+            background: var(--color-white);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .feedback-btn:hover {
+            border-color: var(--color-accent);
+            background: var(--bg-primary);
+            transform: translateX(4px);
+        }
+        
+        .feedback-btn ion-icon {
+            font-size: 1.5rem;
+        }
+        
+        .feedback-btn.on-time {
+            border-color: #2ECC71;
+            color: #2ECC71;
+        }
+        
+        .feedback-btn.too-hard {
+            border-color: #E74C3C;
+            color: #E74C3C;
+        }
+        
+        .feedback-btn.too-easy {
+            border-color: #3498DB;
+            color: #3498DB;
+        }
+        
+        .modal-close {
+            padding: 12px;
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            color: var(--color-dark);
+            font-weight: 600;
+            width: 100%;
+        }
+        
+        /* Loading state */
+        .subject-card.loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        /* ===== Status Styles ===== */
+.subject-card.completed {
+    opacity: 0.7;
+    background: #f8f9fa;
+}
+
+.subject-card.view-only {
+    opacity: 0.8;
+}
+
+.status-complete {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #d4edda;
+    color: #2ECC71;
+    font-weight: 600;
+}
+
+.status-complete ion-icon {
+    font-size: 1.5rem;
+}
+
+.status-waiting {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #fff3cd;
+    color: #856404;
+    font-weight: 600;
+}
+
+.status-waiting ion-icon {
+    font-size: 1.5rem;
+}
+
+.selected-date-header {
+    position: sticky;
+    top: 0;
+    background: var(--color-cream);
+    padding: 8px 0;
+    z-index: 10;
+}
+
+.subject-date {
+    font-size: 0.9rem;
+    color: var(--color-gray);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+    </style>
 </head>
 <body data-page="home">
     <div class="app-container">
@@ -57,212 +222,447 @@
             </section>
         </div>
 
-        <div class="week-calendar-wrapper">
-            <section class="week-calendar" id="weekCalendar">
-            </section>
-        </div>
-
         <main class="main-content" style="padding-top: 0;">
 
             <section class="progress-section">
                 <h2 class="section-title">บันทึกการอ่าน</h2>
-                <p class="section-subtitle">(5/8) เสร็จสิ้น</p>
+                <p class="section-subtitle" id="progressSubtitle">(0/0) เสร็จสิ้น</p>
 
-                <div class="subject-card">
-                    <h3 class="subject-name">Calculus III</h3>
-                    <div class="status-buttons">
-                        <button class="status-btn on-track">ตามแผน</button>
-                        <button class="status-btn off-track">ไม่ตามแผน</button>
-                    </div>
-                </div>
-
-                <div class="subject-card">
-                    <h3 class="subject-name">Data Structure</h3>
-                    <div class="status-buttons">
-                        <button class="status-btn on-track">On Track</button>
-                        <button class="status-btn off-track">Off Track</button>
-                    </div>
+                <div id="subjectsContainer">
+                    <p class="muted">กำลังโหลดข้อมูล...</p>
                 </div>
             </section>
-
-            <!-- <section class="upcoming-section">
-                <h2 class="section-title">Upcoming</h2>
-                <p class="section-subtitle">(5/8) Completed</p>
-            </section> -->
 
         </main>
 
         <nav class="bottom-nav">
-            <a href="schedule.html" class="nav-item" data-page="schedule">
+            <a href="{{ url_for('web_main.home') }}" class="nav-item" data-page="schedule">
                 <ion-icon name="home"></ion-icon>
                 <span>หน้าหลัก</span>
             </a>
-            <a href="home.html" class="nav-item" data-page="home">
+            <a href="{{ url_for('web_main.feedback') }}" class="nav-item active" data-page="home">
                 <ion-icon name="checkmark-circle-outline"></ion-icon>
                 <span>บันทึก</span>
             </a>
-            <a href="add.html" class="nav-item nav-item-center" data-page="add">
+            <a href="{{ url_for('web_main.add') }}" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
                     <ion-icon name="add"></ion-icon>
                 </div>
             </a>
-            <a href="stat.html" class="nav-item" data-page="stat">
+            <a href="{{ url_for('web_main.stat') }}" class="nav-item" data-page="stat">
                 <ion-icon name="stats-chart"></ion-icon>
                 <span>สถิติ</span>
             </a>
-            <a href="profile.html" class="nav-item" data-page="profile">
+            <a href="{{ url_for('web_main.profile') }}" class="nav-item" data-page="profile">
                 <ion-icon name="person"></ion-icon>
                 <span>ตั้งค่า</span>
             </a>
         </nav>
+    </div>
 
-
+    <!-- ✅ Modal สำหรับเลือก feedback -->
+    <div class="modal-overlay" id="feedbackModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">ทำไมไม่ตามแผน?</h3>
+                <p class="modal-subtitle" id="modalSubtitle">เลือกเหตุผล</p>
+            </div>
+            
+            <div class="feedback-options">
+                <button class="feedback-btn on-time" data-feedback="on-time">
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                    <span>อ่านทันตามแผน</span>
+                </button>
+                <button class="feedback-btn too-hard" data-feedback="too-hard">
+                    <ion-icon name="alert-circle"></ion-icon>
+                    <span>ยากเกินไป</span>
+                </button>
+                <button class="feedback-btn too-easy" data-feedback="too-easy">
+                    <ion-icon name="happy"></ion-icon>
+                    <span>ง่ายเกินไป</span>
+                </button>
+            </div>
+            
+            <button class="modal-close" id="modalClose">ปิด</button>
+        </div>
     </div>
 
     <script>
-        
-            const weekCalendar = document.getElementById('weekCalendar');
-            const today = new Date();
-        
-        const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-        const dayNamesShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        
-        const monthNamesThai = [
-            'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
-            'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
-        ];
+    // ===== Calendar Code =====
+    const weekCalendar = document.getElementById('weekCalendar');
+    const today = new Date();
+    
+    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const dayNamesShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    
+    const monthNamesThai = [
+        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+        'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+    ];
 
-        function updateHeaderDate() {
-            const day = today.getDate();
-            const month = monthNamesThai[today.getMonth()];
-            const year = today.getFullYear() + 543; // แปลงเป็น พ.ศ.
-            
-            document.querySelector('.page-title').textContent = `${day} ${month} ${year}`;
-        }
+    function updateHeaderDate() {
+        const day = today.getDate();
+        const month = monthNamesThai[today.getMonth()];
+        const year = today.getFullYear() + 543;
+        
+        document.querySelector('.page-title').textContent = `${day} ${month} ${year}`;
+    }
 
-        updateHeaderDate();
+    updateHeaderDate();
 
-        function generateDays() {
-            const days = [];
-            for (let i = -30; i <= 29; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() + i);
-                days.push({
-                    date: date,
-                    dayNumber: date.getDate(),
-                    dayName: dayNamesShort[date.getDay()],
-                    dayKey: dayNames[date.getDay()],
-                    isToday: i === 0
-                });
-            }
-            return days;
-        }
-        
-        function renderCalendar() {
-            const days = generateDays();
-            weekCalendar.innerHTML = days.map((day, index) => `
-                <div class="day-pill ${day.isToday ? 'active' : ''}" 
-                    data-day="${day.dayKey}" 
-                    data-index="${index}"
-                    data-date="${day.date.toISOString()}">
-                    <span class="day-number">${day.dayNumber}</span>
-                    <span class="day-name">${day.dayName}</span>
-                </div>
-            `).join('');
+    function generateDays() {
+        const days = [];
+        for (let i = -30; i <= 29; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + i);
             
-            setTimeout(() => {
-                const todayPill = weekCalendar.querySelector('.day-pill.active');
-                if (todayPill) {
-                    todayPill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
-            }, 100);
-        }
-        
-        renderCalendar();
-        
-        
-        let scrollTimeout;
-        
-        function updateCenterDay() {
-            const calendarRect = weekCalendar.getBoundingClientRect();
-            const centerX = calendarRect.left + calendarRect.width / 2;
+            // สร้าง ISO date ที่ถูกต้อง
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const isoDate = `${year}-${month}-${day}`;
             
-            let closestPill = null;
-            let closestDistance = Infinity;
-            
-            document.querySelectorAll('.day-pill').forEach(pill => {
-                const pillRect = pill.getBoundingClientRect();
-                const pillCenterX = pillRect.left + pillRect.width / 2;
-                const distance = Math.abs(centerX - pillCenterX);
-                
-                if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestPill = pill;
-                }
+            days.push({
+                date: date,
+                isoDate: isoDate,
+                dayNumber: date.getDate(),
+                dayName: dayNamesShort[date.getDay()],
+                dayKey: dayNames[date.getDay()],
+                isToday: i === 0
             });
-            
-            if (closestPill) {
-                document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
-                
-                closestPill.classList.add('active');
-                
-                const dayKey = closestPill.dataset.day;
-                document.body.dataset.day = dayKey;
-                
-                closestPill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-            }
         }
+        return days;
+    }
+    
+    function renderCalendar() {
+        const days = generateDays();
+        weekCalendar.innerHTML = days.map((day, index) => `
+            <div class="day-pill ${day.isToday ? 'active' : ''}" 
+                data-day="${day.dayKey}" 
+                data-index="${index}"
+                data-date="${day.isoDate}">
+                <span class="day-number">${day.dayNumber}</span>
+                <span class="day-name">${day.dayName}</span>
+            </div>
+        `).join('');
         
-        weekCalendar.addEventListener('scroll', function() {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(updateCenterDay, 150);
-        });
-        
-        weekCalendar.addEventListener('click', function(e) {
-            const pill = e.target.closest('.day-pill');
-            if (!pill) return;
-            
-            document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
-            
-            pill.classList.add('active');
-            
-            const dayKey = pill.dataset.day;
-            document.body.dataset.day = dayKey;
-            
-            pill.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
-        });
-        
-        const currentPage = document.body.dataset.page;
-        document.querySelectorAll('.nav-item').forEach(item => {
-            if (item.dataset.page === currentPage) {
-                item.classList.add('active');
-            }
-        });
-        
-        document.querySelectorAll('.progress-circle').forEach(circle => {
-            const progress = circle.dataset.progress;
-            const total = circle.dataset.total;
-            const percentage = (progress / total) * 100;
-            const circumference = 2 * Math.PI * 54;
-            const offset = circumference - (percentage / 100) * circumference;
-            
-            const progressBar = circle.querySelector('.progress-bar');
-            progressBar.style.strokeDasharray = circumference;
-            progressBar.style.strokeDashoffset = offset;
-        });
-
-        document.getElementById('todayBtn').addEventListener('click', function() {
-            const todayPill = weekCalendar.querySelector('.day-pill[data-index="30"]');
+        setTimeout(() => {
+            const todayPill = weekCalendar.querySelector('.day-pill.active');
             if (todayPill) {
-                document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
-                todayPill.classList.add('active');
-                
-                const dayKey = todayPill.dataset.day;
-                document.body.dataset.day = dayKey;
-                
                 todayPill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
+        }, 100);
+    }
+    
+    renderCalendar();
+    
+    // ===== Feedback System =====
+    let allAllocations = {};
+    let pendingAllocations = [];
+    let currentAllocId = null;
+    let selectedDate = null;
+
+    // โหลดข้อมูล allocations ทั้งหมด
+async function loadAllAllocations() {
+    try {
+        const response = await fetch('/api/schedule');
+        if (!response.ok) throw new Error('Failed to load allocations');
+        
+        const data = await response.json();
+        
+        allAllocations = {};
+        data.events.forEach(event => {
+            const dateKey = event.day;
+            if (!allAllocations[dateKey]) {
+                allAllocations[dateKey] = [];
+            }
+            
+            // ✅ เก็บข้อมูลตามที่ API ส่งมา
+            allAllocations[dateKey].push(event);
         });
-    </script>
+
+        console.log('✅ All allocations loaded:', allAllocations);
+        
+        await loadPendingFeedback();
+        
+    } catch (error) {
+        console.error('Error loading allocations:', error);
+        document.getElementById('subjectsContainer').innerHTML = 
+            '<p class="muted" style="color:#e74c3c">❌ ไม่สามารถโหลดข้อมูลได้</p>';
+    }
+}
+
+// โหลด pending feedback
+async function loadPendingFeedback() {
+    try {
+        const response = await fetch('/api/feedback/pending');
+        if (!response.ok) throw new Error('Failed to load feedback');
+        
+        pendingAllocations = await response.json();
+        
+        console.log('✅ Pending allocations:', pendingAllocations);
+        
+        // แสดงวันปัจจุบัน
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const todayISO = `${year}-${month}-${day}`;
+        
+        selectedDate = todayISO;
+        renderSubjects(todayISO);
+        
+    } catch (error) {
+        console.error('Error loading feedback:', error);
+        document.getElementById('subjectsContainer').innerHTML = 
+            '<p class="muted" style="color:#e74c3c">❌ ไม่สามารถโหลดข้อมูลได้</p>';
+    }
+}
+
+// แสดงรายการวิชาตามวันที่เลือก
+function renderSubjects(dateISO) {
+    const container = document.getElementById('subjectsContainer');
+    selectedDate = dateISO;
+    
+    console.log('🔍 Looking for allocations on:', dateISO);
+    console.log('🔍 Available dates:', Object.keys(allAllocations));
+    
+    const dayAllocations = allAllocations[dateISO] || [];
+    
+    console.log('🔍 Found allocations:', dayAllocations);
+    console.log('🔍 Pending IDs:', pendingAllocations.map(p => p.alloc_id));
+    
+    if (dayAllocations.length === 0) {
+        container.innerHTML = `<p class="muted">ไม่มีวิชาที่ต้องอ่านในวันนี้</p>`;
+        document.getElementById('progressSubtitle').textContent = '(ไม่มีข้อมูล)';
+        return;
+    }
+
+    const completed = dayAllocations.filter(a => a.feedback_done).length;
+    const total = dayAllocations.length;
+    
+    document.getElementById('progressSubtitle').textContent = 
+        `(${completed}/${total}) เสร็จสิ้น`;
+
+    const displayDate = new Date(dateISO + 'T12:00:00');
+    const dateStr = displayDate.toLocaleDateString('th-TH', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    container.innerHTML = `
+        <div class="selected-date-header">
+            <p class="muted" style="margin-bottom: 16px;">📅 ${dateStr}</p>
+        </div>
+        ${dayAllocations.map(alloc => {
+            // ✅ ใช้ alloc.id หรือ alloc.alloc_id (ขึ้นอยู่กับที่ API ส่งมา)
+            const allocId = alloc.id || alloc.alloc_id;
+            const isPending = pendingAllocations.some(p => p.alloc_id === allocId);
+            const isCompleted = alloc.feedback_done;
+            
+            console.log(`  📋 Alloc ${allocId} (${alloc.exam}): pending=${isPending}, completed=${isCompleted}`);
+            
+            return `
+                <div class="subject-card ${isCompleted ? 'completed' : ''} ${!isPending && !isCompleted ? 'view-only' : ''}" 
+                     data-alloc-id="${allocId}">
+                    <h3 class="subject-name">${alloc.exam || 'Unknown'}</h3>
+                    <p class="subject-date">${alloc.slots || 0} ชั่วโมง${alloc.is_exam_day ? ' • 📝 วันสอบ' : ''}</p>
+                    
+                    ${isCompleted ? `
+                        <div class="status-complete">
+                            <ion-icon name="checkmark-circle"></ion-icon>
+                            <span>เสร็จสิ้นแล้ว</span>
+                        </div>
+                    ` : isPending ? `
+                        <div class="status-buttons">
+                            <button class="status-btn on-track" data-action="done">
+                                <ion-icon name="checkmark-circle"></ion-icon>
+                                ตามแผน
+                            </button>
+                            <button class="status-btn off-track" data-action="feedback">
+                                <ion-icon name="close-circle"></ion-icon>
+                                ไม่ตามแผน
+                            </button>
+                        </div>
+                    ` : `
+                        <div class="status-waiting">
+                            <ion-icon name="time-outline"></ion-icon>
+                            <span>รอถึงวันที่กำหนด</span>
+                        </div>
+                    `}
+                </div>
+            `;
+        }).join('')}
+    `;
+
+    container.querySelectorAll('.status-btn').forEach(btn => {
+        btn.addEventListener('click', handleButtonClick);
+    });
+}
+
+    function handleButtonClick(e) {
+        const btn = e.currentTarget;
+        const card = btn.closest('.subject-card');
+        const allocId = card.dataset.allocId;
+        const action = btn.dataset.action;
+
+        if (action === 'done') {
+            submitFeedback(allocId, 'on-track');
+        } else {
+            currentAllocId = allocId;
+            openModal(card.querySelector('.subject-name').textContent);
+        }
+    }
+
+    function openModal(subjectName) {
+        document.getElementById('modalTitle').textContent = `${subjectName}`;
+        document.getElementById('modalSubtitle').textContent = 'ทำไมไม่ตามแผน?';
+        document.getElementById('feedbackModal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('feedbackModal').classList.remove('active');
+        currentAllocId = null;
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('feedbackModal').addEventListener('click', (e) => {
+        if (e.target.id === 'feedbackModal') closeModal();
+    });
+
+    document.querySelectorAll('.feedback-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const feedbackType = btn.dataset.feedback;
+            await submitFeedback(currentAllocId, feedbackType);
+            closeModal();
+        });
+    });
+
+    async function submitFeedback(allocId, feedbackType) {
+        const card = document.querySelector(`[data-alloc-id="${allocId}"]`);
+        if (!card) return;
+        
+        card.classList.add('loading');
+
+        try {
+            const response = await fetch('/api/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    alloc_id: parseInt(allocId),
+                    feedback_type: feedbackType
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to submit feedback');
+
+            Object.keys(allAllocations).forEach(dateKey => {
+                allAllocations[dateKey] = allAllocations[dateKey].map(a => {
+                    if (a.alloc_id == allocId) {
+                        return { ...a, feedback_done: true };
+                    }
+                    return a;
+                });
+            });
+
+            pendingAllocations = pendingAllocations.filter(a => a.alloc_id != allocId);
+
+            renderSubjects(selectedDate);
+
+        } catch (error) {
+            console.error('Error submitting feedback:', error);
+            card.classList.remove('loading');
+            alert('ไม่สามารถบันทึก feedback ได้ กรุณาลองใหม่อีกครั้ง');
+        }
+    }
+
+    // ===== Calendar Events - ตั้งค่าครั้งเดียว =====
+    let scrollTimeout;
+    
+    function updateCenterDay() {
+        const calendarRect = weekCalendar.getBoundingClientRect();
+        const centerX = calendarRect.left + calendarRect.width / 2;
+        
+        let closestPill = null;
+        let closestDistance = Infinity;
+        
+        document.querySelectorAll('.day-pill').forEach(pill => {
+            const pillRect = pill.getBoundingClientRect();
+            const pillCenterX = pillRect.left + pillRect.width / 2;
+            const distance = Math.abs(centerX - pillCenterX);
+            
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestPill = pill;
+            }
+        });
+        
+        if (closestPill) {
+            document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
+            closestPill.classList.add('active');
+            
+            const dayKey = closestPill.dataset.day;
+            document.body.dataset.day = dayKey;
+            
+            closestPill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            
+            const dateISO = closestPill.dataset.date;
+            console.log('📅 Center date:', dateISO);
+            renderSubjects(dateISO);
+        }
+    }
+    
+    weekCalendar.addEventListener('scroll', function() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(updateCenterDay, 150);
+    });
+    
+    weekCalendar.addEventListener('click', function(e) {
+        const pill = e.target.closest('.day-pill');
+        if (!pill) return;
+        
+        document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        
+        const dayKey = pill.dataset.day;
+        document.body.dataset.day = dayKey;
+        
+        pill.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
+        
+        const dateISO = pill.dataset.date;
+        console.log('📅 Selected date:', dateISO);
+        renderSubjects(dateISO);
+    });
+
+    document.getElementById('todayBtn').addEventListener('click', function() {
+        const todayPill = weekCalendar.querySelector('.day-pill[data-index="30"]');
+        if (todayPill) {
+            document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
+            todayPill.classList.add('active');
+            
+            const dayKey = todayPill.dataset.day;
+            document.body.dataset.day = dayKey;
+            
+            todayPill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            
+            const dateISO = todayPill.dataset.date;
+            console.log('📅 Today:', dateISO);
+            renderSubjects(dateISO);
+        }
+    });
+
+    // โหลดข้อมูลเมื่อเริ่มต้น
+    loadAllAllocations();
+
+    // Active nav
+    const currentPage = document.body.dataset.page;
+    document.querySelectorAll('.nav-item').forEach(item => {
+        if (item.dataset.page === currentPage) {
+            item.classList.add('active');
+        }
+    });
+</script>
 </body>
 </html>

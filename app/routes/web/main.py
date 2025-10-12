@@ -18,7 +18,7 @@ def home():
     print(f"=" * 50)
     return render_template('schedule.html')
 
-@web_main.route('/feedback')
+@web_main.route('/home.html')
 @login_required
 def feedback():
     return render_template('home.html')
@@ -27,7 +27,6 @@ def feedback():
 @login_required
 def add():
     return render_template('add.html')
-
 @web_main.route('/stat')
 @login_required
 def stat():
