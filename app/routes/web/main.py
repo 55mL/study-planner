@@ -23,7 +23,7 @@ def home():
 def feedback():
     return render_template('home.html')
 
-@web_main.route('/add')
+@web_main.route('/add.html')
 @login_required
 def add():
     return render_template('add.html')

@@ -117,8 +117,13 @@
 <ul>
   {% for exam, data in slots.items() %}
     <li>
-      {{ exam }}: {{ data.hours }} ชั่วโมง 
-      (weight: {{ "%.2f"|format(data.weight) }})
+      {{ exam }}: 
+      {% if data is mapping %}
+        {{ data.hours }} ชั่วโมง 
+        (weight: {{ "%.2f"|format(data.weight) }})
+      {% else %}
+        {{ data }} ชั่วโมง
+      {% endif %}
     </li>
   {% endfor %}
 </ul>

@@ -190,6 +190,122 @@
     align-items: center;
     gap: 8px;
 }
+/* ===== Exam Alert Styles ===== */
+.exam-card {
+    background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+    border-left: 6px solid #FF9800 !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.exam-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%
+    );
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+}
+
+.exam-alert {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(255, 152, 0, 0.1);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
+}
+
+.exam-alert-icon {
+    font-size: 2rem;
+    color: #FF9800;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.exam-alert-content {
+    flex: 1;
+}
+
+.exam-alert-text {
+    font-weight: 700;
+    color: #E65100;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.exam-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 152, 0, 0.2);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+}
+
+.exam-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FF9800, #FFB74D, #FF9800);
+    background-size: 200% 100%;
+    border-radius: 999px;
+    animation: loading 2s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+}
+
+@keyframes loading {
+    0% {
+        width: 0%;
+        background-position: 0% 50%;
+    }
+    50% {
+        width: 100%;
+        background-position: 100% 50%;
+    }
+    100% {
+        width: 100%;
+        background-position: 200% 50%;
+    }
+}
+
+/* ===== ปรับแต่ง subject-date สำหรับวันสอบ ===== */
+.exam-card .subject-date {
+    color: #E65100;
+    font-weight: 600;
+}
+
+.exam-card .subject-name {
+    color: #BF360C;
+    font-size: 1.2rem;
+}
     </style>
 </head>
 <body data-page="home">
@@ -419,6 +535,7 @@ async function loadPendingFeedback() {
 }
 
 // แสดงรายการวิชาตามวันที่เลือก
+// แสดงรายการวิชาตามวันที่เลือก
 function renderSubjects(dateISO) {
     const container = document.getElementById('subjectsContainer');
     selectedDate = dateISO;
@@ -437,11 +554,20 @@ function renderSubjects(dateISO) {
         return;
     }
 
-    const completed = dayAllocations.filter(a => a.feedback_done).length;
-    const total = dayAllocations.length;
+    // ✅ แยกนับเฉพาะวันอ่าน (ไม่นับวันสอบ)
+    const studyAllocations = dayAllocations.filter(a => a.event_type === 'study');
+    const examAllocations = dayAllocations.filter(a => a.event_type === 'exam');
     
-    document.getElementById('progressSubtitle').textContent = 
-        `(${completed}/${total}) เสร็จสิ้น`;
+    const completed = studyAllocations.filter(a => a.feedback_done).length;
+    const total = studyAllocations.length;
+    
+    // ✅ ถ้ามีแต่วันสอบ ไม่แสดง progress
+    if (total === 0 && examAllocations.length > 0) {
+        document.getElementById('progressSubtitle').textContent = '(วันสอบ)';
+    } else {
+        document.getElementById('progressSubtitle').textContent = 
+            `(${completed}/${total}) เสร็จสิ้น`;
+    }
 
     const displayDate = new Date(dateISO + 'T12:00:00');
     const dateStr = displayDate.toLocaleDateString('th-TH', {
@@ -455,20 +581,32 @@ function renderSubjects(dateISO) {
             <p class="muted" style="margin-bottom: 16px;">📅 ${dateStr}</p>
         </div>
         ${dayAllocations.map(alloc => {
-            // ✅ ใช้ alloc.id หรือ alloc.alloc_id (ขึ้นอยู่กับที่ API ส่งมา)
             const allocId = alloc.id || alloc.alloc_id;
             const isPending = pendingAllocations.some(p => p.alloc_id === allocId);
             const isCompleted = alloc.feedback_done;
+            const isExam = alloc.event_type === 'exam';
             
-            console.log(`  📋 Alloc ${allocId} (${alloc.exam}): pending=${isPending}, completed=${isCompleted}`);
+            console.log(`  📋 Alloc ${allocId} (${alloc.exam}): pending=${isPending}, completed=${isCompleted}, isExam=${isExam}`);
             
             return `
-                <div class="subject-card ${isCompleted ? 'completed' : ''} ${!isPending && !isCompleted ? 'view-only' : ''}" 
+                <div class="subject-card ${isCompleted ? 'completed' : ''} ${!isPending && !isCompleted && !isExam ? 'view-only' : ''} ${isExam ? 'exam-card' : ''}" 
                      data-alloc-id="${allocId}">
-                    <h3 class="subject-name">${alloc.exam || 'Unknown'}</h3>
-                    <p class="subject-date">${alloc.slots || 0} ชั่วโมง${alloc.is_exam_day ? ' • 📝 วันสอบ' : ''}</p>
+                    <h3 class="subject-name">${alloc.exam || 'Unknown'}${isExam ? ' 📝' : ''}</h3>
+                    <p class="subject-date">${!isExam ? `${alloc.slots || 0} ชั่วโมง` : 'วันสอบ'}</p>
                     
-                    ${isCompleted ? `
+                    ${isExam ? `
+                        <div class="exam-alert">
+                            <div class="exam-alert-icon">
+                                <ion-icon name="alert-circle"></ion-icon>
+                            </div>
+                            <div class="exam-alert-content">
+                                <div class="exam-alert-text">มีสอบวันนี้!</div>
+                                <div class="exam-progress-bar">
+                                    <div class="exam-progress-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : isCompleted ? `
                         <div class="status-complete">
                             <ion-icon name="checkmark-circle"></ion-icon>
                             <span>เสร็จสิ้นแล้ว</span>

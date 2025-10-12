@@ -5,7 +5,7 @@
  -            2. Label เลือกวันสอบ
  -            3. Difficulty slider เลือกระดับความยากง่ายของวิชา
  -            4. Add Subject button ปุ่มเพิ่มวิชา
- - Update   : 2025-10-10 5.00 PM(Neptune)
+ - Update   : 2025-10-12 (Added API Integration & Notification)
 -->
 <!DOCTYPE html>
 <html lang="th">
@@ -13,15 +13,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Exam - Study Planner</title>
-    <link rel="stylesheet" href="/app/static/css/main.css">
-    <link rel="stylesheet" href="/app/static/css/components.css">
-    <link rel="stylesheet" href="/app/static/css/responsive.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 <body data-page="add" class="page-add">
     
+    <!-- Notification Toast -->
+    <div id="notification" class="notification">
+        <ion-icon name="checkmark-circle"></ion-icon>
+        <span id="notificationText">เพิ่มวิชาสอบสำเร็จ</span>
+    </div>
+
     <div class="app-container">
         
         <main class="main-content">
@@ -128,6 +134,34 @@
 
     </div>
 
+    <style>
+    .notification {
+        position: fixed;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 9999;
+        transition: top 0.3s ease-in-out;
+        font-weight: 500;
+    }
+
+    .notification.show {
+        top: 20px;
+    }
+
+    .notification ion-icon {
+        font-size: 24px;
+    }
+    </style>
+
     <script>
     function setDayTheme() {
         const today = new Date();
@@ -150,6 +184,76 @@
     difficultySlider.addEventListener('input', function() {
         difficultyValue.textContent = this.value;
     });
-</script>
+
+    // ฟังก์ชันแสดง notification
+    function showNotification(message, isSuccess = true) {
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        
+        notificationText.textContent = message;
+        
+        if (!isSuccess) {
+            notification.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+        } else {
+            notification.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        }
+        
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    // จัดการ form submission
+    document.getElementById('addExamForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const subjectName = document.getElementById('subjectName').value;
+        const examDate = document.getElementById('examDate').value;
+        const difficulty = document.getElementById('difficulty').value;
+        
+        const submitButton = this.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<ion-icon name="hourglass-outline" style="vertical-align: middle; margin-right: 8px;"></ion-icon>กำลังเพิ่ม...';
+        
+        try {
+            const response = await fetch('/api/plans', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    exam_name: subjectName,
+                    exam_date: examDate,
+                    level: parseInt(difficulty)
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showNotification('เพิ่มวิชาสอบสำเร็จ!', true);
+                
+                // รีเซ็ต form
+                this.reset();
+                difficultyValue.textContent = '5';
+                
+                // redirect ไปหน้า home หลังจาก 1.5 วินาที
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1500);
+            } else {
+                showNotification(data.error || 'เกิดข้อผิดพลาดในการเพิ่มวิชา', false);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('เกิดข้อผิดพลาดในการเชื่อมต่อ', false);
+        } finally {
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>เพิ่ม';
+        }
+    });
+    </script>
 </body>
 </html>
