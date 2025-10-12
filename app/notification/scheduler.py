@@ -2,6 +2,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 import pytz, logging
+from app import db
 from app.models import User
 from app.routes.api.study import get_daily_summary
 from app.notification.email_service import send_email
