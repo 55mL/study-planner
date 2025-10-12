@@ -181,7 +181,6 @@ def users_with_email_notifications():
         {
             "id": u.id,
             "email": u.email,
-            "timezone": u.timezone or "UTC",
             "username": u.username
         } for u in users
     ])
