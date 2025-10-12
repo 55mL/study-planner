@@ -66,12 +66,13 @@ def create_app():
     app.url_map.converters['sint'] = SignedIntConverter
     
     # Register blueprints
-    from .routes.api import auth_api, user_api, plan_api, schedule_api, feedback_api
+    from .routes.api import auth_api, user_api, plan_api, schedule_api, feedback_api, study_api
     app.register_blueprint(auth_api)
     app.register_blueprint(user_api)
     app.register_blueprint(plan_api)
     app.register_blueprint(schedule_api)
     app.register_blueprint(feedback_api)
+    app.register_blueprint(study_api)
 
     from .routes.web import web_login, web_password, web_dashboard, web_feedback, web_schedule
     app.register_blueprint(web_login)

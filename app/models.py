@@ -17,6 +17,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(200), unique=True, nullable=False)
     username = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    email_notifications = db.Column(db.Boolean, default=True)
     # record attbruite
     daily_read_hours = db.Column(db.Integer, default=3)
     latest_exam_date = db.Column(db.Date, default=None)

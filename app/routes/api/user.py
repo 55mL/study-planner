@@ -76,6 +76,14 @@ def update_settings():
         except ValueError:
             errors["password"] = "daily_read_hours ต้องเป็นตัวเลขระหว่าง 0-24"
 
+    # ✅ email_notifications
+    if "email_notifications" in data:
+        try:
+            UserUpdateService.set_email_notifications(user, data["email_notifications"])
+            updated["email_notifications"] = user.email_notifications
+        except Exception as e:
+            errors["email_notifications"] = str(e)
+    
     return jsonify({
         "message": "Settings processed",
         "updated": updated,
@@ -83,7 +91,7 @@ def update_settings():
     }), 200
 
 
-@user_api.route("/change-daily-read-hours", methods=["PUT"])
+@user_api.route("/change-daily_read_hours", methods=["PUT"])
 def change_daily_read_hours():
     user = get_current_user()
     if not user:
@@ -146,3 +154,34 @@ def change_password():
         return jsonify({"error": "รหัสผ่านเก่าไม่ถูกต้อง"}), 400
 
     return jsonify({"message": "เปลี่ยนรหัสผ่านสำเร็จ"}), 200
+
+
+# ✅ เปลี่ยน email_notifications
+@user_api.route("/change-email_notifications", methods=["PUT"])
+def change_email_notifications():
+    user = get_current_user()
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    data = request.get_json()
+    email_notifications = data.get("email_notifications")
+    try:
+        UserUpdateService.set_email_notifications(user, email_notifications)
+    except ValueError:
+        return jsonify({"error": "email_notifications ต้องเป็น true/false"}), 400
+
+    return jsonify({"message": "เปลี่ยน email_notifications สำเร็จ"}), 200
+
+
+# get email setting
+@user_api.route("/with-email-notifications", methods=["GET"])
+def users_with_email_notifications():
+    users = User.query.filter_by(email_notifications=True).all()
+    return jsonify([
+        {
+            "id": u.id,
+            "email": u.email,
+            "timezone": u.timezone or "UTC",
+            "username": u.username
+        } for u in users
+    ])

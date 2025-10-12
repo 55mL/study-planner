@@ -4,6 +4,7 @@ from .user import user_api
 from .plan import plan_api
 from .schedule import schedule_api
 from .feedback import feedback_api
+from .study import study_api
 
 __all__ = [
     'auth_api',
@@ -11,4 +12,5 @@ __all__ = [
     'plan_api',
     'schedule_api',
     'feedback_api',
+    'study_api',
 ]

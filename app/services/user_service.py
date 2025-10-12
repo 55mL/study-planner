@@ -79,6 +79,7 @@ class UserUpdateService:
 		if persist:
 			db.session.commit()
 
+	@staticmethod
 	def set_password(user, new_password, old_password, persist=True):
 		if old_password and new_password:
 			if not check_password_hash(user.password, old_password):
@@ -104,6 +105,15 @@ class UserUpdateService:
 			plan.weight = (plan.weight / user.daily_read_hours) * daily_hours
 		user.daily_read_hours = daily_hours
 		ScheduleService.update_schedule(user, persist=persist)
+		if persist:
+			db.session.commit()
+
+	@staticmethod
+	def set_email_notifications(user, val, persist=True):
+		if isinstance(val, bool):
+			user.email_notifications = val
+		else:
+			raise ValueError("email_notifications ต้องเป็น true/false")
 		if persist:
 			db.session.commit()
 
