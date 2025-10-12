@@ -32,7 +32,7 @@ def add():
 def stat():
     return render_template('stat.html')
 
-@web_main.route('/profile')
+@web_main.route('/profile.html')
 @login_required
 def profile():
     return render_template('profile.html')
