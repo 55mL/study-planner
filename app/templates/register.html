@@ -278,7 +278,7 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-btn" title="ย้อนกลับ" aria-label="ย้อนกลับ">←</a>
+    <a href="/" class="back-btn" title="ย้อนกลับ" aria-label="ย้อนกลับ">←</a>
 
     <div id="notification" class="notification">
         <span id="notificationText"></span>
@@ -370,7 +370,7 @@
                 formData.append('username_register', username);
                 formData.append('password_register', password);
                 
-                const response = await fetch('/register', {
+                const response = await fetch('req/register', {
                     method: 'POST',
                     body: formData,
                     credentials: 'include'

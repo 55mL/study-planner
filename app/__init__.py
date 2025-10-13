@@ -75,15 +75,16 @@ def create_app():
     app.register_blueprint(feedback_api)
     app.register_blueprint(study_api)
 
-    from .routes.web import web_login, web_password, web_dashboard, web_feedback, web_schedule
-    app.register_blueprint(web_login)
-    app.register_blueprint(web_password)
-    app.register_blueprint(web_dashboard)
-    app.register_blueprint(web_feedback)
-    app.register_blueprint(web_schedule)
+    # from .routes.web import web_login, web_password, web_dashboard, web_feedback, web_schedule
+    # app.register_blueprint(web_login)
+    # app.register_blueprint(web_password)
+    # app.register_blueprint(web_dashboard)
+    # app.register_blueprint(web_feedback)
+    # app.register_blueprint(web_schedule)
 
-    from .routes.web import web_main
+    from .routes.web import web_main, web_req
     app.register_blueprint(web_main)
+    app.register_blueprint(web_req)
 
     # ✅ เริ่ม scheduler ตอน app start
     start_scheduler()

@@ -311,7 +311,7 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-btn" title="ย้อนกลับ" aria-label="ย้อนกลับ">←</a>
+    <a href="/" class="back-btn" title="ย้อนกลับ" aria-label="ย้อนกลับ">←</a>
 
     <div id="notification" class="notification">
         <span id="notificationText"></span>
@@ -411,7 +411,7 @@
                 formData.append('username_login', username);
                 formData.append('password_login', password);
                 
-                const response = await fetch('/login', {
+                const response = await fetch('req/login', {
                     method: 'POST',
                     body: formData,
                     credentials: 'include'
