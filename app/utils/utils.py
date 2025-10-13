@@ -3,7 +3,7 @@ import pytz
 from datetime import date, datetime
 from flask import session
 
-APP_TIMEZONE = os.getenv("APP_TIMEZONE", "UTC")
+APP_TIMEZONE = os.getenv("APP_TIMEZONE", "Asia/Bangkok")
 TIMEZONE = pytz.timezone(APP_TIMEZONE)
 
 def get_today():
