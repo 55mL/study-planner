@@ -135,197 +135,221 @@
             pointer-events: none;
         }
         /* ===== Status Styles ===== */
-.subject-card.completed {
-    opacity: 0.7;
-    background: #f8f9fa;
-}
+        .subject-card.completed {
+            opacity: 0.7;
+            background: #f8f9fa;
+        }
 
-.subject-card.view-only {
-    opacity: 0.8;
-}
+        .subject-card.view-only {
+            opacity: 0.8;
+        }
 
-.status-complete {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px;
-    border-radius: 12px;
-    background: #d4edda;
-    color: #2ECC71;
-    font-weight: 600;
-}
+        .status-complete {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #d4edda;
+            color: #2ECC71;
+            font-weight: 600;
+        }
 
-.status-complete ion-icon {
-    font-size: 1.5rem;
-}
+        .status-complete ion-icon {
+            font-size: 1.5rem;
+        }
 
-.status-waiting {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px;
-    border-radius: 12px;
-    background: #fff3cd;
-    color: #856404;
-    font-weight: 600;
-}
+        .status-waiting {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #fff3cd;
+            color: #856404;
+            font-weight: 600;
+        }
 
-.status-waiting ion-icon {
-    font-size: 1.5rem;
-}
+        .status-waiting ion-icon {
+            font-size: 1.5rem;
+        }
 
-.selected-date-header {
-    position: sticky;
-    top: 0;
-    background: var(--color-cream);
-    padding: 8px 0;
-    z-index: 10;
-}
+        .selected-date-header {
+            position: sticky;
+            top: 0;
+            background: var(--color-cream);
+            padding: 8px 0;
+            z-index: 10;
+        }
 
-.subject-date {
-    font-size: 0.9rem;
-    color: var(--color-gray);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-/* ===== Exam Alert Styles ===== */
-.exam-card {
-    background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
-    border-left: 6px solid #FF9800 !important;
-    position: relative;
-    overflow: hidden;
-}
+        .subject-date {
+            font-size: 0.9rem;
+            color: var(--color-gray);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        /* ===== Exam Alert Styles ===== */
+        .exam-card {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-left: 6px solid #FF9800 !important;
+            position: relative;
+            overflow: hidden;
+        }
 
-.exam-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        45deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.1) 50%,
-        transparent 70%
-    );
-    animation: shimmer 3s infinite;
-}
+        .exam-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 70%
+            );
+            animation: shimmer 3s infinite;
+        }
 
-@keyframes shimmer {
-    0% {
-        transform: translateX(-100%) translateY(-100%) rotate(45deg);
-    }
-    100% {
-        transform: translateX(100%) translateY(100%) rotate(45deg);
-    }
-}
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
 
-.exam-alert {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
-    border-radius: 12px;
-    background: rgba(255, 152, 0, 0.1);
-    backdrop-filter: blur(10px);
-    position: relative;
-    z-index: 1;
-}
+        .exam-alert {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(255, 152, 0, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
 
-.exam-alert-icon {
-    font-size: 2rem;
-    color: #FF9800;
-    animation: pulse 2s ease-in-out infinite;
-}
+        .exam-alert-icon {
+            font-size: 2rem;
+            color: #FF9800;
+            animation: pulse 2s ease-in-out infinite;
+        }
 
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.1);
-        opacity: 0.8;
-    }
-}
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
 
-.exam-alert-content {
-    flex: 1;
-}
+        .exam-alert-content {
+            flex: 1;
+        }
 
-.exam-alert-text {
-    font-weight: 700;
-    color: #E65100;
-    margin-bottom: 8px;
-    font-size: 1.1rem;
-}
+        .exam-alert-text {
+            font-weight: 700;
+            color: #E65100;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
 
-.exam-progress-bar {
-    width: 100%;
-    height: 8px;
-    background: rgba(255, 152, 0, 0.2);
-    border-radius: 999px;
-    overflow: hidden;
-    position: relative;
-}
+        .exam-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 152, 0, 0.2);
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+        }
 
-.exam-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #FF9800, #FFB74D, #FF9800);
-    background-size: 200% 100%;
-    border-radius: 999px;
-    animation: loading 2s ease-in-out infinite;
-    box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
-}
+        .exam-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF9800, #FFB74D, #FF9800);
+            background-size: 200% 100%;
+            border-radius: 999px;
+            animation: loading 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+        }
 
-@keyframes loading {
-    0% {
-        width: 0%;
-        background-position: 0% 50%;
-    }
-    50% {
-        width: 100%;
-        background-position: 100% 50%;
-    }
-    100% {
-        width: 100%;
-        background-position: 200% 50%;
-    }
-}
+        @keyframes loading {
+            0% {
+                width: 0%;
+                background-position: 0% 50%;
+            }
+            50% {
+                width: 100%;
+                background-position: 100% 50%;
+            }
+            100% {
+                width: 100%;
+                background-position: 200% 50%;
+            }
+        }
 
-/* ===== ปรับแต่ง subject-date สำหรับวันสอบ ===== */
-.exam-card .subject-date {
-    color: #E65100;
-    font-weight: 600;
-}
+        /* ===== ปรับแต่ง subject-date สำหรับวันสอบ ===== */
+        .exam-card .subject-date {
+            color: #E65100;
+            font-weight: 600;
+        }
 
-.exam-card .subject-name {
-    color: #BF360C;
-    font-size: 1.2rem;
-}
+        .exam-card .subject-name {
+            color: #BF360C;
+            font-size: 1.2rem;
+        }
+
+        .calendar-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            padding: 8px 0;
+        }
+
+        .nav-arrow {
+            background: var(--bg-secondary);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--color-white);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-arrow ion-icon {
+            font-size: 1.5rem;
+        }
+
+        .calendar-hint {
+            font-size: 1rem;
+            color: rgb(89, 89, 89);
+            margin: 0;
+        }
     </style>
 </head>
 <body data-page="home">
     <div class="app-container">
         
-        <main class="main-content">
-            
-            <header class="page-header">
-                <div class="user-avatar"></div>
-                <div class="greeting">
-                    <p class="welcome-text">สวัสดีจ้า</p>
-                    <h1 class="page-title"></h1>
-                </div>
-            </header>
-        </main>
-
+        <!-- เริ่มต้นด้วยตารางอ่านรายวัน -->
         <div class="calendar-header">
             <div class="calendar-header-text">
                 <h2 class="section-title">ตารางอ่านรายวัน</h2>
-                <p class="calendar-hint">เลื่อนซ้ายขวาเพื่อดูวันอื่น</p>
             </div>
             <button class="today-btn" id="todayBtn">
                 <ion-icon name="today-outline"></ion-icon>
@@ -336,13 +360,19 @@
         <div class="week-calendar-wrapper">
             <section class="week-calendar" id="weekCalendar">
             </section>
+            
+            <div class="calendar-navigation">
+                <p class="calendar-hint">เลื่อนซ้ายขวาได้ด้วยนะ</p>
+                <button class="nav-arrow" id="nextDay">
+                    <ion-icon name="swap-horizontal-outline"></ion-icon>
+                </button>
+            </div>
         </div>
-
         <main class="main-content" style="padding-top: 0;">
 
             <section class="progress-section">
                 <h2 class="section-title">บันทึกการอ่าน</h2>
-                <p class="section-subtitle" id="progressSubtitle">(0/0) เสร็จสิ้น</p>
+                <p class="section-subtitle" id="progressSubtitle">(0/0) เสร็จสิ้น</h2>
 
                 <div id="subjectsContainer">
                     <p class="muted">กำลังโหลดข้อมูล...</p>
@@ -357,7 +387,7 @@
                 <span>หน้าหลัก</span>
             </a>
             <a href="{{ url_for('web_main.feedback') }}" class="nav-item active" data-page="home">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <ion-icon name="checkmark-circle"></ion-icon>
                 <span>บันทึก</span>
             </a>
             <a href="{{ url_for('web_main.add') }}" class="nav-item nav-item-center" data-page="add">
@@ -366,7 +396,7 @@
                 </div>
             </a>
             <a href="{{ url_for('web_main.stat') }}" class="nav-item" data-page="stat">
-                <ion-icon name="book-outline"></ion-icon>
+                <ion-icon name="book"></ion-icon>
                 <span>คู่มือ</span>
             </a>
             <a href="{{ url_for('web_main.profile') }}" class="nav-item" data-page="profile">
@@ -376,7 +406,6 @@
         </nav>
     </div>
 
-    <!-- ✅ Modal สำหรับเลือก feedback -->
     <div class="modal-overlay" id="feedbackModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -402,7 +431,6 @@
             <button class="modal-close" id="modalClose">ปิด</button>
         </div>
     </div>
-
     <script>
     // ===== Calendar Code =====
     const weekCalendar = document.getElementById('weekCalendar');
@@ -415,16 +443,6 @@
         'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
         'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
     ];
-
-    function updateHeaderDate() {
-        const day = today.getDate();
-        const month = monthNamesThai[today.getMonth()];
-        const year = today.getFullYear() + 543;
-        
-        document.querySelector('.page-title').textContent = `${day} ${month} ${year}`;
-    }
-
-    updateHeaderDate();
 
     function generateDays() {
         const days = [];
@@ -534,8 +552,6 @@ async function loadPendingFeedback() {
     }
 }
 
-// แสดงรายการวิชาตามวันที่เลือก
-// แสดงรายการวิชาตามวันที่เลือก
 function renderSubjects(dateISO) {
     const container = document.getElementById('subjectsContainer');
     selectedDate = dateISO;
@@ -554,14 +570,12 @@ function renderSubjects(dateISO) {
         return;
     }
 
-    // ✅ แยกนับเฉพาะวันอ่าน (ไม่นับวันสอบ)
     const studyAllocations = dayAllocations.filter(a => a.event_type === 'study');
     const examAllocations = dayAllocations.filter(a => a.event_type === 'exam');
     
     const completed = studyAllocations.filter(a => a.feedback_done).length;
     const total = studyAllocations.length;
     
-    // ✅ ถ้ามีแต่วันสอบ ไม่แสดง progress
     if (total === 0 && examAllocations.length > 0) {
         document.getElementById('progressSubtitle').textContent = '(วันสอบ)';
     } else {
@@ -578,7 +592,7 @@ function renderSubjects(dateISO) {
 
     container.innerHTML = `
         <div class="selected-date-header">
-            <p class="muted" style="margin-bottom: 16px;">📅 ${dateStr}</p>
+            <p class="muted" style="margin-bottom: 16px;">${dateStr}</p>
         </div>
         ${dayAllocations.map(alloc => {
             const allocId = alloc.id || alloc.alloc_id;

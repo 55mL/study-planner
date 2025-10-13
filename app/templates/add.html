@@ -34,9 +34,6 @@
             
             <header class="page-header">
                 <div class="top-header">
-                    <a href="home.html" class="back-item" data-page="home">
-                    <ion-icon name="caret-back-circle"></ion-icon>
-                    </a>
                     <h1 class="page-title">เพิ่มวิชา</h1>
                     <!-- <p class="welcome-text">ห้ะ</p> -->
                 </div>
@@ -57,14 +54,14 @@
                     >
                 </div>
 
-                <!-- เลือกวันสอบ -->
                 <div class="form-group">
                     <label for="examDate" class="form-label">วันสอบ</label>
                     <input 
-                        type="date" 
+                        type="text" 
                         id="examDate" 
                         name="examDate" 
-                        class="form-input"
+                        class="form-input" 
+                        placeholder="คลิกเพื่อเลือกวันที่"
                         required
                     >
                 </div>
@@ -114,7 +111,7 @@
                 <span>หน้าหลัก</span>
             </a>
             <a href="{{ url_for('web_main.feedback') }}" class="nav-item" data-page="home">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <ion-icon name="checkmark-circle"></ion-icon>
                 <span>บันทึก</span>
             </a>
             <a href="{{ url_for('web_main.add') }}" class="nav-item nav-item-center" data-page="add">
@@ -123,7 +120,7 @@
                 </div>
             </a>
             <a href="{{ url_for('web_main.stat') }}" class="nav-item" data-page="stat">
-                <ion-icon name="book-outline"></ion-icon>
+                <ion-icon name="book"></ion-icon>
                 <span>คู่มือ</span>
             </a>
             <a href="{{ url_for('web_main.profile') }}" class="nav-item" data-page="profile">
@@ -162,97 +159,118 @@
     </style>
 
     <script>
-    function setDayTheme() {
-        const today = new Date();
-        const dayIndex = today.getDay();
-        const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-        document.body.setAttribute('data-day', dayNames[dayIndex]);
-    }
-    setDayTheme();
-
-    const currentPage = document.body.dataset.page;
-    document.querySelectorAll('.nav-item').forEach(item => {
-        if (item.dataset.page === currentPage) {
-            item.classList.add('active');
+        function setDayTheme() {
+            const today = new Date();
+            const dayIndex = today.getDay();
+            const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            document.body.setAttribute('data-day', dayNames[dayIndex]);
         }
-    });
+        setDayTheme();
 
-    const difficultySlider = document.getElementById('difficulty');
-    const difficultyValue = document.getElementById('difficultyValue');
-    
-    difficultySlider.addEventListener('input', function() {
-        difficultyValue.textContent = this.value;
-    });
-
-    // ฟังก์ชันแสดง notification
-    function showNotification(message, isSuccess = true) {
-        const notification = document.getElementById('notification');
-        const notificationText = document.getElementById('notificationText');
-        
-        notificationText.textContent = message;
-        
-        if (!isSuccess) {
-            notification.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
-        } else {
-            notification.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-        }
-        
-        notification.classList.add('show');
-        
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
-    }
-
-    // จัดการ form submission
-    document.getElementById('addExamForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const subjectName = document.getElementById('subjectName').value;
-        const examDate = document.getElementById('examDate').value;
-        const difficulty = document.getElementById('difficulty').value;
-        
-        const submitButton = this.querySelector('button[type="submit"]');
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<ion-icon name="hourglass-outline" style="vertical-align: middle; margin-right: 8px;"></ion-icon>กำลังเพิ่ม...';
-        
-        try {
-            const response = await fetch('/api/plans', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    exam_name: subjectName,
-                    exam_date: examDate,
-                    level: parseInt(difficulty)
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                showNotification('เพิ่มวิชาสอบสำเร็จ!', true);
-                
-                // รีเซ็ต form
-                this.reset();
-                difficultyValue.textContent = '5';
-                
-                // redirect ไปหน้า home หลังจาก 1.5 วินาที
-                setTimeout(() => {
-                    window.location.href = 'home.html';
-                }, 1500);
-            } else {
-                showNotification(data.error || 'เกิดข้อผิดพลาดในการเพิ่มวิชา', false);
+        const currentPage = document.body.dataset.page;
+        document.querySelectorAll('.nav-item').forEach(item => {
+            if (item.dataset.page === currentPage) {
+                item.classList.add('active');
             }
-        } catch (error) {
-            console.error('Error:', error);
-            showNotification('เกิดข้อผิดพลาดในการเชื่อมต่อ', false);
-        } finally {
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>เพิ่ม';
+        });
+
+        const difficultySlider = document.getElementById('difficulty');
+        const difficultyValue = document.getElementById('difficultyValue');
+        
+        difficultySlider.addEventListener('input', function() {
+            difficultyValue.textContent = this.value;
+        });
+
+        // จัดการ input วันที่
+        const examDateInput = document.getElementById('examDate');
+        
+        examDateInput.addEventListener('focus', function() {
+            this.type = 'date';
+            // ใช้ click() แทน showPicker() เพื่อความเข้ากันได้
+            setTimeout(() => {
+                this.click();
+            }, 100);
+        });
+        
+        examDateInput.addEventListener('blur', function() {
+            if (!this.value) {
+                this.type = 'text';
+            }
+        });
+        
+        // ตั้งค่าเริ่มต้น
+        examDateInput.type = 'text';
+
+        // ฟังก์ชันแสดง notification
+        function showNotification(message, isSuccess = true) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            
+            if (!isSuccess) {
+                notification.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+            } else {
+                notification.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
-    });
+
+        // จัดการ form submission
+        document.getElementById('addExamForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const subjectName = document.getElementById('subjectName').value;
+            const examDate = document.getElementById('examDate').value;
+            const difficulty = document.getElementById('difficulty').value;
+            
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<ion-icon name="hourglass-outline" style="vertical-align: middle; margin-right: 8px;"></ion-icon>กำลังเพิ่ม...';
+            
+            try {
+                const response = await fetch('/api/plans', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        exam_name: subjectName,
+                        exam_date: examDate,
+                        level: parseInt(difficulty)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showNotification('เพิ่มวิชาสอบสำเร็จ!', true);
+                    
+                    // รีเซ็ต form
+                    this.reset();
+                    difficultyValue.textContent = '5';
+                    examDateInput.type = 'text'; // รีเซ็ต type เป็น text อีกครั้ง
+                    
+                    // redirect ไปหน้า home หลังจาก 1.5 วินาที
+                    setTimeout(() => {
+                        window.location.href = 'home.html';
+                    }, 1500);
+                } else {
+                    showNotification(data.error || 'เกิดข้อผิดพลาดในการเพิ่มวิชา', false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('เกิดข้อผิดพลาดในการเชื่อมต่อ', false);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>เพิ่ม';
+            }
+        });
     </script>
 </body>
 </html>

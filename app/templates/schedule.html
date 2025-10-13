@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -16,12 +17,34 @@
         <main class="main-content">
             <header class="page-header">
                 <div class="top-header">
-                    <a href="{{ url_for('web_main.feedback') }}" class="back-item" data-page="home">
-                        <ion-icon name="caret-back-circle"></ion-icon>
-                    </a>
-                    <h1 class="page-title">ปฏิทิน</h1>
+                    <h1 class="page-title" style="text-align: center; width: 100%; margin-left: 0;">หน้าแรก</h1>
                 </div>
             </header>
+
+            <!-- Welcome Banner for New Users -->
+            <section class="welcome-banner">
+                <div class="welcome-content">
+                    <div class="welcome-icon">
+                        <ion-icon name="hand-left"></ion-icon>
+                    </div>
+                    <div class="welcome-text-content">
+                        <h3>สวัสดี! พึ่งเคยใช้ครั้งแรกรึเปล่า?</h3>
+                        <p>ลองดูคู่มือการใช้งานสิ</p>
+                        
+                    </div>
+                </div>
+                <a href="{{ url_for('web_main.stat') }}" class="guide-link-btn">
+                    <ion-icon name="book-outline"></ion-icon>
+                    <span>คู่มือการใช้งาน</span>
+                    <ion-icon name="chevron-forward"></ion-icon>
+                </a>
+            </section>
+
+            <!-- Calendar Title Section -->
+            <div class="calendar-title-section">
+                <h2 class="section-title">ปฏิทินการเรียน</h2>
+                <p class="section-subtitle">เลือกวันเพื่อดูรายละเอียด</p>
+            </div>
 
             <div class="calendar-container">
                 <div class="calendar-header">
@@ -61,7 +84,7 @@
                 <span>หน้าหลัก</span>
             </a>
             <a href="{{ url_for('web_main.feedback') }}" class="nav-item" data-page="home">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <ion-icon name="checkmark-circle"></ion-icon>
                 <span>บันทึก</span>
             </a>
             <a href="{{ url_for('web_main.add') }}" class="nav-item nav-item-center" data-page="add">
@@ -70,7 +93,7 @@
                 </div>
             </a>
             <a href="{{ url_for('web_main.stat') }}" class="nav-item" data-page="stat">
-                <ion-icon name="book-outline"></ion-icon>
+                <ion-icon name="book"></ion-icon>
                 <span>คู่มือ</span>
             </a>
             <a href="{{ url_for('web_main.profile') }}" class="nav-item" data-page="profile">

@@ -61,12 +61,12 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 2rem;
     color: var(--color-dark);
     margin: 0;
+    align-content: center;
 }
 
 .section-title {
-    font-size: 1.5rem;
     color: var(--color-dark);
-    margin-bottom: var(--spacing-xs);
+    font-size: 2rem; margin-bottom: 8px;
 }
 
 .section-subtitle {
@@ -182,7 +182,198 @@ h1, h2, h3, h4, h5, h6 {
  * หน้าที่ 1 : Home Page
  * ----------------------------------
  */
+body[data-page="schedule"] .welcome-banner {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--bg-secondary) 100%);
+  /* background: linear-gradient(135deg, #E3F2FD 0%, #F3E5F5 100%); */
+  border-radius: var(--radius-box);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  position: relative;
+}
 
+body[data-page="schedule"] .welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.welcome-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.welcome-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  backdrop-filter: blur(10px);
+}
+
+.welcome-icon ion-icon {
+  font-size: 2rem;
+  color: var(--color-white);
+  animation: wave 1s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(20deg); }
+  75% { transform: rotate(-20deg); }
+}
+
+.welcome-text-content h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.welcome-text-content p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.guide-link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-white);
+  border-radius: var(--radius-button);
+  text-decoration: none;
+  color: var(--color-dark);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.guide-link-btn:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+}
+
+.guide-link-btn ion-icon:first-child {
+  font-size: 1.25rem;
+  color: var(--color-accent);
+}
+
+.guide-link-btn ion-icon:last-child {
+  font-size: 1rem;
+  color: var(--color-gray);
+}
+
+/* ===== Calendar Title Section ===== */
+.calendar-title-section {
+  margin-bottom: var(--spacing-md);
+}
+
+.calendar-title-section .section-title {
+  font-size: 1.25rem;
+  margin-bottom: 4px;
+  color: var(--color-dark);
+}
+
+.calendar-title-section .section-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-gray);
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 400px) {
+  body[data-page="schedule"] .welcome-banner {
+    padding: var(--spacing-sm);
+  }
+  
+  .welcome-content {
+    gap: var(--spacing-xs);
+  }
+  
+  .welcome-icon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .welcome-icon ion-icon {
+    font-size: 1.75rem;
+  }
+  
+  .welcome-text-content h3 {
+    font-size: 1rem;
+  }
+  
+  .welcome-text-content p {
+    font-size: 0.8rem;
+  }
+  
+  .guide-link-btn {
+    padding: 10px var(--spacing-sm);
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-height: 750px) {
+  body[data-page="schedule"] .welcome-banner {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm);
+  }
+  
+  .welcome-text-content h3 {
+    font-size: 1rem;
+  }
+  
+  .welcome-text-content p {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-height: 650px) {
+  body[data-page="schedule"] .welcome-banner {
+    margin-bottom: 10px;
+  }
+}
+
+/* ===== FIX SCROLL ISSUE ===== */
+body[data-page="schedule"] {
+  overflow-y: auto !important;
+  height: auto !important;
+}
+
+body[data-page="schedule"] .app-container {
+  overflow: visible !important;
+  height: auto !important;
+}
+
+body[data-page="schedule"] .main-content {
+  overflow: visible !important;
+  padding-bottom: 100px;
+}
+
+.events-list,
+#eventsContainer {
+  overflow: visible !important;
+  flex: 0 1 auto !important;
+}
 .user-avatar {
     width: 60px;
     height: 60px;
@@ -277,20 +468,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .calendar-header .section-title {
-    margin: 0;
-    font-size: 1.25rem;
+    margin: 10px;
+    font-size: 1.5rem;
 }
 
 .calendar-header-text {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
 }
 
 .calendar-hint {
     font-size: 0.8rem;
-    color: var(--color-gray);
-    margin: 0;
+    color: var(--color-black);
+    margin: 10px;
     opacity: 0.8;
 }
 
@@ -374,7 +565,7 @@ h1, h2, h3, h4, h5, h6 {
     border-color: transparent;
     box-shadow: var(--shadow-md);
     min-height: 100px;
-    transform: translateY(-15px);
+    transform: translateY(+10px);
 }
 
 .day-number {
@@ -517,8 +708,12 @@ body[data-page="schedule"] .page-header {
 }
 
 body[data-page="schedule"] .top-header .page-title {
-  transform: translateX(-20px);
-  font-size: 1.15rem;
+    justify-self: center;
+    text-align: center;
+    width: 100%;
+    margin-left: 0;
+    transform: none;
+    font-size: 1.3rem;
 }
 
 /* ===== Calendar Container ===== */
@@ -613,7 +808,6 @@ body[data-page="schedule"] .top-header .page-title {
   color: var(--color-accent);
 }
 
-/* ✅ วันที่ถูกเลือก - แสดงเฉพาะกรอบสีเทาอ่อน */
 .calendar-day.selected {
   background: transparent !important;
   box-shadow: inset 0 0 0 2px rgba(149, 165, 166, 0.3) !important;
@@ -654,7 +848,6 @@ body[data-page="schedule"] .top-header .page-title {
   transform: translateX(-50%) translateX(5px);
 }
 
-/* ✅ สีจุด exam ใช้จาก main.css */
 .event-dot.exam {
   background: var(--difficulty-hard);
 }
@@ -666,10 +859,11 @@ body[data-page="schedule"] .top-header .page-title {
   flex-direction: column;
   overflow: hidden;
   min-height: 0;
+  margin-top: 24px;
 }
 
 .events-list .section-title {
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-dark);
   margin-bottom: 8px;
@@ -934,12 +1128,12 @@ body[data-page="schedule"] .top-header .page-title {
 .slider-container {
     position: relative;
     width: 100%;
-    height: 50px;
+    height: 70px;
 }
 
 .slider-input {
     width: 100%;
-    height: 8px;
+    height: 16px;
     border-radius: var(--radius-full);
     background: linear-gradient(to right, var(--difficulty-easy) 0%, var(--difficulty-medium) 50%, var(--difficulty-hard) 100%);
     outline: none;
@@ -950,8 +1144,8 @@ body[data-page="schedule"] .top-header .page-title {
 .slider-input::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: var(--color-white);
     cursor: pointer;
@@ -960,8 +1154,8 @@ body[data-page="schedule"] .top-header .page-title {
 }
 
 .slider-input::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: var(--color-white);
     cursor: pointer;
@@ -1018,7 +1212,7 @@ body[data-page="schedule"] .top-header .page-title {
 .btn-primary {
     width: 100%;
     padding: var(--spacing-md);
-    background: var(--color-accent);
+    background: var(--color-black);
     color: var(--color-white);
     border-radius: var(--radius-button);
     font-size: 1.1rem;
@@ -1042,135 +1236,6 @@ body[data-page="schedule"] .top-header .page-title {
  * ----------------------------------
  */
 
-.stats-tabs {
-    display: flex;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-lg);
-}
-
-.tab-btn {
-    flex: 1;
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: var(--color-white);
-    color: var(--color-dark);
-    border-radius: var(--radius-button);
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.tab-btn.active {
-    background: var(--color-accent);
-    color: var(--color-white);
-    box-shadow: var(--shadow-md);
-}
-
-.chart-container {
-    background: var(--color-white);
-    border-radius: var(--radius-box);
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-    box-shadow: var(--shadow-sm);
-    min-height: 300px;
-}
-
-.stat-summary {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-lg);
-}
-
-.summary-card {
-    background: var(--color-white);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-md);
-    text-align: center;
-    box-shadow: var(--shadow-sm);
-}
-
-.summary-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-accent);
-    margin-bottom: var(--spacing-xs);
-}
-
-.summary-label {
-    font-size: 0.9rem;
-    color: var(--color-gray);
-}
-
-/* ===== Subject Card ===== */
-.subject-card {
-    background: var(--color-white);
-    border-radius: 14px;
-    padding: 16px;
-    margin-bottom: 12px;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
-}
-
-.subject-card:hover {
-    box-shadow: var(--shadow-md);
-}
-
-.subject-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--color-dark);
-    margin-bottom: 8px;
-}
-
-.subject-date {
-    font-size: 0.9rem;
-    color: var(--color-gray);
-    margin-bottom: 12px;
-}
-
-.status-buttons {
-    display: flex;
-    gap: 12px;
-}
-
-.status-btn {
-    flex: 1;
-    padding: 12px;
-    border-radius: 12px;
-    border: 2px solid transparent;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-}
-
-.status-btn ion-icon {
-    font-size: 1.25rem;
-}
-
-.status-btn.on-track {
-    background: #d4edda;
-    color: #2ECC71;
-    border-color: #2ECC71;
-}
-
-.status-btn.on-track:hover {
-    background: #2ECC71;
-    color: white;
-}
-
-.status-btn.off-track {
-    background: #f8d7da;
-    color: #E74C3C;
-    border-color: #E74C3C;
-}
-
-.status-btn.off-track:hover {
-    background: #E74C3C;
-    color: white;
-}
 
 /* 
  * ----------------------------------
@@ -1233,27 +1298,29 @@ body[data-page="schedule"] .top-header .page-title {
 }
 
 .setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background: var(--color-white);
     border-radius: var(--radius-lg);
     padding: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     box-shadow: var(--shadow-sm);
     cursor: pointer;
     transition: all 0.3s ease;
-}
-
-.setting-item:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateX(4px);
+    gap: 16px;
 }
 
 .setting-info {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
+    flex: 1;
+}
+
+.setting-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateX(4px);
 }
 
 .setting-icon {
@@ -1268,7 +1335,7 @@ body[data-page="schedule"] .top-header .page-title {
 
 .setting-icon ion-icon {
     font-size: 1.25rem;
-    color: var(--color-accent);
+    color: var(--color-white);
 }
 
 .setting-text h4 {
