@@ -108,6 +108,7 @@
 
     // ===== state =====
     const todayReal = new Date();
+    const today = todayReal.toISOString().split("T")[0]; // แปลงเป็น YYYY-MM-DD
     let viewYear = todayReal.getFullYear();
     let viewMonth = todayReal.getMonth();
     let eventsData = {};
@@ -200,8 +201,23 @@
         if (filterDate) {
             displayEvents = eventsData[filterDate] || [];
         } else {
-            Object.keys(eventsData).sort().forEach(d => displayEvents.push(...eventsData[d]));
+            Object.keys(eventsData)
+                  .filter(d => d >= today)   // 👈 กรองเอาเฉพาะวันปัจจุบันขึ้นไป
+                  .sort()
+                  .forEach(d => displayEvents.push(...eventsData[d]));
         }
+        // เรียงภายในวัน: exam ก่อน allocation
+        displayEvents.sort((a, b) => {
+            const dateA = a.day;
+            const dateB = b.day;
+            // 1. เรียงตามวันที่ก่อน
+            if (dateA !== dateB) {
+                return dateA.localeCompare(dateB);
+            }
+            // 2. ถ้าวันเดียวกัน → ให้ event_type === 'exam' มาก่อน
+            const order = { exam: 0, study: 1 };
+            return (order[a.event_type] ?? 99) - (order[b.event_type] ?? 99);
+        });
 
         if (displayEvents.length === 0) {
             container.innerHTML += '<p class="muted">ไม่มีเหตุการณ์</p>';

@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify, session
 from app.models import User
 from app.extensions import db
 from app.services.user_service import AuthService, UserUpdateService
+from app.utils.utils import get_today
 
 user_api = Blueprint('user_api', __name__, url_prefix='/api/user')
 
@@ -171,7 +172,7 @@ def change_email_notifications():
 
 # ✅ เปลี่ยน email_notifications
 @user_api.route("/change-profile_img", methods=["PUT"])
-def change_email_notifications():
+def change_profile_img():
     user = get_current_user()
     if not user:
         return jsonify({'error': 'Unauthorized'}), 401
@@ -196,3 +197,7 @@ def users_with_email_notifications():
             "username": u.username
         } for u in users
     ])
+
+@user_api.route("/today", methods=["GET"])
+def today_api():
+    return jsonify({"today": get_today().isoformat()})
