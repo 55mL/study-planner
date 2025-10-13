@@ -85,6 +85,7 @@ class Feedback:
 
         # mark feedback done
         allocation.feedback_done = True
+        allocation.feedback_type = feedback_type
 
         if persist:
             db.session.commit()

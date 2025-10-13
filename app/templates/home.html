@@ -414,15 +414,15 @@
             </div>
             
             <div class="feedback-options">
-                <button class="feedback-btn on-time" data-feedback="on-time">
+                <button class="feedback-btn on-time" data-feedback="read_all">
                     <ion-icon name="checkmark-circle"></ion-icon>
-                    <span>อ่านทันตามแผน</span>
+                    <span>อ่านเนื้อหาครบหมดแล้ว</span>
                 </button>
-                <button class="feedback-btn too-hard" data-feedback="too-hard">
+                <button class="feedback-btn too-hard" data-feedback="harder">
                     <ion-icon name="alert-circle"></ion-icon>
                     <span>ยากเกินไป</span>
                 </button>
-                <button class="feedback-btn too-easy" data-feedback="too-easy">
+                <button class="feedback-btn too-easy" data-feedback="easier">
                     <ion-icon name="happy"></ion-icon>
                     <span>ง่ายเกินไป</span>
                 </button>
@@ -659,7 +659,7 @@ function renderSubjects(dateISO) {
         const action = btn.dataset.action;
 
         if (action === 'done') {
-            submitFeedback(allocId, 'on-track');
+            submitFeedback(allocId, 'read_in_time');
         } else {
             currentAllocId = allocId;
             openModal(card.querySelector('.subject-name').textContent);

@@ -68,6 +68,7 @@ class DailyAllocations(db.Model):
     date = db.Column(db.Date, nullable=False)
     slots = db.Column(db.Integer, nullable=False, default=0)
     feedback_done = db.Column(db.Boolean, default=False, nullable=False)
+    feedback_type = db.Column(db.String(20), nullable=True)
     # get user and plan
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     plan_id = db.Column(
