@@ -1403,3 +1403,7 @@ body[data-page="schedule"] .top-header .page-title {
 .toggle-switch input:checked + .toggle-slider:before {
     transform: translateX(22px);
 }
+
+.placeholder-card {
+  visibility: hidden;   /* ทำให้มองไม่เห็น แต่ยังคงพื้นที่ */
+}

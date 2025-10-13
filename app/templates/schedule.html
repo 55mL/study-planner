@@ -238,6 +238,15 @@
             
             container.appendChild(card);
         });
+
+        const firstCard = container.querySelector('.event-card');
+        if (firstCard) {
+            const cardHeight = firstCard.offsetHeight; // หรือ firstCard.getBoundingClientRect().height
+            const placeholder = document.createElement('div');
+            placeholder.className = 'event-card placeholder-card';
+            placeholder.style.height = cardHeight + 'px'; // เซตความสูงตามการ์ดจริง
+            container.appendChild(placeholder);
+        }
     }
 
     // ===== render calendar =====
