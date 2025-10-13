@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+from flask import Blueprint, jsonify, render_template, redirect, url_for, flash, request, session
 from flask_login import login_required, current_user, login_user
 from sqlalchemy import or_
 from app.models import ReadingPlans, User
@@ -32,8 +32,12 @@ def forgot_password():
                           sender=os.environ.get('SENDER_MAIL', 'idk-bruh'),
                           recipients=[user.email])
             msg.body = f'click for reset password: {reset_url}'
-            mail.send(msg)
-            flash('email sent, please check on checkbox')
+            try:
+                mail.send(msg)
+                flash('Email sent successfully')
+            except Exception as e:
+                print(f"Error sending email: {e}")
+                flash('Failed to send email. Please try again later.')
         else:
             flash('dont have email in system')
             
@@ -78,26 +82,29 @@ def login():
 
 @web_req.route('/register', methods=['GET', 'POST'])
 def register():
-    """
-    ฟังก์ชันสำหรับสมัครสมาชิกใหม่
-    - ถ้า method เป็น POST จะรับข้อมูลจากฟอร์มและสร้าง user ใหม่
-    - ถ้าสมัครสำเร็จจะ redirect ไปหน้า login
-    - ถ้ามี error จะ rollback และแสดง error
-    - ถ้า method เป็น GET จะแสดงหน้า register
-    """
     if request.method == 'POST':
         email = request.form['email_register']
         username = request.form['username_register']
         password = request.form['password_register']
+
+        # ✅ เช็คอีเมลซ้ำ
+        if User.query.filter_by(email=email).first():
+            return jsonify({"error": "อีเมลนี้ถูกใช้แล้ว"}), 400
+
         new_user = User(username=username, email=email)
         AuthService.set_password(new_user, password)
+
         try:
             db.session.add(new_user)
             db.session.commit()
-            flash('register complete! please login')
-            return redirect(url_for('web_login.login'))
+
+            # ✅ ล็อกอินให้อัตโนมัติ
+            login_user(new_user)
+
+            flash('สมัครสมาชิกสำเร็จ และเข้าสู่ระบบแล้ว')
+            return redirect(url_for('web_main.home'))  # ไปหน้า dashboard/home
         except Exception as e:
             db.session.rollback()
-            flash(f'Error: {e}')
-            
+            return jsonify({"error": str(e)}), 400
+
     return render_template('register.html')

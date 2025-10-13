@@ -369,25 +369,25 @@
                 formData.append('email_register', email);
                 formData.append('username_register', username);
                 formData.append('password_register', password);
-                
+
                 const response = await fetch('req/register', {
                     method: 'POST',
                     body: formData,
                     credentials: 'include'
                 });
-                
+
                 if (response.redirected) {
-                    showNotification('สมัครสมาชิกสำเร็จ! กำลังพาไปหน้าเข้าสู่ระบบ...', true);
+                    // สมัครสำเร็จ → backend redirect ไปหน้า dashboard/login
+                    showNotification('สมัครสมาชิกสำเร็จ! กำลังพาไปหน้า...', true);
                     setTimeout(() => {
                         window.location.href = response.url;
                     }, 1500);
                 } else {
-                    const text = await response.text();
-                    
-                    if (text.includes('Error:')) {
-                        const errorMatch = text.match(/Error: (.+?)</);
-                        const errorMsg = errorMatch ? errorMatch[1] : 'เกิดข้อผิดพลาดในการสมัครสมาชิก';
-                        showNotification(errorMsg, false);
+                    // พยายาม parse เป็น JSON
+                    const data = await response.json().catch(() => null);
+
+                    if (data && data.error) {
+                        showNotification(data.error, false);
                     } else {
                         showNotification('เกิดข้อผิดพลาดในการสมัครสมาชิก', false);
                     }
