@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer
-from flask import current_app
+from flask import current_app, session
 from app.extensions import db
 from app.models import User, ReadingPlans
 from .schedule_service import ScheduleService
@@ -116,6 +116,15 @@ class UserUpdateService:
 			raise ValueError("email_notifications ต้องเป็น true/false")
 		if persist:
 			db.session.commit()
+
+	@staticmethod
+	def set_profile(user, profile_path):
+		session["profile"] = profile_path
+		return profile_path
+	
+	@staticmethod
+	def get_profile(user, default=None):
+		return session.get("profile_path", default)
 
 	@staticmethod
 	def add_plan(user, exam_name, exam_date, level, persist=True):

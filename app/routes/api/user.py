@@ -24,6 +24,7 @@ def profile():
     
     # คืนข้อมูลโปรไฟล์ user ปัจจุบัน (เพิ่ม email_notifications)
     return jsonify({
+        'profile_img' : UserUpdateService.get_profile(user),
         'id': user.id,
         'username': user.username,
         'email': user.email,
@@ -168,6 +169,21 @@ def change_email_notifications():
 
     return jsonify({"message": "เปลี่ยน email_notifications สำเร็จ"}), 200
 
+# ✅ เปลี่ยน email_notifications
+@user_api.route("/change-profile_img", methods=["PUT"])
+def change_email_notifications():
+    user = get_current_user()
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    data = request.get_json()
+    profile_path = data.get("profile_path")
+    try:
+        UserUpdateService.set_profile(user, profile_path)
+    except Exception as e:
+        return jsonify({"error": f"{e}"}), 400
+
+    return jsonify({"message": "เปลี่ยน profile สำเร็จ"}), 200
 
 # get email setting
 @user_api.route("/with-email-notifications", methods=["GET"])
