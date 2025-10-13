@@ -899,55 +899,71 @@ body[data-page="schedule"] .top-header .page-title {
 }
 
 /* ===== Event Cards ===== */
+/* ===== Event Cards - LARGER VERSION ===== */
 .event-card {
   background: var(--color-white);
-  border-radius: 12px;
-  padding: 10px;
-  margin-bottom: 8px;
-  box-shadow: var(--shadow-sm);
-  border-left: 4px solid var(--difficulty-medium);
-  transition: all 0.2s ease;
+  border-radius: 16px;
+  padding: 16px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid var(--difficulty-medium);
+  transition: all 0.3s ease;
 }
 
 .event-card:hover {
-  transform: translateX(3px);
-  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .event-title {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--color-dark);
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  line-height: 1.3;
 }
 
 .event-meta {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   align-items: center;
   color: var(--color-gray);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   flex-wrap: wrap;
+  line-height: 1.5;
+}
+
+.event-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .event-meta ion-icon {
-  margin-right: 2px;
+  margin-right: 3px;
   vertical-align: middle;
-  font-size: 0.85rem;
+  font-size: 1rem;
+}
+
+.meta-date,
+.meta-hours {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .level-badge {
   font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 2px 6px;
+  gap: 4px;
+  padding: 4px 10px;
   border-radius: 999px;
-  font-size: 0.7rem;
-  background: rgba(0, 0, 0, 0.04);
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.05);
 }
 
-/* ✅ Difficulty colors ใช้จาก main.css แทน */
+/* ✅ Difficulty colors */
 .event-card.difficulty-1  { border-left-color: #A5D6A7 !important; }
 .event-card.difficulty-2  { border-left-color: #81C784 !important; }
 .event-card.difficulty-3  { border-left-color: #66BB6A !important; }
@@ -959,83 +975,52 @@ body[data-page="schedule"] .top-header .page-title {
 .event-card.difficulty-9  { border-left-color: #F4511E !important; }
 .event-card.difficulty-10 { border-left-color: var(--difficulty-hard) !important; }
 
-/* ===== Utility Classes ===== */
-.day-heading {
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: var(--color-gray);
-  font-size: 0.75rem;
-  padding: 3px 0;
+/* ===== Placeholder Card (สำหรับ spacing ท้ายสุด) ===== */
+.placeholder-card {
+  opacity: 0;
+  pointer-events: none;
+  margin-bottom: 0;
 }
 
-.muted {
-  color: #999;
-  font-size: 0.75rem;
-}
-
-/* ===== Bottom Navbar - FIXED ===== */
-/* body[data-page="schedule"] .bottom-nav {
-  flex-shrink: 0;
-  position: relative;
-  bottom: 0;
-} */
-
-/* ===== Responsive ===== */
+/* ===== Responsive - ปรับขนาดตามหน้าจอ ===== */
 @media (max-height: 750px) {
-  .calendar-container {
-    padding: 8px;
-    margin-bottom: 8px;
-  }
-  
-  .calendar-days {
-    gap: 2px;
-  }
-  
-  .calendar-day {
-    font-size: 0.75rem;
-  }
-  
   .event-card {
-    padding: 8px;
-    margin-bottom: 6px;
+    padding: 14px 12px;
+    margin-bottom: 10px;
+    border-radius: 14px;
   }
   
   .event-title {
-    font-size: 0.85rem;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .event-meta {
+    font-size: 0.8rem;
+    gap: 10px;
   }
 }
 
 @media (max-height: 650px) {
-  body[data-page="schedule"] .page-header {
-    margin-bottom: 8px;
-  }
-  
-  .calendar-container {
-    padding: 6px;
-    margin-bottom: 6px;
-  }
-  
-  .calendar-weekday {
-    font-size: 0.6rem;
-  }
-  
-  .calendar-day {
-    font-size: 0.7rem;
-  }
-  
   .event-card {
-    padding: 6px;
-    margin-bottom: 5px;
+    padding: 12px 10px;
+    margin-bottom: 8px;
+    border-radius: 12px;
   }
   
   .event-title {
-    font-size: 0.8rem;
-    margin-bottom: 4px;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
   }
   
   .event-meta {
-    font-size: 0.7rem;
-    gap: 6px;
+    font-size: 0.75rem;
+    gap: 8px;
+  }
+
+  .level-badge {
+    padding: 3px 8px;
+    font-size: 0.75rem;
   }
 }
 

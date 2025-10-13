@@ -16,20 +16,20 @@ def get_current_user():
 def profile():
     """
     ดึงข้อมูลโปรไฟล์ของ user ปัจจุบัน (ต้อง login)
-    คืน id, username, email, daily_read_hours
+    คืน id, username, email, daily_read_hours, email_notifications
     """
     user = get_current_user()
     if not user:
         return jsonify({'error': 'Unauthorized'}), 401
     
-    # คืนข้อมูลโปรไฟล์ user ปัจจุบัน
+    # คืนข้อมูลโปรไฟล์ user ปัจจุบัน (เพิ่ม email_notifications)
     return jsonify({
         'id': user.id,
         'username': user.username,
         'email': user.email,
-        'daily_read_hours': user.daily_read_hours
+        'daily_read_hours': user.daily_read_hours,
+        'email_notifications': user.email_notifications  # เพิ่มบรรทัดนี้
     })
-
 @user_api.route('/settings', methods=['PUT'])
 def update_settings():
     """
