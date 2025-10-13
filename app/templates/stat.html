@@ -1,152 +1,615 @@
-<!-- Update   : 2025-10-10 5.00 PM(Neptune) -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistics - Study Planner</title>
-    <link rel="stylesheet" href="/app/static/css/main.css">
-    <link rel="stylesheet" href="/app/static/css/components.css">
-    <link rel="stylesheet" href="/app/static/css/responsive.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>คู่มือการใช้งาน - Study Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <style>
+        /* Tutorial Styles */
+        .tutorial-container {
+            padding-bottom: 80px;
+        }
+
+        .tutorial-section {
+            margin-bottom: 48px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .tutorial-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 0 16px;
+        }
+
+        .section-number {
+            display: inline-block;
+            background: var(--color-black);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 12px;
+        }
+
+        .section-description {
+            font-size: 1rem;
+            color: var(--color-gray);
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-content {
+            padding: 0 16px;
+        }
+
+        .image-contain {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--radius-lg);
+            object-fit: cover;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 16/9;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            border: 3px dashed var(--color-accent);
+            margin: 24px auto;
+        }
+
+        .image-placeholder ion-icon {
+            font-size: 3rem;
+            color: var(--color-accent);
+        }
+
+        .image-placeholder-text {
+            color: var(--color-gray);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 0 16px;
+        }
+
+        /* สำหรับรูปที่อยู่ใน image-placeholder */
+.image-placeholder .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+}
+
+/* ซ่อน placeholder content เมื่อมีรูป */
+.image-placeholder:has(img) ion-icon,
+.image-placeholder:has(img) .image-placeholder-text {
+    display: none;
+}
+        .highlight-box {
+            background: var(--color-cream);
+            border-left: 4px solid var(--color-accent);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 24px auto;
+            max-width: 450px;
+        }
+
+        .highlight-box ion-icon {
+            vertical-align: middle;
+            margin-right: 8px;
+            color: var(--color-accent);
+            font-size: 1.2rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 24px auto;
+            max-width: 450px;
+        }
+
+        .feature-list li {
+            padding: 16px;
+            background: white;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .feature-list li:hover {
+            transform: translateX(8px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature-list ion-icon {
+            font-size: 1.5rem;
+            color: var(--color-black);
+            flex-shrink: 0;
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            color: var(--color-accent);
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        .emoji-large {
+            font-size: 4rem;
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        .start-button {
+            display: block;
+            max-width: 350px;
+            margin: 32px auto;
+            padding: 18px 32px;
+            background: red;
+            color: white;
+            text-align: center;
+            border-radius: var(--radius-button);
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .start-button:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .start-button ion-icon {
+            vertical-align: middle;
+            margin-left: 8px;
+            font-size: 1.3rem;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--color-accent), transparent);
+            margin: 48px auto;
+            max-width: 300px;
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: var(--color-accent);
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Navigation Hint */
+        .nav-hint {
+            background: var(--color-accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 24px auto;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-hint ion-icon {
+            vertical-align: middle;
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .arrow-down {
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        .arrow-down ion-icon {
+            font-size: 2.5rem;
+            color: var(--color-accent);
+            animation: bounce 2s infinite;
+        }
+    </style>
 </head>
 <body data-page="stat">
     
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <div class="app-container">
         
         <main class="main-content">
             
             <header class="page-header">
                 <div class="top-header">
-                    <a href="home.html" class="back-item" data-page="home">
-                    <ion-icon name="caret-back-circle"></ion-icon>
-                    </a>
-                    <h1 class="page-title">Statistics</h1>
-                    <!-- <p class="welcome-text">Track your progress</p> -->
+                    <h1 class="page-title">คู่มือการใช้งาน</h1>
                 </div>
             </header>
 
-            <!-- <section class="stat-summary">
-                <div class="summary-card">
-                    <div class="summary-value">24</div>
-                    <div class="summary-label">Days Checked In</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-value">4</div>
-                    <div class="summary-label">Current Streak</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-value">12</div>
-                    <div class="summary-label">Total Exams</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-value">8</div>
-                    <div class="summary-label">Completed</div>
-                </div>
-            </section> -->
+            <div class="tutorial-container">
+                
+                <!-- Section 1: Welcome & Introduction -->
+                <section class="tutorial-section" data-section="1">
+                    <div class="section-header">
+                        <div class="section-number">ขั้นตอนที่ 1</div>
+                        <h2 class="section-title">รู้จัก Study Planner!</h2>
+                                           </div>
+                    
+                    <div class="section-content">
+                        <div class="welcome-icon">
+                            <ion-icon name="sparkles"></ion-icon>
+                        </div>
 
-            <div class="stats-tabs">
-                <button class="tab-btn active" data-chart="bar" id="barChartBtn">
-                    <ion-icon name="bar-chart" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
-                    Bar Chart
-                </button>
-                <button class="tab-btn" data-chart="line" id="lineChartBtn">
-                    <ion-icon name="analytics" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
-                    Line Chart
-                </button>
+                        <div class="highlight-box">
+                            เว็บไซต์ที่มีระบบ<strong>วิเคราะห์และปรับแผนการอ่าน</strong>ให้เหมาะสมกับคุณโดยอัตโนมัติ ตามความคืบหน้าและความยากง่ายที่คุณกรอก
+                        </div>
+
+                        <h3 style="text-align: center; color: var(--color-dark); margin: 32px 0 16px;">เมนูหลักทั้ง 5</h3>
+                        
+                        <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/nav.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+                        <ul class="feature-list">
+                            <li>
+                                <ion-icon name="home"></ion-icon>
+                                <span><strong>หน้าหลัก</strong> - ดูแผนการอ่านประจำวันและภาพรวม</span>
+                            </li>
+                            <li>
+                                <ion-icon name="checkmark-circle"></ion-icon>
+                                <span><strong>บันทึก</strong> - บันทึกความคืบหน้าและให้ความเห็น</span>
+                            </li>
+                            <li>
+                                <ion-icon name="add-circle"></ion-icon>
+                                <span><strong>เพิ่มวิชา</strong> - เพิ่มวิชาสอบใหม่เข้าระบบ</span>
+                            </li>
+                            <li>
+                                <ion-icon name="book"></ion-icon>
+                                <span><strong>คู่มือ</strong> - วิธีการใช้งาน (หน้านี้)</span>
+                            </li>
+                            <li>
+                                <ion-icon name="person"></ion-icon>
+                                <span><strong>ตั้งค่า</strong> - จัดการโปรไฟล์และการตั้งค่า</span>
+                            </li>
+                        </ul>
+
+                                            
+                    </div>
+
+                    <div class="arrow-down">
+                        <ion-icon name="chevron-down"></ion-icon>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Section 2: Calendar -->
+                <section class="tutorial-section" data-section="2">
+                    <div class="section-header">
+                        <div class="section-number">ขั้นตอนที่ 2</div>
+                        <h2 class="section-title">ปฏิทินแผนการอ่าน</h2>
+                        <p class="section-description">
+                            หน้าหลักแสดงปฏิทินพร้อมแผนการอ่านทั้งหมด ดูภาพรวมและรายละเอียดได้ชัดเจน
+                        </p>
+                    </div>
+                    
+                    <div class="section-content">
+                        <div class="highlight-box">
+                            <ion-icon name="calendar"></ion-icon>
+                            <strong>จุดสีบนปฏิทิน:</strong> แต่ละสีแสดงประเภทกิจกรรม - วันอ่านจะมีสีตามวิชา, วันสอบจะเป็นสีแดง
+                        </div>
+
+                        <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/calendar.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+
+                        <ul class="feature-list">
+                            <li>
+                                <ion-icon name="eye"></ion-icon>
+                                <span><strong>คลิกวันใดวันหนึ่ง</strong> เพื่อดูรายละเอียดการอ่านในวันนั้น</span>
+                            </li>
+                            <li>
+                                <ion-icon name="color-palette"></ion-icon>
+                                <span><strong>จุดสี</strong> แสดงประเภทกิจกรรม: อ่าน / สอบ / ทบทวน</span>
+                            </li>
+                            <li>
+                                <ion-icon name="list"></ion-icon>
+                                <span><strong>รายการด้านล่าง</strong> แสดงเหตุการณ์ทั้งหมดในเดือน</span>
+                            </li>
+                        </ul>
+
+                        <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/come.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+                    </div>
+
+                    <div class="arrow-down">
+                        <ion-icon name="chevron-down"></ion-icon>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Section 3: Progress Tracking -->
+                <section class="tutorial-section" data-section="3">
+                    <div class="section-header">
+                        <div class="section-number">ขั้นตอนที่ 3</div>
+                        <h2 class="section-title">บันทึกความคืบหน้า</h2>
+                        <p class="section-description">
+                            หน้าบันทึกจะแสดงรายการวิชาที่ต้องอ่านในวันนี้ ให้คุณบันทึกความคืบหน้าและความเห็น
+                        </p>
+                    </div>
+                    
+                    <div class="section-content">
+                        <div class="highlight-box">
+                            <ion-icon name="notifications"></ion-icon>
+                            <strong>ระบบจะปรับแผนอัตโนมัติ:</strong> ถ้าคุณบอกว่าเนื้อหายากหรือง่ายเกินไป ระบบจะปรับภาระให้เหมาะสม
+                        </div>
+
+                        <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/log.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+
+                        <h3 style="text-align: center; color: var(--color-dark); margin: 32px 0 16px;">ตัวเลือกการบันทึก</h3>
+
+                        <ul class="feature-list">
+                            <li>
+                                <ion-icon name="checkmark-circle"></ion-icon>
+                                <span><strong>ตามแผน</strong> - อ่านได้ตามกำหนด ความยากพอดี</span>
+                            </li>
+                            <li>
+                                <ion-icon name="alert-circle"></ion-icon>
+                                <span><strong>ยากเกินไป</strong> - ระบบจะลดภาระให้ในวันต่อไป</span>
+                            </li>
+                            <li>
+                                <ion-icon name="happy"></ion-icon>
+                                <span><strong>ง่ายเกินไป</strong> - ระบบจะเพิ่มภาระให้มากขึ้น</span>
+                            </li>
+                            <li>
+                                <ion-icon name="close-circle"></ion-icon>
+                                <span><strong>ไม่ได้อ่าน</strong> - ระบบจะปรับแผนใหม่</span>
+                            </li>
+                        </ul>
+
+                        <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/track.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+                    </div>
+
+                    <div class="arrow-down">
+                        <ion-icon name="chevron-down"></ion-icon>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Section 4: Add Subject -->
+                <section class="tutorial-section" data-section="4">
+                    <div class="section-header">
+                        <div class="section-number">ขั้นตอนที่ 4</div>
+                        <h2 class="section-title">เพิ่มวิชาสอบ</h2>
+                        <p class="section-description">
+                            เริ่มต้นด้วยการเพิ่มวิชาที่ต้องสอบ กรอกข้อมูลที่จำเป็นเพื่อให้ระบบวางแผนได้
+                        </p>
+                    </div>
+                    
+                    <div class="section-content">
+                        <div class="highlight-box">
+                            <ion-icon name="create"></ion-icon>
+                            <strong>กรอกข้อมูล 3 ส่วน:</strong> ชื่อวิชา, วันสอบ, และระดับความถนัด (1-10)
+                        </div>
+
+                        <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/add.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+
+
+                        <div class="highlight-box">
+                            <ion-icon name="information-circle"></ion-icon>
+                            <strong>เคล็ดลับ:</strong> ประเมินความถนัดให้ตรงที่สุด ระบบจะใช้ข้อมูลนี้ในการคำนวณเวลาที่เหมาะสม
+                        </div>
+                    </div>
+
+                    <div class="arrow-down">
+                        <ion-icon name="chevron-down"></ion-icon>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Section 5: Settings -->
+                <section class="tutorial-section" data-section="5">
+                    <div class="section-header">
+                        <div class="section-number">ขั้นตอนที่ 5</div>
+                        <h2 class="section-title">ปรับแต่งการตั้งค่า</h2>
+                        <p class="section-description">
+                            จัดการโปรไฟล์ การแจ้งเตือน และการตั้งค่าต่างๆ ให้เหมาะกับตัวคุณ
+                        </p>
+                    </div>
+                    
+                    <div class="section-content">
+                        <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/setting.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+
+                        <h3 style="text-align: center; color: var(--color-dark); margin: 32px 0 16px;">สิ่งที่ตั้งค่าได้</h3>
+
+                        <ul class="feature-list">
+                            <li>
+                                <ion-icon name="person-circle"></ion-icon>
+                                <span><strong>แก้ไขโปรไฟล์</strong> - เปลี่ยนชื่อ, อีเมล และข้อมูลส่วนตัว</span>
+                            </li>
+                            <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/name.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+                            <li>
+                                <ion-icon name="notifications"></ion-icon>
+                                <span><strong>การแจ้งเตือน</strong> - เปิด/ปิด และกำหนดเวลาแจ้งเตือน</span>
+                            </li>
+                            <li>
+                                <ion-icon name="time"></ion-icon>
+                                <span><strong>เวลาอ่านต่อวัน</strong> - กำหนดจำนวนชั่วโมงที่สามารถอ่านได้</span>
+                            </li>
+                            <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/time.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+                            <li>
+                                <ion-icon name="lock-closed"></ion-icon>
+                                <span><strong>ความปลอดภัย</strong> - เปลี่ยนรหัสผ่านและการเข้าสู่ระบบ</span>
+                            </li>
+                            <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/pass.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+                        </ul>
+
+        
+                    </div>
+
+                    <div class="arrow-down">
+                        <ion-icon name="chevron-down"></ion-icon>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Section 6: Complete -->
+                <section class="tutorial-section" data-section="6">
+                    <div class="section-header">
+                        <div class="section-number">เสร็จสิ้น</div>
+                        <h2 class="section-title">พร้อมเริ่มต้นแล้ว!</h2>
+                        
+                    </div>
+                    
+                    <div class="section-content">
+                        
+
+                        <div class="highlight-box">
+                            <ion-icon name="trophy"></ion-icon>
+                            <strong>สำคัญ:</strong> สนับสนุนพวกเราได้ตามกำลังศรัทธา เพื่อพัฒนาและปรับปรุงเว็บไซต์ให้ดียิ่งขึ้น
+                        </div>
+
+                        <div style="text-align: center; margin: 24px 0; padding: 16px; background: none; border:0cap;">
+                            <img src="{{ url_for('static', filename='images/us.jpg') }}" 
+                                alt="Navigation Bar"
+                                style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        </div>
+
+                        <h3 style="text-align: center; color: var(--color-dark); margin: 32px 0 16px;">สิ่งที่ควรจำ</h3>
+
+                        <ul class="feature-list">
+                            <li>
+                                <ion-icon name="heart"></ion-icon>
+                                <span><strong>ใช้งานต่อเนื่อง</strong> เพื่อผลลัพธ์ที่ดีที่สุด</span>
+                            </li>
+                            <li>
+                                <ion-icon name="star"></ion-icon>
+                                <span><strong>ระบบเรียนรู้</strong> และปรับปรุงแผนให้เหมาะกับคุณ</span>
+                            </li>
+                            <li>
+                                <ion-icon name="refresh"></ion-icon>
+                                <span><strong>ให้ Feedback</strong> ตรงตามความเป็นจริง</span>
+                            </li>
+                            
+                        </ul>
+
+                        <a href="{{ url_for('web_main.add') }}" class="start-button">
+                            เริ่มใช้งาน
+                            <ion-icon name="rocket"></ion-icon>
+                        </a>
+                    
+                    </div>
+                </section>
+
             </div>
-
-            <!-- Chart Container -->
-            <div class="chart-container">
-                <canvas id="statsChart"></canvas>
-            </div>
-
-            <!-- Weekly Progress
-            <section class="progress-section" style="margin-top: var(--spacing-lg);">
-                <h2 class="section-title">Weekly Progress</h2>
-                <p class="section-subtitle">Check-in history for this week</p>
-
-                <div class="week-calendar">
-                    <div class="day-pill" data-checked="true">
-                        <span class="day-number">12</span>
-                        <span class="day-name">Mon</span>
-                        <ion-icon name="checkmark-circle" style="color: var(--difficulty-easy); font-size: 1.25rem;"></ion-icon>
-                    </div>
-                    <div class="day-pill" data-checked="true">
-                        <span class="day-number">13</span>
-                        <span class="day-name">Tue</span>
-                        <ion-icon name="checkmark-circle" style="color: var(--difficulty-easy); font-size: 1.25rem;"></ion-icon>
-                    </div>
-                    <div class="day-pill" data-checked="true">
-                        <span class="day-number">14</span>
-                        <span class="day-name">Wed</span>
-                        <ion-icon name="checkmark-circle" style="color: var(--difficulty-easy); font-size: 1.25rem;"></ion-icon>
-                    </div>
-                    <div class="day-pill" data-checked="true">
-                        <span class="day-number">15</span>
-                        <span class="day-name">Thu</span>
-                        <ion-icon name="checkmark-circle" style="color: var(--difficulty-easy); font-size: 1.25rem;"></ion-icon>
-                    </div>
-                    <div class="day-pill" data-checked="false">
-                        <span class="day-number">16</span>
-                        <span class="day-name">Fri</span>
-                        <ion-icon name="close-circle" style="color: var(--color-gray); font-size: 1.25rem;"></ion-icon>
-                    </div>
-                    <div class="day-pill" data-checked="false">
-                        <span class="day-number">17</span>
-                        <span class="day-name">Sat</span>
-                        <ion-icon name="close-circle" style="color: var(--color-gray); font-size: 1.25rem;"></ion-icon>
-                    </div>
-                    <div class="day-pill" data-checked="false">
-                        <span class="day-number">18</span>
-                        <span class="day-name">Sun</span>
-                        <ion-icon name="close-circle" style="color: var(--color-gray); font-size: 1.25rem;"></ion-icon>
-                    </div>
-                </div>
-            </section>
-
-            <section style="margin-top: var(--spacing-xl);">
-                <h2 class="section-title">Monthly Overview</h2>
-                <div class="stat-summary" style="grid-template-columns: repeat(3, 1fr);">
-                    <div class="summary-card">
-                        <div class="summary-value" style="font-size: 1.5rem;">18</div>
-                        <div class="summary-label">Study Sessions</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-value" style="font-size: 1.5rem;">45h</div>
-                        <div class="summary-label">Total Hours</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-value" style="font-size: 1.5rem;">2.5h</div>
-                        <div class="summary-label">Daily Average</div>
-                    </div>
-                </div>
-            </section> -->
 
         </main>
 
         <nav class="bottom-nav">
-            <a href="schedule.html" class="nav-item" data-page="schedule">
+            <a href="{{ url_for('web_main.home') }}" class="nav-item" data-page="home">
                 <ion-icon name="home"></ion-icon>
                 <span>หน้าหลัก</span>
             </a>
-            <a href="home.html" class="nav-item" data-page="home">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
+            <a href="{{ url_for('web_main.feedback') }}" class="nav-item" data-page="feedback">
+                <ion-icon name="checkmark-circle"></ion-icon>
                 <span>บันทึก</span>
             </a>
-            <a href="add.html" class="nav-item nav-item-center" data-page="add">
+            <a href="{{ url_for('web_main.add') }}" class="nav-item nav-item-center" data-page="add">
                 <div class="add-button">
                     <ion-icon name="add"></ion-icon>
                 </div>
             </a>
-            <a href="stat.html" class="nav-item" data-page="stat">
-                <ion-icon name="stats-chart"></ion-icon>
-                <span>สถิติ</span>
+            <a href="{{ url_for('web_main.stat') }}" class="nav-item active" data-page="stat">
+                <ion-icon name="book"></ion-icon>
+                <span>คู่มือ</span>
             </a>
-            <a href="profile.html" class="nav-item" data-page="profile">
+            <a href="{{ url_for('web_main.profile') }}" class="nav-item" data-page="profile">
                 <ion-icon name="person"></ion-icon>
                 <span>ตั้งค่า</span>
             </a>
@@ -155,6 +618,7 @@
     </div>
 
     <script>
+        // Set day theme
         function setDayTheme() {
             const today = new Date();
             const dayIndex = today.getDay();
@@ -163,93 +627,42 @@
         }
         setDayTheme();
 
-        const currentPage = document.body.dataset.page;
-        document.querySelectorAll('.nav-item').forEach(item => {
-            if (item.dataset.page === currentPage) {
-                item.classList.add('active');
+        function updateScrollProgress() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercent = (scrollTop / scrollHeight) * 100;
+        document.getElementById('scrollProgress').style.width = scrollPercent + '%';
+    }
+
+    window.addEventListener('scroll', updateScrollProgress);
+
+    // Intersection Observer for Fade-in Animation
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
             }
         });
+    }, observerOptions);
 
-        const chartData = {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [{
-                label: 'Study Hours',
-                data: [3, 4, 2.5, 5, 0, 0, 0],
-                backgroundColor: [
-                    'rgba(241, 196, 15, 0.7)',
-                    'rgba(248, 180, 217, 0.7)',
-                    'rgba(168, 230, 207, 0.7)',
-                    'rgba(255, 184, 77, 0.7)',
-                    'rgba(133, 193, 226, 0.7)',
-                    'rgba(195, 155, 211, 0.7)',
-                    'rgba(241, 148, 138, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(241, 196, 15, 1)',
-                    'rgba(248, 180, 217, 1)',
-                    'rgba(168, 230, 207, 1)',
-                    'rgba(255, 184, 77, 1)',
-                    'rgba(133, 193, 226, 1)',
-                    'rgba(195, 155, 211, 1)',
-                    'rgba(241, 148, 138, 1)'
-                ],
-                borderWidth: 2
-            }]
-        };
+    // Observe all tutorial sections
+    document.querySelectorAll('.tutorial-section').forEach(section => {
+        observer.observe(section);
+    });
 
-        const chartConfig = {
-            type: 'bar',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return value + 'h';
-                            }
-                        }
-                    }
-                }
-            }
-        };
+    // Smooth scroll to top on page load
+    window.scrollTo({ top: 0, behavior: 'instant' });
 
-        const ctx = document.getElementById('statsChart').getContext('2d');
-        let currentChart = new Chart(ctx, chartConfig);
-
-        const barChartBtn = document.getElementById('barChartBtn');
-        const lineChartBtn = document.getElementById('lineChartBtn');
-
-        barChartBtn.addEventListener('click', function() {
-            if (currentChart.config.type === 'bar') return;
-            
-            currentChart.destroy();
-            chartConfig.type = 'bar';
-            currentChart = new Chart(ctx, chartConfig);
-            
-            barChartBtn.classList.add('active');
-            lineChartBtn.classList.remove('active');
-        });
-
-        lineChartBtn.addEventListener('click', function() {
-            if (currentChart.config.type === 'line') return;
-            
-            currentChart.destroy();
-            chartConfig.type = 'line';
-            chartConfig.data.datasets[0].fill = true;
-            chartConfig.data.datasets[0].tension = 0.4;
-            currentChart = new Chart(ctx, chartConfig);
-            
-            lineChartBtn.classList.add('active');
-            barChartBtn.classList.remove('active');
-        });
-    </script>
+    // Add visible class to first section immediately
+    setTimeout(() => {
+        document.querySelector('.tutorial-section[data-section="1"]').classList.add('visible');
+    }, 100);
+</script>
 </body>
 </html>
